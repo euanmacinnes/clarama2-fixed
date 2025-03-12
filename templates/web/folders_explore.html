@@ -1,0 +1,466 @@
+{% extends "web/root.html" %}
+
+{% block content %}
+
+<div class="dropdown-menu dropdown-menu-sm" id="context-menu">
+  <a id="menu_open" class="dropdown-item content_item bi bi-eye fs4" href="#">&nbsp;Open</a>
+  <a id="menu_download" class="dropdown-item content_item bi bi-download" href="#">&nbsp;Download</a>
+  <hr/>
+  <a class="dropdown-item content_item bi bi-pencil rename" href="#" onclick="context_rename();">&nbsp;Rename</a>
+  <a class="dropdown-item content_item bi bi-scissors" href="#" onclick="context_cut();">&nbsp;Cut</a>
+  <a class="dropdown-item content_item bi bi-copy" href="#" onclick="context_copy();">&nbsp;Copy</a>
+  <a class="dropdown-item content_item bi bi-clipboard" href="#"  onclick="context_paste();">&nbsp;Paste</a>
+  <hr/>
+  <a class="dropdown-item content_item bi bi-trash3" href="#"  onclick="context_delete();">&nbsp;Delete</a>
+</div>
+
+
+<div class="align-items-center" style="padding: 15px">
+    <div class="row align-items-start" >
+        <div class="col-5">
+            <div class="card bg-light">
+                <nav class="card-header navbar navbar-expand-xl navbar-dark bg-dark">
+                    <div class="container-fluid">
+                        <div class="btn-group" role="group" aria-label="folder_functions">
+                                  <button type="button" class="btn text-white"></button>
+                                    <div id="folder_toolbar" >
+                                    <button type="button" class="btn text-secondary"><i>New</i></button>
+                                    <button id="new_1" type="button" class="btn text-white toggle_show hoverover" opacity=0.15 style="opacity: 0.15" new_file_class="bi-folder" new_file_type="folder" data-bs-toggle="tooltip" data-bs-title="Folder" data-bs-placement="bottom"><i class="bi bi-folder"></i></button>
+                                    <button id="new_2" type="button" class="btn text-white toggle_show hoverover" opacity=0.15 style="opacity: 0.15" new_file_class="bi-journal-arrow-down" new_file_type="task" data-bs-toggle="tooltip" data-bs-title="Task" data-bs-placement="bottom"><i class="bi bi-journal-arrow-down"></i></button>
+                                    <button id="new_3" type="button" class="btn text-white toggle_show hoverover" opacity=0.15 style="opacity: 0.15" new_file_class="bi-file-earmark-spreadsheet" new_file_type="slate" data-bs-toggle="tooltip" data-bs-title="Slate (Interactive Dashboard)" data-bs-placement="bottom"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+                                    <button id="new_4" type="button" class="btn text-white toggle_show hoverover" opacity=0.15 style="opacity: 0.15" new_file_class="bi-blockquote-left" new_file_type="markdown" data-bs-toggle="tooltip" data-bs-title="Markdown File (Help Content)" data-bs-placement="bottom"><i class="bi bi-blockquote-left"></i></button>
+                                    </div>
+                                </div>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarFolder" aria-controls="navbarFolder" aria-expanded="false" aria-label="Toggle navigation">
+                          <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarFolder">
+                            <ul class="navbar-nav ma-2 mb-lg-0">
+                                <li class="nav-item dropdown">
+                                  <a class="nav-link dropdown-toggle hoverover" opacity=0.25 href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    all...
+                                  </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item toggle_show" new_file_type="folder"      new_file_class="bi-folder" href="#"><i class="bi bi-folder"></i> Folder</a>
+                                        <a class="dropdown-item toggle_show" new_file_type="task"        new_file_class="bi-journal-arrow-down" href="#"><i class="bi bi-journal-arrow-down"></i>Task</a>
+                                        <a class="dropdown-item toggle_show" new_file_type="slate"       new_file_class="bi-file-earmark-spreadsheet" href="#"><i class="bi bi-file-earmark-spreadsheet"></i>Slate</a>
+                                        <a class="dropdown-item toggle_show" new_file_type="markdown"    new_file_class="bi-blockquote-left" href="#"><i class="bi bi-blockquote-left"></i>Markdown</a>
+                                        <a class="dropdown-item toggle_show" new_file_type="table"       new_file_class="bi-table" href="#"><i class="bi bi-table"></i>Table</a>
+                                        <a class="dropdown-item toggle_show" new_file_type="source"      new_file_class="bi-database" href="#"><i class="bi bi-database"></i>Source</a>
+                                        <a class="dropdown-item toggle_show" new_file_type="field"       new_file_class="bi-menu-app" href="#"><i class="bi bi-menu-app"></i>Field</a>
+                                        <a class="dropdown-item toggle_show" new_file_type="environment" new_file_class="bi-eye" href="#"><i class="bi bi-eye"></i>Environment</a>
+                                        <a class="dropdown-item toggle_show" new_file_type="config"      new_file_class="bi-sliders" href="#"><i class="bi bi-sliders"></i>Config</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class="card-body">
+                <div class="list-group" style="width: 100%">
+                    <div id="toggle_target" name="toggle_target" class="list-group-item list-group-item-action container-fluid toggle_target" style="display: none;">
+                        <div class="row">
+                            <div class="col">
+                                <div class="row row-cols-auto" style="width=100%;">
+                                    <i id="new_item" class="bi bi-folder position-relative new_item" style="font-size: 2rem;">
+                                        <div class="rounded-pill badge-notification position-absolute translate-middle" style="font-size: 0.6em; left: 80%!important;top: 20%!important;">
+                                            <i class="bi bi-plus-circle-dotted"></i>
+                                        </div></i>
+                                    <div class="col-11"><form id="new_content_form" class="col" >
+                                        <div class="btn-group d-flex" role="group" aria-label="task_functions" style="width=100%;">
+                                              <input id="new_content" name="new_content" type="text" value="Untitled" class="form-control" style="width: 100%;">
+                                              <input id="new_content_type" name="new_content_type" type="hidden" value="" class="form-control new_content_type" style="width: 100%;">
+                                              <button type="submit" class="btn btn-secondary"><i class="bi bi-save"></i></button>
+                                              <button type="button" class="btn btn-secondary toggle_hide"><i class="bi bi-x"></i></button>
+                                            </div>
+                                    </form></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% for folder in folders | sortnicely %}
+                        <a  href="{{ url_for("clarama_content.content_get",mode='explore',filename=local_url + folder) }}"
+                            class="list-group-item list-group-item-action container-fluid listing"
+                            file_div="folder_{{ loop.index }}"
+                            listing_file="{{ folder }}"
+                            listing_filepath="{{ local_url + folder }}"
+                            >
+                            <div class="row">
+                                <div class="col">
+                                    <div class="row row-cols-auto" width="100%">
+                                        <i class="bi bi-folder-fill position-relative col" style="font-size: 2rem;">
+                                            <!--<div class="clarama-embedded rounded-pill badge-notification position-absolute translate-middle"
+                                                 style="font-size: 0.6em; left: 80%!important;top: 20%!important;"
+                                                 url="{{ url_for("clarama_webgit.git_versioning",mode='explore',filetype='folder',filename=local_url + folder) }}">
+                                            </div>--></i>
+                                        <div id="folder_{{ loop.index }}" class="col d-flex align-items-center listing_div">{{ folder }}</div>
+                                    </div>
+                                </div>
+                                <!--<i class="col col-sm-1 bi bi-x hoverover click_delete" style="opacity:0" url="{{ url_for("clarama_content.content_render",mode="delete", filename=local_url + folder) }}"></i>-->
+                            </div>
+                        </a>
+                    {% endfor %}
+
+                   {% for file in files | sortnicely %}
+                        <a href="{{ url_for("clarama_content.content_get",mode='default', filename=local_url + file) }}"
+                           file_div="file_{{ loop.index }}"
+                           listing_file="{{ file }}"
+                           listing_filepath="{{ local_url + file }}"
+                           class="list-group-item list-group-item-action container-fluid listing"
+                           style="width: 600">
+                            <div class="row" >
+                                <div class="col">
+                                    <div class="row row-cols-auto" width="100%" >
+                                        <i class="bi {{ get(filetypes, file | fileextension, 'bi-clipboard2-data') }} position-relative col" style="font-size: 2rem;">
+                                            <!--<div class="clarama-embedded rounded-pill badge-notification position-absolute translate-middle" style="font-size: 0.6em; left: 80%!important;top: 20%!important;" url="{{ url_for("clarama_webgit.git_versioning",mode='explore',filetype='file',filename=local_url + file) }}">
+                                            </div>-->
+                                        </i>
+                                        <div id="file_{{ loop.index }}" class="col d-flex align-items-center listing_div">{{ file | filebasename }}</div>
+                                    </div>
+                                </div>
+                                <div class="col col-sm-2">{{ get(filetype_names, file | fileextension, file | fileextension) }}</div>
+                                <!--<i class="col col-sm-1 bi bi-x hoverover click_delete" style="opacity:0" url="{{ url_for("clarama_content.content_render",mode='delete', filename=local_url + file) }}"></i>-->
+                            </div>
+                        </a>
+                   {% endfor %}
+                        <div class="container-fluid" >
+                            <form class="row">
+                              <fieldset class="upload_dropZone text-center mb-3 p-4">
+                                <legend class="visually-hidden">Image uploader</legend>
+                                <p class="small my-2">Drag &amp; Drop supported files <i>or</i>
+                                <input id="upload_image_background" data-post-name="image_background"
+                                       data-post-url="{{ url_for("clarama_content.content_get",mode='explore', filename=local_url) }}"
+                                       class="position-absolute invisible"
+                                       type="file" multiple accept="image/jpeg, image/png, image/svg+xml" />
+                                    <label for="upload_image_background" type="button" class="btn btn-primary">Choose file(s)</label></p>
+                                <div class="upload_gallery d-flex flex-wrap justify-content-center gap-3 mb-0"></div>
+                              </fieldset>
+                            </form>
+                        </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="col-7">
+            <div class="card bg-light">
+                <nav class="card-header navbar navbar-expand-xl navbar-dark bg-dark">
+                    <div class="container-fluid">
+                        <h1 class="navbar-brand">{{ active_content }}</h1>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarFolder" aria-controls="navbarFolder" aria-expanded="false" aria-label="Toggle navigation">
+                          <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                </nav>
+                {% if content %}
+                <div class="card-body bg-dark text-white help-folder d-flex justify-content-center">
+                    <div class="card-text">{{ content | safe }}</div>
+                </div>
+                {% endif %}
+                </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    console.clear();
+
+ function content_new()
+ {
+    var new_content=$("#new_content").val();
+    var new_content_type=$("#new_content_type").val();
+    var file = "/render/new/{{ local_url }}?new_content=" + encodeURIComponent(new_content) + "&new_content_type=" + encodeURIComponent(new_content_type);
+
+    execute_json_url(file, true);
+ }
+
+ function context_rename() {
+   console.log("Renaming " + $("#context-menu").attr("listing_file") + ' in ' + $("#context-menu").attr("file_div"));
+   var file_div = $("#context-menu").attr("file_div");
+
+   $('#' + file_div).attr('contenteditable', true).focus();
+   $("#context-menu").removeClass("show").hide();
+ }
+
+ function context_delete() {
+   var file = "/render/delete/" + $("#context-menu").attr("listing_filepath");
+   execute_json_url(file, true);
+   $("#context-menu").removeClass("show").hide();
+ }
+
+ function context_cut() {
+    var file =$("#context-menu").attr("listing_filepath")
+    navigator.clipboard.writeText(encodeURIComponent(file) + "&mode=cut");
+    $("#context-menu").removeClass("show").hide();
+ }
+
+ function context_copy() {
+    var file =$("#context-menu").attr("listing_filepath")
+    navigator.clipboard.writeText(encodeURIComponent(file) + "&mode=copy");
+    $("#context-menu").removeClass("show").hide();
+ }
+
+// Things to watch out for:
+// Pasting a folder inside it's own child
+// Can't paste to an empty folder
+// File pasting into current folder should create a duplicate
+ function context_paste() {
+
+    navigator.clipboard.readText()
+    .then(source =>{
+        var file = "/render/paste/" + $("#context-menu").attr("listing_filepath") + '?source=' + source;
+        execute_json_url(file, true);
+        })
+    .catch(err => {
+      console.error('Failed to read clipboard contents: ', err);
+    });
+
+    $("#context-menu").removeClass("show").hide();
+ }
+
+ function rename_finished(object)
+ {
+        var conattr = $(object).text();
+        $(object).attr('contenteditable', false);
+
+        var file = "/render/rename/" + $("#context-menu").attr("listing_filepath") + '?new_name=' + conattr;
+
+        execute_json_url(file, true);
+        console.log("renaming");
+ }
+
+
+ $(document).ready(function() {
+    console.log('Ready!');
+
+    $('#new_content_form').on('submit', function( e ){
+        content_new();
+        e.preventDefault();
+    });
+
+    jQuery(document).click(function(event) {
+      console.log("LENGTH: " +  jQuery(event.target).closest('.listing').length);
+      if (jQuery(event.target).closest('.listing').length === 0) {
+        $('#context-menu').hide();
+      }
+    });
+
+    $('.listing_div').on('focusout',function() {
+        rename_finished(this);
+    });
+
+    $('.listing_div').keypress(function(ev) {
+        var keycode = (ev.keyCode ? ev.keyCode : ev.which);
+        if(keycode == 13) {
+            $(this).attr('contenteditable', false);
+            // No need to call rename here too, the disabling of content editable will cause a focusoout
+        }
+    });
+
+    $('.listing').on('contextmenu', function(e) {
+      var top = e.pageY - 10;
+      var left = e.pageX - 10;
+
+      var item = $(this);
+      var file_div = item.attr('file_div');
+      var file = item.attr('listing_file');
+      var filepath = item.attr('listing_filepath');
+      var url = item.attr('href'); // Needed for Open and Download
+
+      $("#context-menu").attr("file_div", file_div);
+      $("#context-menu").attr("listing_file", file);
+      $("#context-menu").attr("listing_filepath", filepath); // Needed for delete, cut, copy & paste
+      $("#context-menu").attr("listing_path", "{{ local_url }}");
+
+      $('#menu_open').attr("href", url);
+      $('#menu_download').attr("href", "/content/download/" + filepath);
+      $('#menu_delete').attr("href", "/content/delete/" + filepath);
+      console.log(file);
+      console.log(url);
+
+      $("#context-menu").css({
+        display: "block",
+        top: top,
+        left: left
+      }).addClass("show");
+      return false; //blocks default Webbrowser right click menu
+    }).on("click", function() {
+      $("#context-menu").removeClass("show").hide();
+    });
+
+    $("#context-menu a").on("click", function() {
+      $(this).parent().removeClass("show").hide();
+    });
+
+    $(".toggle_show").click(function(){
+      new_class = $(this).attr("new_file_class");
+      new_type = $(this).attr("new_file_type");
+      $(".new_content_type").val(new_type);
+      $(".new_item").removeClass("bi-folder bi-journal-arrow-down bi-file-earmark-spreadsheet bi-blockquote-left bi-table bi-database bi-menu-app bi-eye bi-sliders");
+      $(".new_item").addClass(new_class);
+      $(".toggle_target").show( 'fast', function(){
+      });
+    });
+
+    $(".toggle_hide").click(function(){
+      $(".toggle_target").hide( 'fast', function(){
+      });
+    });
+
+    $(".click_delete").click(function(e){
+        e.preventDefault();
+        url = $(this).attr("url");
+
+        console.log("Deleting " + url);
+        fetch($CLARAMA_ROOT + url)
+        .then((response) => {
+           console.log(response);
+           history.go(0);
+        });
+     });
+ });
+
+// Drag and drop - single or multiple image files
+// https://www.smashingmagazine.com/2018/01/drag-drop-file-uploader-vanilla-js/
+// https://codepen.io/joezimjs/pen/yPWQbd?editors=1000
+(function () {
+
+  // Four objects of interest: drop zones, input elements, gallery elements, and the files.
+  // dataRefs = {files: [image files], input: element ref, gallery: element ref}
+
+  const preventDefaults = event => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const highlight = event =>
+    event.target.classList.add('highlight');
+
+  const unhighlight = event =>
+    event.target.classList.remove('highlight');
+
+  const getInputAndGalleryRefs = element => {
+    const zone = element.closest('.upload_dropZone') || false;
+    const gallery = zone.querySelector('.upload_gallery') || false;
+    const input = zone.querySelector('input[type="file"]') || false;
+    return {input: input, gallery: gallery};
+  }
+
+  const handleDrop = event => {
+    const dataRefs = getInputAndGalleryRefs(event.target);
+    dataRefs.files = event.dataTransfer.files;
+    handleFiles(dataRefs);
+  }
+
+
+  const eventHandlers = zone => {
+
+    const dataRefs = getInputAndGalleryRefs(zone);
+    if (!dataRefs.input) return;
+
+    // Prevent default drag behaviors
+    ;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(event => {
+      zone.addEventListener(event, preventDefaults, false);
+      document.body.addEventListener(event, preventDefaults, false);
+    });
+
+    // Highlighting drop area when item is dragged over it
+    ;['dragenter', 'dragover'].forEach(event => {
+      zone.addEventListener(event, highlight, false);
+    });
+    ;['dragleave', 'drop'].forEach(event => {
+      zone.addEventListener(event, unhighlight, false);
+    });
+
+    // Handle dropped files
+    zone.addEventListener('drop', handleDrop, false);
+
+    // Handle browse selected files
+    dataRefs.input.addEventListener('change', event => {
+      dataRefs.files = event.target.files;
+      handleFiles(dataRefs);
+    }, false);
+
+  }
+
+
+  // Initialise ALL dropzones
+  const dropZones = document.querySelectorAll('.upload_dropZone');
+  for (const zone of dropZones) {
+    eventHandlers(zone);
+  }
+
+
+  // No 'image/gif' or PDF or webp allowed here, but it's up to your use case.
+  // Double checks the input "accept" attribute
+  const isImageFile = file =>
+    ['image/jpeg', 'image/png', 'image/svg+xml', 'text/csv','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/pdf','application/x-zip'].includes(file.type);
+
+
+  // Based on: https://flaviocopes.com/how-to-upload-files-fetch/
+  const imageUpload = dataRefs => {
+
+    // Multiple source routes, so double check validity
+    if (!dataRefs.files || !dataRefs.input) return;
+
+    const url = dataRefs.input.getAttribute('data-post-url');
+
+    console.log(url);
+    if (!url) return;
+
+    /*const formData = new FormData();
+
+    for (const file of dataRefs.files) {
+        formData.append("files", file, file.name);
+        console.log(file);
+    }*/
+
+    const formData = new FormData();
+    formData.append("file", dataRefs.files[0]);
+
+    fetch(url, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('posted: ', data);
+      if (data.success === true) {
+        // previewFiles(dataRefs);
+      } else {
+        console.log('URL: ', url, '  name: ', name)
+      }
+    })
+    .catch(error => {
+      console.error('errored: ', error);
+    });
+
+    history.go(0);
+  }
+
+
+  // Handle both selected and dropped files
+  const handleFiles = dataRefs => {
+
+    let files = [...dataRefs.files];
+
+    // Remove unaccepted file types
+    files = files.filter(item => {
+      if (!isImageFile(item)) {
+        console.log('Not an image, ', item.type);
+        alert(item.type + ' not a valid file for upload');
+      }
+      return isImageFile(item) ? item : null;
+    });
+
+    if (!files.length) return;
+    dataRefs.files = files;
+
+    imageUpload(dataRefs);
+  }
+
+})();
+</script>
+
+{% endblock %}

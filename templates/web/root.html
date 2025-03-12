@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+
+<head>
+    {% with page_title=" - " + active_content %}
+    {% include "web/common_header.html" %}
+    {% endwith %}
+</head>
+<body style="background-image: linear-gradient(to right, #0099f7, #f11712);" class="d-flex flex-column v-100 vh-100"  style="height: 100%;">
+  <nav class="navbar navbar-expand-xl navbar-dark bg-dark" aria-label="Clarama Header" style="padding: 1px">
+    <div class="container-fluid py-2">
+          <a class="navbar-brand" href="{{ url_for("clarama_ui.home")}}">
+    <img src="/static/art/clarama_logo_c2_128.png" width="42" height="42" alt="">
+  </a>
+      <a class="navbar-brand" href="{{ url_for("clarama_ui.home")}}content/explore/">Clarama</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarClarama" aria-controls="navbarClarama" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarClarama">
+
+{% set ns = namespace(burl="") %}
+
+        <ul class="navbar-nav me-auto mb-2 mb-xl-0 align-items-center">
+              {% for breadcrumb in breadcrumbs %}
+                {% if loop.first %}
+                    {% set ns.burl = breadcrumb %}
+                {% else  %}
+                    {% set ns.burl = ns.burl + "/" + breadcrumb %}
+                {% endif %}
+              <li class="nav-item">
+               <i class="nav-link bi bi-chevron-right p-0"></i>
+              </li>
+
+                {% if loop.last %}
+                   <li class="nav-item">
+                        <a class="nav-link fw-bold text-white " href="#" role="button" aria-expanded="false">
+                          {% if folder %}
+                            {{ breadcrumb }}
+                          {% else %}
+                            {{ breadcrumb | filebasename }}
+                          {% endif %}
+                        </a>
+                   </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link px-2" aria-current="page" href="{{ url_for("clarama_content.content_get", mode='explore', filename=ns.burl) }}">{{ breadcrumb }}</a>
+                    </li>
+                {% endif %}
+
+              {% endfor %}
+                    {% if modes %}
+                    <li class="nav-item">
+                       <i class="nav-link">|</i>
+                    </li>
+                    <li class="nav-item">
+                      <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <i class="bi {{ modeicons[mode] }} h6"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark p-2">
+                          {% for lmode in modes %}
+                            <li><a class="text-capitalize nav-link {%if lmode == mode %} fw-bold text-white {% else %} fw-light {% endif %} fst-italic dropdown-item mx-1"
+                              href="{{ url_for("clarama_content.content_get", mode=lmode, filename=local_url | no_trailing_slash) }}">
+                            <i class="bi {{ modeicons[lmode] }} h5 me-2"></i>{{ lmode }}</a></li>
+                          {% endfor %}
+                          <li><hr class="dropdown-divider bg-secondary"></li>
+                          <li><a class="nav-link fw-light fst-italic dropdown-item mx-1">
+                            <i class="bi bi-star h5 me-2"></i>Favourites
+                          </a></li>
+                          <li><a class="nav-link fw-light fst-italic dropdown-item mx-1">
+                            <i class="bi bi-share h5 me-2"></i>Share
+                          </a></li>
+                          <li><a class="nav-link fw-light fst-italic dropdown-item mx-1" href="{{ url_for("clarama_content.content_get", mode="download", filename=local_url) }}">
+                            <i class="bi bi-download h5 me-2"></i>Download
+                          </a></li>
+                        </ul>
+                      </div>
+                    </li>
+                    {% endif %}
+        </ul>
+        <form id="search" class="d-flex">
+          <input class="form-control bg-secondary text-white" type="search" placeholder="..." aria-label="Search" autofocus required>
+          <button class="btn btn-dark" type="submit"><i class="bi bi-search"></i></button>
+        </form>
+
+		  <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ username }} <!--<span class="badge rounded-pill bg-danger badge-notification">2</span>-->
+          </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{{url_for('clarama_ui.logout')}}">Logout</a></li>
+            </ul>
+        </li>
+		  </ul>
+		</div>
+    </div>
+  </nav>
+  <div class="container-fluid min-vt-100">
+
+{% block content %}{% endblock %}
+
+  </div>
+
+<div class="container h-100">
+  <footer class="fixed-bottom" style="padding: 25px">
+      <div id="notification_popup" class="row">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="row alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </div>
+      <div class="row">
+        <div class="col align-items-center">
+          <span class="mb-3 mb-md-0 text-muted">&copy; 2023 Euan Duncan Macinnes. All rights reserved.</span>
+        </div>
+      </div>
+  </footer>
+</div>
+</div>
+
+{{ bootstrap.load_js() }}
+
+<script type="text/javascript">
+    $( document ).ready(() => {
+        enable_interactions($('body'));
+    });
+</script>
+
+</body>
+</html>

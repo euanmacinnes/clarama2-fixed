@@ -1,0 +1,16 @@
+<div class="clarama-cell-content" celltype="source" dataid="{{ loop_index }}">
+    <div class="bg-info rounded text-light" style="padding: 5px">
+        <div class="rounded text-light row">
+            <div class="input-group col">
+
+            <input id="task_step_{{ loop_index }}_source" type="text" class="form-control" placeholder="Data Source Filename" aria-label="Data source relative filename" value="{{source}}">
+            </div>
+
+          <div class="btn-group rounded-top col-1" role="group">
+            <button id="task_step_{{ loop_index }}_browse" type="button" class="btn btn-secondary dropdown-toggle datasource" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Browse</button>
+                <div class="dropdown-menu" aria-labelledby="task_step_{{ loop_index }}_source">
+                    <a class="dropdown-item" href="#">Browse</a>
+                </div>
+          </div>
+    </div>
+</div>

@@ -1,0 +1,186 @@
+<div class="clarama-cell-content" celltype="data" dataid="{{ loop_index }}">
+    <div class="bg-info rounded-top text-light" style="padding: 5px">
+        <div class="rounded-top text-light row">
+            <input id="task_step_{{ loop_index }}_output" type="hidden" value="{{ output or 'table' }}">
+            <div class="btn-group col">
+                <button id="task_step_{{ loop_index }}_table" type="button" class="btn {% if output==" table"
+                    %}btn-primary{% else %}btn-secondary{% endif %}"
+                    onclick="datacell_setOutput('task_step_{{ loop_index }}', 'table');"><i class="bi bi-table"></i>
+                </button>
+                <button id="task_step_{{ loop_index }}_chart" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseOptions" aria-expanded="false" aria-controls="collapseOptions"
+                    class="btn dropdown-toggle {% if output==" chart" %}btn-primary{% else %}btn-secondary{% endif %}"
+                    onclick="datacell_setOutput('task_step_{{ loop_index }}', 'chart');"><i
+                        class="bi bi-graph-up-arrow"></i></button>
+
+                <button id="task_step_{{ loop_index }}_code" type="button" class="btn {% if output==" code"
+                    %}btn-primary{% else %}btn-secondary{% endif %}"
+                    onclick="datacell_setOutput('task_step_{{ loop_index }}', 'code');"><i class="bi bi-code"></i>
+                </button>
+                <input id="task_step_{{ loop_index }}_source" type="text" class="form-control"
+                    placeholder="Data Source Filename" aria-label="Data source relative filename" value="{{ source }}">
+            </div>
+
+            <div class="btn-group rounded-top col-1" role="group">
+                <button id="task_step_{{ loop_index }}_browse" type="button"
+                    class="btn btn-secondary dropdown-toggle datasource" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">Browse
+                </button>
+                <div class="dropdown-menu" aria-labelledby="task_step_{{ loop_index }}_source">
+                    <a class="dropdown-item" href="#">Browse</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="collapseOptions" class="accordion-collapse collapse bg-dark text-light">
+        <div class="accordion-body" aria-labelledby="chart" style="padding: 8px;">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center my-3">
+                    <label for="c{{ loop_index }}" class="form-label ps-0">Chart Title</label>
+                    <div class="col">
+                        <input type="string" class="form-control chart-title" id="c{{ loop_index }}" name="title"
+                            value="{% if chart is defined %}{{ chart['title'] }}{% endif %}">
+                    </div>
+
+                    <label for="ct{{ loop_index }}" class="form-label">Chart Subtitle</label>
+                    <div class="col">
+                        <input type="string" class="form-control chart-subtitle" id="ct{{ loop_index }}" name="subtitle"
+                            value="{% if chart is defined %}{{ chart['subtitle'] }}{% endif %}">
+                    </div>
+
+                    <label for="lg{{ loop_index }}" class="form-label">Legend</label>
+                    <div class="col">
+                        {% set legend = 'Off' %}
+                        {% if chart is defined %}
+                        {% set legend = chart['legend'] %}
+                        {% endif %}
+                        <select id="lg{{ loop_index }}" class="form-control chart-legend">
+                            <option {{ selected("Off",legend) }}>Off</option>
+                            <option {{ selected("Left",legend) }}>Left</option>
+                            <option {{ selected("Right",legend) }}>Right</option>
+                            <option {{ selected("Top",legend) }}>Top</option>
+                            <option {{ selected("Bottom",legend) }}>Bottom</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <ul id="seriesGrp" class="list-group">
+                {% if chart is defined %}
+                {% set seriesgroups = chart['series-groups'] or [{}] %}
+                {% set seriesformats = chart['series-formats'] or [{}] %}
+                {% set seriesannotations = chart['series-annotations'] or [{}] %}
+                {% else %}
+                {% set seriesgroups = [{}] %}
+                {% set seriesformats = [{}] %}
+                {% set seriesannotations = [{}] %}
+                {% endif %}
+                <label for="sg{{ loop_index }}" class="form-label mb-2">
+                    Series Groups
+                    <i id="addSG" class="bi bi-plus-circle ms-1 data-cell-icon-hover add"></i>
+                </label>
+                {% for sgroup in seriesgroups %}
+                <li class="chart-series-groups" draggable="true">
+                    <div class="list-group-item d-flex align-items-center">
+                        <i class="bi bi-grip-vertical draggable-heading pe-3"></i>
+                        <select id="sg{{ loop_index }}" class="form-control series-type">
+                            <option {{ selected("Line",sgroup['series-type']) }}>Line</option>
+                            <option {{ selected("Scatter",sgroup['series-type']) }}>Scatter</option>
+                            <option {{ selected("Bubble",sgroup['series-type']) }}>Bubble</option>
+                            <option {{ selected("Bar",sgroup['series-type']) }}>Bar</option>
+                            <option {{ selected("Doughnut",sgroup['series-type']) }}>Doughnut</option>
+                        </select>
+                        <label for="x{{ loop_index }}" class="form-label">X Axis</label>
+                        <input type="string" class="form-control series-x" id="x{{ loop_index }}" name="x"
+                            value="{{ sgroup['series-x'] }}">
+                        <label for="y{{ loop_index }}" class="form-label">Y Axis</label>
+                        <input type="string" class="form-control series-y" id="y{{ loop_index }}" name="y"
+                            value="{{ sgroup['series-y'] }}">
+                        <label for="z{{ loop_index }}" class="form-label">Z Axis</label>
+                        <input type="string" class="form-control series-z" id="z{{ loop_index }}" name="z"
+                            value="{{ sgroup['series-z'] }}">
+                        <label for="ymin{{ loop_index }}" class="form-label">Y Min Axis</label>
+                        <input type="string" class="form-control series-ymin" id="ymin{{ loop_index }}" name="ymin"
+                            value="{{ sgroup['series-ymin'] }}">
+                        <label for="ymax{{ loop_index }}" class="form-label">Y Max Axis</label>
+                        <input type="string" class="form-control series-ymax" id="ymax{{ loop_index }}" name="ymax"
+                            value="{{ sgroup['series-ymax'] }}">
+                        <label for="s{{ loop_index }}" class="form-label">Series Axis</label>
+                        <input type="string" class="form-control series-s" id="s{{ loop_index }}" name="s"
+                            value="{{ sgroup['series-s'] }}">
+                        <label for="u{{ loop_index }}" class="form-label">Unit Axis</label>
+                        <input type="string" class="form-control series-u" id="u{{ loop_index }}" name="u"
+                            value="{{ sgroup['series-u'] }}">
+                        <label for="l{{ loop_index }}" class="form-label">Label Axis</label>
+                        <input type="string" class="form-control series-l" id="l{{ loop_index }}" name="l"
+                            value="{{ sgroup['series-l'] }}">
+                        <i class="bi bi-trash ps-3 cell-delete-series-group data-cell-icon-hover remove"></i>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <label for="sg{{ loop_index }}" class="form-label mb-2"><br />
+                Series Formats
+                <i id="addSF" class="bi bi-plus-circle ms-1 data-cell-icon-hover add"></i>
+            </label>
+            <ul id="seriesFormat" class="list-group">
+                {% for sformat in seriesformats %}
+                <li class=" chart-series-formats">
+                    <div class=" list-group-item d-flex align-items-center">
+                        <label for="nrx{{ loop_index }}" class="form-label">Series Name / Regex</label>
+                        <input type="string" class="form-control format-nrx" id="x{{ loop_index }}" name="x"
+                            value="{{ sformat['format-nrx'] }}">
+                        <label for="f{{ loop_index }}" class="form-label">Filled</label>
+                        <input type="checkbox" class="form-check-input format-f" id="f{{ loop_index }}" name="f" {% if
+                            sformat['format-f'] %}checked{% endif %}>
+                        <label for="p{{ loop_index }}" class="form-label">Stepped</label>
+                        <input type="checkbox" class="form-check-input format-p" id="p{{ loop_index }}" name="p" {% if
+                            sformat['format-p'] %}checked{% endif %}>
+                        <label for="dt{{ loop_index }}" class="form-label">Dotted</label>
+                        <input type="checkbox" class="form-check-input format-dt" id="dt{{ loop_index }}" name="dt" {%
+                            if sformat['format-dt'] %}checked{% endif %}>
+                        <label for="pr{{ loop_index }}" class="form-label">Point Size</label>
+                        <input type="number" step="1" min="0" max="100" class="form-control format-pr"
+                            id="pr{{ loop_index }}" name="pr" value="{{ sformat['format-pr'] }}">
+                        <label for="lw{{ loop_index }}" class="form-label">Line Width</label>
+                        <input type="number" step="1" min="0" max="100" class="form-control format-lw"
+                            id="lw{{ loop_index }}" name="lw" value="{{ sformat['format-lw'] }}">
+                        <label for="col{{ loop_index }}" class="form-label">Colour (named or hex)</label>
+                        <div class="color-picker-container d-flex align-items-center">
+                            <select class="form-control format-col" id="col{{ loop_index }}" name="color">
+                                <option value="rgb(255, 99, 132)">Red</option>
+                                <option value="rgb(255, 159, 64)">Orange</option>
+                                <option value="rgb(255, 205, 86)">Yellow</option>
+                                <option value="rgb(75, 192, 192)">Green</option>
+                                <option value="rgb(54, 162, 235)">Blue</option>
+                                <option value="rgb(153, 102, 255)">Purple</option>
+                                <option value="rgb(201, 203, 207)">Grey</option>
+                                <option value="custom">Custom Colour</option>
+                            </select>
+                            <i class="bi bi-three-dots-vertical ellipsis"></i>
+                            <input type="color" class="form-control format-col-picker" id="col{{ loop_index }}" name="cc">
+                        </div>
+
+                        <i class="bi bi-trash ps-3 cell-delete-series-format data-cell-icon-hover remove"></i>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div id="content_query_{{ loop_index }}" name="task_step_field_{{ loop_index }}" editor="sql"
+        class="source-editor form-control clarama-field-editor" style="min-height: 100px">{{ content }}</div>
+</div>
+<div id="content_chart_{{ loop_index }}">
+
+</div>
+<script type="text/javascript">
+    $(document).ready(() => {
+        $('.source-editor').editor();
+        var output = $('#task_step_{{ loop_index }}_output').attr('value');
+        // datacell_setOutput('task_step_{{ loop_index }}', '{{ output }}');
+
+        chart_options_initialize();
+    });
+</script>

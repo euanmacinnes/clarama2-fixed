@@ -1,0 +1,82 @@
+<h5> Field Type </h5>
+        <div class="container-fluid">
+        <div class="row">
+        {% for key, ftype in fieldtypes.items() %}
+        <div class="col-1">
+            <label id="field_{{key}}" key="{{key}}" class="btn {% if field_config['type'] == key %} clicked btn-primary {% else %} btn-light {% endif %} field" style="width: 100%;">
+            <i class="bi fs-4 {{ ftype['icon'] }}" style="width: 100%;"> </i></label>
+            <div style="overflow-wrap: initial; width: 100%" class="text-center">
+            <br/><b>{{ ftype['name'] }}</b>
+                </div>
+            <br/>{{ ftype['description'] }}
+            </label>
+        </div>
+        {% endfor %}
+        </div>
+        </div>
+    </div>
+<br/>
+    <br/>
+    <br/>
+        <h5> Field Name </h5>
+<div>
+            <input id="name" required name="name" type="text"
+               class="form-control clarama-field"
+               autocomplete="on"
+               placeholder="field name"
+               value="{{ get(field_config,'name','') }}"
+               {% include "explorer/files/field_tooltip.html" %}
+        />
+<br/>
+    <h5> Field Description </h5>
+            <textarea id="description"
+               name="description" type="text"
+               class="form-control clarama-field"
+               autocomplete="on"
+               rows="5"
+               placeholder="description"
+               value=""
+               {% include "explorer/files/field_tooltip.html" %}
+        >{{ get(field_config,'description') }}</textarea>
+    <br/>
+    <div>
+
+    <div class="d-flex align-items-center justify-content-center">
+        <div class="col-4">
+        <h1>Preview</h1>
+        <div id="preview" class="clarama-embedded" url="{{ embedded_url(filename=file_url) }}"></div>
+        </div>
+    </div>
+
+
+    </div>
+</div>
+<script type="text/javascript">
+   var key = "{{ key }}";
+
+   $(".field").click(function(){
+     $(".field").removeClass("clicked");
+     $(".field").removeClass("btn-primary");
+     $(".field").addClass("btn-light");
+     key = $(this).attr("key");
+     $(this).addClass("clicked");
+     $(this).addClass("btn-primary");
+     $(this).removeClass("btn-light");
+     update_preview();
+});
+
+$( ".clarama-field" )
+  .on( "focusout", function() {
+   update_preview();
+  });
+
+    function update_preview() {
+         var url="{{ embedded_url(filename=file_url) }}?type=" + key + "&name=" + $("#name").val() + "&description=" + $("#description").val();
+         console.log(url);
+         $("#preview").attr("url",url);
+         $("#preview").attr("clarama_loaded", false)
+         $('#preview').load();
+    };
+</script>
+
+{% include "web/file_footer.html" %}

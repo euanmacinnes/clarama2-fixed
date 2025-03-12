@@ -1,0 +1,16 @@
+{% extends "explorer/files/fieldlayout_" + field_layout + ".html" %}
+
+{% block content %}
+        <div class="form-check form-switch">
+          <input class="form-check-input clarama-field clarama-now-field"
+                 fieldtype="html"
+                 type="checkbox"
+                 value="{{ field_value or get(field_config,'default','') }}"
+                 id="{{ field_id }}"
+                 name="{{ field_name }}" checked
+               {% include "explorer/files/field_tooltip.html" %}
+          >
+          <label class="form-check-label" for="field_{{ field }}">{{ get(field_config,'description',field) | safe }}
+          </label>
+        </div>
+{% endblock %}

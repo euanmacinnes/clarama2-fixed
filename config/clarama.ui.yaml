@@ -1,0 +1,202 @@
+Clarama:
+  Folders:
+    ModeSlates: "{rootdir}/files/dynamic/content/System/Slates"
+    FileTypeModeSlates: "{rootdir}/files/dynamic/content/System/FileModes"
+    Environments: "{rootdir}/files/dynamic/content/System/Environments"
+    Config: "{rootdir}/files/dynamic/config"
+    Content: "{rootdir}/files/dynamic/content"
+    Users: "{rootdir}/files/dynamic/content/Users"
+    Cells: "{rootdir}/files/fixed/templates/web/steps"
+    Templates: "{rootdir}/files/fixed/templates"
+    StaticFiles: "{rootdir}/files/fixed/static"
+    Orchestrators: "{claramadir}/services/environments/orchestrators"
+    SourceTypes: "{claramadir}/services/data/sourcetypes"
+  DefaultFavourites:
+    - "/Users/{user}"
+  UI:
+    AllowedUploads:
+      - 'md'
+      - 'csv'
+      - 'xls'
+      - 'xlsx'
+      - 'jpeg'
+      - 'jpg'
+      - 'png'
+      - 'pdf'
+      - 'zip'
+      - 'jfif'
+      - 'svg'
+      - 'svgz'
+      - 'pjpeg'
+      - 'pjp'
+    InternalModes: [ 'delete','raw','download','new','rename','paste','info','embed','view' ]
+    VisibleModes: # Internal modes are 'view', 'info' and 'embed', and are not selectable by the user.
+      folders: [ 'explore', 'jobs', 'versioning', 'issues' ]
+      default: [ 'explore', 'versioning', 'issues' ]
+      .task.yaml: [ 'run','jobs','schedule','explore','edit','raw','versioning', 'issues' ]
+      .slate.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
+      .plan.yaml: [ 'explore','edit','raw','jobs','versioning', 'issues' ]
+      .source.yaml: [ 'explore','raw','versioning', 'issues' ]
+      .table.yaml: [ 'raw','insert','update','data','layouts','edit','raw','versioning', 'issues' ]
+      .query.yaml: [ 'raw','versioning', 'issues' ]
+      .field.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
+      .config.yaml: [ 'raw','versioning', 'issues' ]
+      .environment.yaml: [ 'raw','versioning', 'issues' ]
+      .deploy.yaml: [ 'status','raw','versioning', 'issues' ]
+      .access.yaml: [ 'raw','versioning', 'issues' ]
+      .html: [ 'explore','raw','versioning', 'issues' ]
+      .json: [ 'explore','raw','versioning', 'issues' ]
+      .md: [ 'explore','raw','versioning', 'issues' ]
+      .csv: [ 'explore','raw','versioning', 'issues' ]
+      .tsv: [ 'explore','raw','versioning', 'issues' ]
+      .jpg: [ 'explore' ]
+      .png: [ 'explore' ]
+      .jpeg: [ 'explore' ]
+      .pdf: [ 'explore' ]
+      .svg: [ 'explore' ]
+      .svgz: [ 'explore' ]
+      .pjpeg: [ 'explore' ]
+      .pjp: [ 'explore' ]
+      .jfif: [ 'explore' ]
+    FiletypeCSS:
+      .csv: bi-filetype-csv
+      .tsv: bi-filetype-tsv
+      .xls: bi-filetype-xls
+      .xlsx: bi-filetype-xlsx
+      .json: bi-filetype-json
+      .md: bi-blockquote-left
+      .html: bi-file-earmark-richtext
+      .help.yaml: bi-info-square
+      .task.yaml: bi-journal-arrow-down
+      .slate.yaml: bi-file-earmark-spreadsheet
+      .plan.yaml: bi-diagram-3
+      .table.yaml: bi-table
+      .query.yaml: bi-question-circle
+      .layout.yaml: bi-columns-gap
+      .source.yaml: bi-database
+      .field.yaml: bi-menu-app
+      .environment.yaml: bi-eye
+      .group.yaml: bi-people
+      .config.yaml: bi-sliders
+      .access.yaml: bi-fingerprint
+      .jpg: bi-card-image
+      .png: bi-card-image
+      .jpeg: bi-card-image
+      .jfif: bi-card-image
+      .svg: bi-card-image
+      .svgz: bi-card-image
+      .pjpeg: bi-card-image
+      .pjp: bi-card-image
+      .pdf: bi-file-pdf
+      .zip: bi-file-zip
+    FiletypeRawEditor:
+      .html: html
+      .json: json
+      .md: markdown
+      .task.yaml: yaml
+      .slate.yaml: yaml
+      .plan.yaml: yaml
+      .table.yaml: yaml
+      .source.yaml: yaml
+      .field.yaml: yaml
+      .group.yaml: yaml
+      .environment.yaml: yaml
+      .config.yaml: yaml
+      .access.yaml: yaml
+    FiletypeNames:
+      .csv: Comma-Separated Values
+      .tsv: Tab-Separated Values
+      .xls: Excel Sheet
+      .xlsx: Excel Sheet
+      .html: Web Page
+      .json: JSON
+      .md: Markdown
+      .task.yaml: Task
+      .slate.yaml: Slate
+      .plan.yaml: Plan
+      .table.yaml: Data Table
+      .source.yaml: Source
+      .field.yaml: Field
+      .group.yaml: Security Group
+      .environment.yaml: Task Environment
+      .config.yaml: Configuration
+      .access.yaml: Access Control
+      .jpeg: Jpeg Image
+      .jpg: Jpeg Image
+      .png: PNG Image
+      .pdf: Adobe PDF
+    ModeIcons:
+      explore: bi-view-list
+      run: bi-play text-success
+      edit: bi-pen
+      raw: bi-file-code
+      jobs: bi-collection-play
+      schedule: bi-stopwatch
+      versioning: bi-git
+      issues: bi-exclamation-square
+    FieldTypes:
+      button:
+        icon: bi-square
+        name: Button
+      checkbox:
+        icon: bi-toggle-on
+        name: Checkbox Toggle
+      codeeditor:
+        icon: bi-code-square
+        name: Code Editor
+      color:
+        icon: bi-palette
+        name: Color Picker
+      date:
+        icon: bi-calendar-day
+        name: Date Picker
+      daterange:
+        icon: bi-calendar2-range
+        name: Date Range Picker
+        description: Select a start and end date/time
+      datetime:
+        icon: bi-calendar
+        name: Datetime Picker
+      email:
+        icon: bi-envelope-at
+        name: Email Address
+      file:
+        icon: bi-paperclip
+        name: Attached File(s)
+      hidden:
+        icon: bi-incognito
+        name: Hidden Field
+        description: for passing information between tasks without showing the user
+      number:
+        icon: bi-1-square
+        name: Number
+        description: Enter a number, either integer or floating-point
+      password:
+        icon: bi-braces-asterisk
+        name: Password
+      range:
+        icon: bi-sliders
+        name: Number Slider
+      select:
+        icon: bi-menu-app
+        name: Menu (Single Selection)
+        description: Single-item selection, data-driven
+        data: True
+        choices: True
+      select_multiple:
+        icon: bi-menu-button-wide
+        name: Menu (Multiple Selection)
+        description: Multiple-item selection, data-driven
+        data: True
+        choices: True
+      string:
+        icon: bi-input-cursor-text
+        name: String
+        description: a single line of text
+      textarea:
+        icon: bi-body-text
+        name: Text
+        deacription: A multi-line block of text
+      time:
+        icon: bi-clock
+        name: Time

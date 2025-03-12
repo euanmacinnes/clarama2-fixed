@@ -1,0 +1,328 @@
+.pre_response {
+    white-space: pre-wrap;
+    display: block;
+    margin-top: 0;
+    margin-bottom: 0rem;
+    overflow: auto;
+    font-size: .9em;
+}
+
+.select2 {
+    padding: 0;
+    flex: 1 0 0%;
+}
+
+.role-icon {
+    font-size: 140px;
+}
+
+.chart-canvas-holder {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+.grid-stack-item-content {
+    padding-bottom: 2px;
+}
+
+.clarama-edit-element {
+    border-width: 2px !important;
+    padding: 8px !important;
+    margin: 2px !important;
+    border-style: dashed !important;
+    border-radius: 8px !important;
+    height: 100% !important;
+    border-color: DeepSkyBlue !important;
+    background-color: GhostWhite;
+}
+
+.tight {
+    padding: 0;
+    margin: 0;
+}
+
+.form-label {
+    white-space: nowrap !important;
+    vertical-align: middle !important;
+    padding-right: 8px;
+    padding-left: 8px;
+    height: 100%;
+}
+
+.cell-editor {
+    margin: 5px;
+}
+
+.cell-results {
+    margin: 0;
+    padding: 0;
+}
+
+.nowrap {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.trumbowyg-box, .trumbowyg-editor {
+    min-height: 150px;
+    height: 100%;
+    background: #fff
+}
+
+thead * {
+    color: #fff;
+    background-color: #555;
+}
+
+.source_editor {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+td * {
+    font-size: 16px;
+    line-height: 1.528;
+}
+
+.auto-hover {
+    opacity: 0.04;
+/ / background-color: white;
+/ / z-index: 100;
+/ / position: fixed;
+}
+
+.faded {
+    opacity: 0.25;
+}
+
+.loop-inactive {
+    opacity: 0.04;
+}
+
+.help h1 {
+    font-size: 48px !important;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
+.help p {
+    font-size: 18px !important;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
+.help ul {
+    font-size: 18px !important;
+    color: #bbb;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+    padding: 10px;
+}
+
+.help li {
+    font-size: 18px !important;
+    color: #888;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+    padding: 10px;
+}
+
+.help em {
+    font-size: 18px !important;
+    color: #888;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
+.help code {
+    font-size: 20px !important;
+    color: #ee5;
+}
+
+.help pre {
+    font-size: 20px !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #555;
+    border-top-color: #ccc;
+    border-top-style: solid;
+    border-top-width: thin;
+    border-bottom-color: #ccc;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+    text-indent: 25px;
+}
+
+.help a {
+    font-size: 18px !important;
+    color: #2FA4E7;
+    text-decoration: none;
+}
+
+.help-folder h1 {
+    font-size: 44px !important;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
+.help-folder p {
+    font-size: 16px !important;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
+.help-folder li {
+    font-size: 16px !important;
+    color: #888;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
+.help-folder em {
+    font-size: 16px !important;
+    color: #888;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
+.help-folder code {
+    font-size: 20px !important;
+    color: #888;
+}
+
+.help-folder pre {
+    font-size: 22px !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #eee;
+    border-top-color: #ccc;
+    border-top-style: solid;
+    border-top-width: thin;
+    border-bottom-color: #ccc;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+    text-indent: 25px;
+}
+
+.help-folder a {
+    font-size: 22px !important;
+    color: #5DACFC;
+    text-decoration: none;
+}
+
+.loop-active {
+    opacity: 1;
+}
+
+.loop {
+    background-color: #b833ff;
+}
+
+.loop-left {
+    width: 15px;
+    -ms-flex: 0 0 15px;
+    flex: 0 0 15px;
+}
+
+.loop-height {
+    height: 100%;
+}
+
+.loop-edge {
+    width: 45px;
+    height: 15px;
+    -ms-flex: 0 0 45px;
+    flex: 0 0 45px;
+}
+
+.loop-hidden {
+    display: none;
+}
+
+.loop-show {
+    display: block;
+}
+
+
+.code_response {
+    font-size: medium;
+}
+
+.upload_dropZone {
+    color: #0f3c4b;
+    outline: 2px dashed var(--colorPrimaryHalf, #c1ddef);
+    outline-offset: -12px;
+    transition: outline-offset 0.2s ease-out,
+    outline-color 0.3s ease-in-out,
+    background-color 0.2s ease-out;
+}
+
+.upload_dropZone.highlight {
+    outline-offset: -4px;
+    outline-color: var(--colorPrimaryNormal, #0576bd);
+    background-color: var(--colorPrimaryEighth, #c8dadf);
+}
+
+.upload_svg {
+    fill: var(--colorPrimaryNormal, #0576bd);
+}
+
+.btn-upload {
+    color: #fff;
+    background-color: var(--colorPrimaryNormal);
+}
+
+.btn-upload:hover,
+.btn-upload:focus {
+    color: #fff;
+    background-color: var(--colorPrimaryGlare);
+}
+
+.upload_img {
+    width: calc(33.333% - (2rem / 3));
+    object-fit: contain;
+}
+
+.draggable-heading {
+    cursor: move;
+}
+
+/* bootstrap.css */
+* {
+    font-size: 14px;
+    line-height: 1.328;
+}
+
+.ace_editor, .ace_editor * {
+    font-family: "Monaco", "Menlo", "Ubuntu Mono", "Droid Sans Mono", "Consolas", monospace !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0 !important;
+    line-height: 1.65rem !important;
+}
+
+.clarama-field {
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.slate-panel-target-row {
+    padding: 2px;
+}
+
+.slate-panel-target {
+    padding: 0px;
+    border-width: none;
+    border-style: none;
+    border-color: #ddd;
+    overflow: hidden;
+}
+
+.select2-container {
+    min-width: 10em !important;
+    width: 100% !important;
+}
+
+.embedded-dropdown-menu {
+    position: fixed !important;
+    top: 0 !important;
+}

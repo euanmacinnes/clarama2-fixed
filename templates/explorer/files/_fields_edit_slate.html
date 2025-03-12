@@ -1,0 +1,15 @@
+<div class="row dflex">
+    <div class="col-1" onClick="save('/content/save/{{ file_url }}')"><i class="fs-5 bi bi-save2"></i> Save</div>
+    <div class="col-1" onClick="addNested()"><i class="fs-5 bi bi-file-plus"></i> Add Panel</div>
+    <div class="col-1 gridaddcontent" type="button" data-bs-toggle="modal" data-bs-target="#addfieldModal"
+         filters="*.field.yaml|*.task.yaml"><i
+            class="fs-5 bi bi-node-plus" class="col"></i> Add Content
+    </div>
+    <div class="col">&nbsp;</div>
+    <div class="col-auto trash"><i class="fs-5 bi bi-trash3"></i> Drag here to remove</div>
+</div>
+<hr/>
+<div class="row dflex">
+    <div id="containment-wrapper" class="col" width="100%" height="100%">
+    </div>
+</div>
