@@ -114,7 +114,7 @@ function ChartSeriesAxis(dataset, scales, axis) {
     }
 
     if (found === undefined) {
-        yaxis = keys.length + 1
+        yaxis = keys.length
         scales['y' + yaxis] = {
             type: 'linear',
             display: 'auto',
