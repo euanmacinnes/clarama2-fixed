@@ -1,250 +1,348 @@
 <div class="modal fade" tabindex="-1" id="addfieldModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Content (Fields or Tasks)</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Select Content</p>
-                <select id="add_content"
-                        name="add_content"
-                        size="10"
-                        class="form-control">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Content (Fields or Tasks)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- <p>Select Content</p> -->
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb" id="breadcrumb">
+          </ol>
+        </nav>
 
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary"
-                        onclick="add_selected_content('/content/element/{{ file_url }}')">Add
-                </button>
-            </div>
-        </div>
+        <select id="add_content"
+                name="add_content"
+                size="10"
+                class="form-control">
+
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"
+                              onclick="add_selected_content('/content/element/{{ file_url }}')">Add
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
 <script type="text/javascript">
-    function isDict(v) {
-        return typeof v === 'object' && v !== null && !(v instanceof Array) && !(v instanceof Date);
-    }
+  function isDict(v) {
+    return typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
+  }
 
-    $(document).ready(() => {
-        $('#addfieldModal').on('shown.bs.modal', function () {
-            filters = $(".gridaddcontent").attr('filters');
-            path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
+  $( document ).ready(() => {
+    $('#addfieldModal').on('shown.bs.modal', function () {
+      filters = $(".gridaddcontent").attr('filters');
+      path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
 
-            fetch(path)
-                .then((response) => response.json())
-                .then((json_files) => {
-                    items = json_files['results']['files'];
-                    $('#add_content').empty();
-
-                    jQuery.each(items, function () {
-                        console.log(this);
-                        $('#add_content').append($('<option>').val(this).text(this));
-                    });
-
-                });
-        });
-        console.log("GRID");
-        console.log({{ grid_id }}elements);
-        console.log({{ grid_json | safe }});
+      navigateToPath(path);
     });
+    //console.log("GRID");
+    //console.log({{ grid_id }}elements);
+    //console.log({{ grid_json | safe }});
+  });
 
-    const {{ grid_id }}elements = {{ element_json | safe }};
+  const {{ grid_id }}elements = {{ element_json | safe }};
 
-    let {{ grid_id }}subOptions = {
-        cellHeight: 55, // should be 50 - top/bottom
-        acceptWidgets: true, // will accept .grid-stack-item by default
-        margin: 2,
-        sizeToContent: true,
-        subGridDynamic: false, // make it recursive for all future sub-grids
+  let {{ grid_id }}subOptions = {
+    cellHeight: 55, // should be 50 - top/bottom
+    acceptWidgets: true, // will accept .grid-stack-item by default
+    margin: 2,
+    sizeToContent: true,
+    subGridDynamic: false, // make it recursive for all future sub-grids
+  };
+
+  let {{ grid_id }}options = { // main grid options
+    cellHeight: 55,
+    margin: 2,
+    float: true,
+    minRow: 1, // don't collapse when empty
+    acceptWidgets: true,
+    subGridOpts: {{ grid_id }}subOptions,
+    removable: '.trash',
+    draggable: {cancel: '.no-drag'},
+    subGridDynamic: false, // v7 api to create sub-grids on the fly
+    children: {{ grid_json | safe }}
+  };
+
+  // document.querySelector('#saved').value = JSON.stringify(options);
+  let {{ grid_id }}grid = GridStack.addGrid(document.querySelector('#containment-wrapper'), {{ grid_id }}options);
+
+  function addNested() {
+    {{ grid_id }}grid.addWidget({
+      x: 0, y: 20, w: 4, h: 4,
+      cellHeight: 75,
+      margin: 2,
+      minRow: 1, // don't collapse when empty
+      acceptWidgets: true,
+      removable: '.trash',
+      subGridOpts: {
+        children: [],
+        ...{{ grid_id }}subOptions
+      }
+    });
+  }
+
+  function addContent(element, data, html) {
+    if (isDict({{ grid_id }}elements)) {
+      {{ grid_id }}elements[element] = new_element_data;
+    } else {
+      var elem = {};
+      elem[element] = new_element_data;
+      {{ grid_id }}elements = elem;
+    }
+    ;
+
+    {{ grid_id }}elements[element] = data;
+
+    {{ grid_id }}grid.addWidget({
+      x: 0,
+      y: 0,
+      w: 4,
+      h: 1,
+      id: element,
+      content: html,
+      cellHeight: 65,
+      margin: 5,
+      minRow: 1, // don't collapse when empty
+      acceptWidgets: true,
+      removable: '.trash'
+    })
+
+    $('.clarama-embedded').load();
+  }
+
+
+  function saveGrid() {
+    savedgrid = {{ grid_id }}grid.save(false, true);
+
+    serializedData = {
+      'grid': savedgrid,
+      'elements': {{ grid_id }}elements
     };
 
-    let {{ grid_id }}options = { // main grid options
-        cellHeight: 55,
-        margin: 2,
-        float: true,
-        minRow: 1, // don't collapse when empty
-        acceptWidgets: true,
-        subGridOpts: {{ grid_id }}subOptions,
-        removable: '.trash',
-        draggable: {cancel: '.no-drag'},
-        subGridDynamic: false, // v7 api to create sub-grids on the fly
-        children: {{ grid_json | safe }}
-    };
+    return serializedData;
+  }
 
-    // document.querySelector('#saved').value = JSON.stringify(options);
-    let {{ grid_id }}grid = GridStack.addGrid(document.querySelector('#containment-wrapper'), {{ grid_id }}options);
+  function add_selected_content(element_render_url) {
+    selected_val = "./" + $("#add_content").val();
+    console.log("adding " + selected_val);
 
-    function addNested() {
-        {{ grid_id }}grid.addWidget({
-            x: 0, y: 20, w: 4, h: 4,
-            cellHeight: 75,
-            margin: 2,
-            minRow: 1, // don't collapse when empty
-            acceptWidgets: true,
-            removable: '.trash',
-            subGridOpts: {
-                children: [],
-                ...{{ grid_id }}subOptions
+    if (selected_val == null) {
+      flash("No file selected!")
+    } else {
+      // Find a unique element id
+      var element_id = 0;
+      var element_found = false;
+      do {
+        element = "element_" + element_id;
+
+        if (element in {{ grid_id }}elements)
+          element_id = element_id + 1;
+        else
+          element_found = true;
+      }
+      while (!element_found);
+
+      console.log("element " + element);
+
+      // Now add the element
+
+      new_element_data = {"url": selected_val}
+
+      slate_data = saveGrid();
+
+      if (isDict(slate_data['elements'])) {
+        slate_data['elements'][element] = new_element_data;
+      } else {
+        var elem = {};
+        elem[element] = new_element_data;
+        slate_data['elements'] = elem;
+      }
+      ;
+      console.log(slate_data)
+
+      $.ajax({
+        type: 'POST',
+        url: element_render_url + "?element=" + element,
+        datatype: "html",
+        contentType: 'application/json',
+        data: JSON.stringify(slate_data),
+        success: function (data) {
+          if (data['data'] == 'ok') {
+            addContent(element, new_element_data, data['results']);
+          } else {
+            console.log('Submission was successful.');
+            console.log(data);
+            flash("Couldn't save content: " + data['error']);
+          }
+        },
+        error: function (data) {
+          console.log('An error occurred.');
+          console.log(data);
+          flash("Couldn't render element content, access denied", "danger");
+        }
+      })
+    }
+  };
+
+  function save(url) {
+    slate_data = saveGrid();
+    $.ajax({
+      type: 'POST',
+      url: url,
+      datatype: "html",
+      contentType: 'application/json',
+      data: JSON.stringify(slate_data),
+      success: function (data) {
+        if (data['data'] == 'ok') {
+          console.log('Submission was successful.');
+          console.log(data);
+          flash("Saved!");
+        } else {
+          console.log('Submission was successful.');
+          console.log(data);
+          flash("Couldn't save content: " + data['error']);
+        }
+      },
+      error: function (data) {
+        console.log('An error occurred.');
+        console.log(data);
+        flash("Couldn't save content, access denied", "danger");
+      }
+    })
+  }
+
+  function link_elements(target, linked) {
+    var value = $("#" + target + "_" + linked).is(':checked');
+    // flash("linking " + target + " to " + linked + " with " + value);
+
+    if (linked in {{ grid_id }}elements) {
+
+      if (target in {{ grid_id }}elements) {
+        var element = {{ grid_id }}elements[target];
+
+        if (!(element.hasOwnProperty("links"))) {
+          element['links'] = []
+        }
+
+
+        if (value) if (!(element['links'].includes(linked))) element['links'].push(linked);
+        if (!(value))
+          if (element['links'].includes(linked)) {
+            element['links'].splice(element['links'].indexOf(linked), 1);
+          }
+
+        flash("linking " + target + " to [" + element['links'] + "]");
+      }
+    }
+  };
+    // Extract the current directory depth
+    const currentPath = "{{ file_url | path }}";
+    var relativePath;
+    function renderBreadcrumb(path) {
+      const targetPath = path.split('?')[0].split('/').slice(3).join('/');
+      relativePath = getRelativePath(currentPath, targetPath);
+
+      const breadcrumb = document.getElementById('breadcrumb');
+      breadcrumb.innerHTML = '';
+      const trimmedPath = path.split('/').slice(5); // Remove the first 5 parts
+      trimmedPath.forEach((part, index, array) => {
+        console.log(part)
+          const li = document.createElement('li');
+
+          if (index < array.length - 1) {
+            li.style.cursor = 'pointer';
+            li.className = 'text-secondary';
+            li.addEventListener('click', () => navigateToPath(path.split('/').slice(0, index + 6).join('/') + "?subfolders=True&extensions=" + filters));
+            li.innerHTML = part + "&nbsp;>&nbsp;";
+          } else {
+            li.innerText = part.split('?')[0];
+          }
+          breadcrumb.appendChild(li);
+      });
+    }
+
+    function getRelativePath(from, to) {
+      const fromParts = from.split('/').filter(Boolean);
+      const toParts = to.split('/').filter(Boolean);
+      // Find common root
+      let i = 0;
+      while (i < fromParts.length && i < toParts.length && fromParts[i] === toParts[i]) {
+          i++;
+      }
+
+      // How many levels to go up from `from`
+      const upLevels = fromParts.length - i; // eg. if this is 6-4 = 2
+      const goUp = Array(upLevels).fill('..').join('/'); // this will be ../../
+
+      // Navigate down to `to`
+      const goDown = toParts.slice(i).join('/'); // extracts the remaining thats not common
+      return goUp ? `${goUp}/${goDown}` : goDown; // if no goUp means we r in the correct folder
+    }
+
+    function renderFilesNFolder(path) {
+      const selectElement = document.getElementById('add_content');
+      fetch(path)
+        .then((response) => response.json())
+        .then((json_files) => {
+          $('#add_content').empty();
+          const allPaths = json_files['results']['files'];
+          const foldersSet = new Set();
+          const filesSet = new Set();
+          console.log("All paths:", allPaths);
+
+          // Determine folders and files
+          allPaths.forEach(filePath => {
+            console.log("File path:", filePath);
+            const parts = filePath.split('/');
+            if (parts.length > 1) {
+              foldersSet.add(parts[0]); // Top-level folder
+            } else {
+              filesSet.add(filePath); // Root-level file
             }
+          });
+
+          // Render folders
+          foldersSet.forEach(folder => {
+            const option = document.createElement('option');
+            option.value = folder;
+            option.className = "bi bi-folder-fill";
+            option.innerHTML = `&nbsp; ${folder}`;
+            option.addEventListener('dblclick', () => navigateToPath(`${path.split('?')[0]}/${folder}` + "?subfolders=True&extensions=" + filters));
+            selectElement.appendChild(option);
+          });
+
+          // Render files with relative paths
+          allPaths.forEach(filePath => {
+            if (!foldersSet.has(filePath.split('/')[0])) { // Ensure it's not a folder
+              const option = document.createElement('option');
+              option.value = relativePath + "/" + filePath; // Store relative path in the value
+
+              let matchedIcon = Object.entries(filetypeCSS)
+                .find(([ext, _]) => filePath.endsWith(ext));
+              if (!matchedIcon) {
+                const simpleExt = `.${filePath.split('.').pop()}`;
+                matchedIcon = filetypeCSS[simpleExt] ? [simpleExt, filetypeCSS[simpleExt]] : null;
+              }
+              const icon = matchedIcon ? matchedIcon[1] : "bi-file-earmark";
+              option.className = `bi ${icon}`;
+
+              option.innerHTML = `&nbsp; ${filePath}`;
+              selectElement.appendChild(option);
+            }
+          });
         });
     }
 
-    function addContent(element, data, html) {
-        if (isDict({{ grid_id }}elements)) {
-            {{ grid_id }}elements[element] = new_element_data;
-        } else {
-            var elem = {};
-            elem[element] = new_element_data;
-            {{ grid_id }}elements = elem;
-        }
-        ;
-
-        {{ grid_id }}elements[element] = data;
-
-        {{ grid_id }}grid.addWidget({
-            x: 0,
-            y: 0,
-            w: 4,
-            h: 1,
-            id: element,
-            content: html,
-            cellHeight: 65,
-            margin: 5,
-            minRow: 1, // don't collapse when empty
-            acceptWidgets: true,
-            removable: '.trash'
-        })
-
-        $('.clarama-embedded').load();
+    // Function to navigate to a specific path
+    function navigateToPath(path) {
+      renderBreadcrumb(path);
+      renderFilesNFolder(path);
     }
 
-
-    function saveGrid() {
-        savedgrid = {{ grid_id }}grid.save(false, true);
-
-        serializedData = {
-            'grid': savedgrid,
-            'elements': {{ grid_id }}elements
-        };
-
-        return serializedData;
-    }
-
-    function add_selected_content(element_render_url) {
-        selected_val = "./" + $("#add_content").val();
-        console.log("adding " + selected_val);
-
-        if (selected_val == null) {
-            flash("No file selected!")
-        } else {
-            // Find a unique element id
-            var element_id = 0;
-            var element_found = false;
-            do {
-                element = "element_" + element_id;
-
-                if (element in {{ grid_id }}elements)
-                    element_id = element_id + 1;
-                else
-                    element_found = true;
-            }
-            while (!element_found);
-
-            console.log("element " + element);
-
-            // Now add the element
-
-            new_element_data = {"url": selected_val}
-
-            slate_data = saveGrid();
-
-            if (isDict(slate_data['elements'])) {
-                slate_data['elements'][element] = new_element_data;
-            } else {
-                var elem = {};
-                elem[element] = new_element_data;
-                slate_data['elements'] = elem;
-            }
-            ;
-            console.log(slate_data)
-
-            $.ajax({
-                type: 'POST',
-                url: element_render_url + "?element=" + element,
-                datatype: "html",
-                contentType: 'application/json',
-                data: JSON.stringify(slate_data),
-                success: function (data) {
-                    if (data['data'] == 'ok') {
-                        addContent(element, new_element_data, data['results']);
-                    } else {
-                        console.log('Submission was successful.');
-                        console.log(data);
-                        flash("Couldn't save content: " + data['error']);
-                    }
-                },
-                error: function (data) {
-                    console.log('An error occurred.');
-                    console.log(data);
-                    flash("Couldn't render element content, access denied", "danger");
-                }
-            })
-        }
-    };
-
-    function save(url) {
-        slate_data = saveGrid();
-        $.ajax({
-            type: 'POST',
-            url: url,
-            datatype: "html",
-            contentType: 'application/json',
-            data: JSON.stringify(slate_data),
-            success: function (data) {
-                if (data['data'] == 'ok') {
-                    console.log('Submission was successful.');
-                    console.log(data);
-                    flash("Saved!");
-                } else {
-                    console.log('Submission was successful.');
-                    console.log(data);
-                    flash("Couldn't save content: " + data['error']);
-                }
-            },
-            error: function (data) {
-                console.log('An error occurred.');
-                console.log(data);
-                flash("Couldn't save content, access denied", "danger");
-            }
-        })
-    }
-
-    function link_elements(target, linked) {
-        var value = $("#" + target + "_" + linked).is(':checked');
-        // flash("linking " + target + " to " + linked + " with " + value);
-
-        if (linked in {{ grid_id }}elements) {
-
-            if (target in {{ grid_id }}elements) {
-                var element = {{ grid_id }}elements[target];
-
-                if (!(element.hasOwnProperty("links"))) {
-                    element['links'] = []
-                }
-
-
-                if (value) if (!(element['links'].includes(linked))) element['links'].push(linked);
-                if (!(value))
-                    if (element['links'].includes(linked)) {
-                        element['links'].splice(element['links'].indexOf(linked), 1);
-                    }
-
-                flash("linking " + target + " to [" + element['links'] + "]");
-            }
-        }
-    };
 </script>
