@@ -92,6 +92,53 @@ function ChartSeriesFormat(dataset, formats) {
     return dataset;
 }
 
+/**
+ * ChartSeriesAxis looks at the specified series and tries to assign an axis to it (this function will be called assuming a unit axis is specified).
+ * @param {*|{}} dataset
+ * @param {*|{}} scales
+ * @param {string} axis
+ */
+function ChartSeriesAxis(dataset, scales, axis) {
+
+    const keys = Object.keys(scales);
+    console.log("UNIT AXIS: " + axis + ' ' + keys.length);
+    var found = undefined;
+    for (f = 0; f < keys.length; f++) {
+        var scale = scales[keys[f]];
+
+        if (scale['title']['text'] === axis) {
+            found = keys[f];
+            console.log("REUSING " + found);
+        }
+
+    }
+
+    if (found === undefined) {
+        yaxis = keys.length + 1
+        scales['y' + yaxis] = {
+            type: 'linear',
+            display: true,
+            position: 'left',
+            title: {
+                text: axis,
+                display: true,
+            }
+        }
+
+        if (keys.length > 3)
+            scales['y' + yaxis]['grid'] = {
+                drawOnChartArea: false, // only want the grid lines for one axis to show up
+            };
+
+        found = 'y' + yaxis;
+    }
+
+    if (found !== undefined) {
+        dataset['yAxisID'] = found
+    }
+}
+
+
 function bChart(chart_id, chart_data) {
     var data = chart_data['data'];
     var config = chart_data['chart'];
@@ -178,18 +225,27 @@ function bChart(chart_id, chart_data) {
             if (series_id >= 0) {
                 series = data['rows'][series_id];
 
+                if (unit_id > 0)
+                    unit = data['rows'][unit_id];
+                else
+                    unit = undefined;
+
                 if (series !== undefined) {
                     var curr = series[0];
+
                     label = curr;
 
                     for (p = 0; p < xaxis.length; p++) {
-                        if (series[p] != curr)   // then pop the current dataset onto the datasets queue, and reset
+                        if (series[p] !== curr)   // then pop the current dataset onto the datasets queue, and reset
                         {
                             dataset = {
                                 label: label,
                                 data: points,
                                 type: sg['series-type'].toLowerCase()
                             }
+
+                            if (unit !== undefined)
+                                ChartSeriesAxis(dataset, scales, unit[p - 1]);
 
                             datasets.push(ChartSeriesFormat(dataset, formats));
 
@@ -236,6 +292,9 @@ function bChart(chart_id, chart_data) {
                 type: sg['series-type'].toLowerCase(),
             }
 
+            if (unit !== undefined)
+                if (xaxis.length >= 1)
+                    ChartSeriesAxis(dataset, scales, unit[xaxis.length - 1]);
 
             datasets.push(ChartSeriesFormat(dataset, formats));
 
@@ -249,6 +308,9 @@ function bChart(chart_id, chart_data) {
 
     console.log("FINAL DATASETS");
     console.log(datasets.length);
+    console.log("FINAL SCALES");
+    console.log(scales);
+    console.log(datasets);
 
     var chartColors = {
         red: 'rgb(255, 50, 50)',
