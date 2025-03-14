@@ -117,15 +117,18 @@ function ChartSeriesAxis(dataset, scales, axis) {
         yaxis = keys.length + 1
         scales['y' + yaxis] = {
             type: 'linear',
-            display: true,
+            display: 'auto',
             position: 'left',
+            bounds: 'data',
+            clip: true,
+            axis: 'y',
             title: {
                 text: axis,
                 display: true,
             }
         }
 
-        if (keys.length > 3)
+        if (keys.length > 1)
             scales['y' + yaxis]['grid'] = {
                 drawOnChartArea: false, // only want the grid lines for one axis to show up
             };
@@ -213,7 +216,9 @@ function bChart(chart_id, chart_data) {
             xaxis_scale['title']['text'] = sg['series-x'];
             yaxis_scale['title']['text'] = sg['series-y'];
             scales['x'] = xaxis_scale;
-            scales['y'] = yaxis_scale;
+
+            if (unit_id < 0)
+                scales['y'] = yaxis_scale;
 
 
             console.log("X-AXIS");
@@ -351,6 +356,7 @@ function bChart(chart_id, chart_data) {
             labels: unique_labels,
             datasets: datasets
         },
+        stacked: false,
         options: {
             responsive: true,
             maintainAspectRatio: maintain,
