@@ -1,59 +1,59 @@
 <center>
     <div id="task_toolbar_{{ stream}}_new"
-         class="col-auto nowrap mb-3 fs-4 step-owner cell-toolbar"
+         class="d-flex flex-wrap align-items-center justify-content-center mb-3 mx-3 step-owner cell-toolbar"
          stream="stream_{{ stream }}"
          stream-file="{{ file_url | washed }}"
          step="-1">
-        <button id="step_new_insert_text" type="button" class="btn insert_step" steptype="markdown" stream="{{stream}}">
+        <button id="step_new_insert_text" type="button" class="btn insert_step fs-4" steptype="markdown" stream="{{stream}}">
             <i
-                    class="mb-1 fs-3 bi bi-pen"
+                    class="bi bi-pen fs-4 me-2"
                     data-bs-toggle="tooltip"
                     data-bs-placement="bottom"
-                    title="Add a text step. Hold shift to add cell after"></i>
+                    title="Add a text step. Hold shift to add cell after"></i>Text
         </button>
-        Text
-        <button id="step_new_insert_code" type="button" class="btn insert_step" steptype="code" stream="{{stream}}"><i
-                class="mb-3 fs-3 bi bi-code"
+        
+        <button id="step_new_insert_code" type="button" class="btn insert_step fs-4" steptype="code" stream="{{stream}}"><i
+                class="bi bi-code fs-4 me-2"
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom"
-                title="Add a coding step. Hold shift to add cell after"></i>
+                title="Add a coding step. Hold shift to add cell after"></i>Code
         </button>
-        Code
-        <button id="step_new_insert_data" type="button" class="btn insert_step" steptype="data" stream="{{stream}}"><i
-                class="mb-3 fs-3 bi bi-table"
+        
+        <button id="step_new_insert_data" type="button" class="btn insert_step fs-4" steptype="data" stream="{{stream}}"><i
+                class="bi bi-table fs-4 me-2"
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom"
-                title="Add a data step (table / chart). Hold shift to add cell after"></i>
+                title="Add a data step (table / chart). Hold shift to add cell after"></i>Data
         </button>
-        Data
-        <button id="step_new_insert_source" type="button" class="btn insert_step" steptype="source" stream="{{stream}}"><i
-                class="mb-3 fs-3 bi bi-database"
+        
+        <button id="step_new_insert_source" type="button" class="btn insert_step fs-4" steptype="source" stream="{{stream}}"><i
+                class="bi bi-database fs-4 me-2"
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom"
-                title="Add a data source step. Hold shift to add cell after"></i>
+                title="Add a data source step. Hold shift to add cell after"></i>Source
         </button>
-        Source
-        <button id="step_new_insert_task" type="button" class="btn insert_step" steptype="task" stream="{{stream}}"><i
-                class="mb-3 fs-3 bi bi-journal-arrow-down"
+        
+        <button id="step_new_insert_task" type="button" class="btn insert_step fs-4" steptype="task" stream="{{stream}}"><i
+                class="bi bi-journal-arrow-down fs-4 me-2"
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom"
-                title="Add a task step. Hold shift to add cell after"></i>
+                title="Add a task step. Hold shift to add cell after"></i>Task
         </button>
-        Task
-        <button id="step_new_insert_url" type="button" class="btn insert_step" steptype="url" stream="{{stream}}"><i
-                class="mb-3 fs-3 bi bi-link"
+        
+        <button id="step_new_insert_url" type="button" class="btn insert_step fs-4" steptype="url" stream="{{stream}}"><i
+                class="bi bi-link fs-4 me-2"
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom"
-                title="Add a URL step. Hold shift to add cell after"></i>
+                title="Add a URL step. Hold shift to add cell after"></i>URL
         </button>
-        URL
-        <button id="step_new_insert_notification" type="button" class="btn insert_step" steptype="notification"
+        
+        <button id="step_new_insert_notification" type="button" class="btn insert_step fs-4" steptype="notification"
                 stream="{{stream}}">
-            <i class="mb-3 fs-3 bi bi-send"
+            <i class="bi bi-send fs-4 me-2"
                data-bs-toggle="tooltip"
                data-bs-placement="bottom"
-               title="Add a notification step. Hold shift to add cell after"></i>
+               title="Add a notification step. Hold shift to add cell after"></i>Notification
         </button>
-        Notification
+        
     </div>
 </center>

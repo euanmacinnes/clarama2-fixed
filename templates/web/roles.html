@@ -5,24 +5,33 @@
 {% extends "web/root.html" %}
 
 {% block content %}
-<div class="h-100 d-flex align-items-center justify-content-center" style="height: 100%">
-    <div class="row">
-        {% for role in role_info %}
-        <div class="col" style="padding: 25px">
-            <div class="card align-items-center shadow-lg" style="width: 20rem;">
-                <i class="bi {{ role['card']['icon'] | d('bi-folder',True)}} role-icon text-secondary "
-                   style="text-shadow: 7px 7px 16px #cccccc;"></i>
-                <div class="card-body" style="width: 100%; padding: 20px;">
-                    <h5 class="card-title">{{role['card']['title']}}</h5>
-                    <p class="card-text" style="height: 4rem;">{{role['card']['description']}}</p>
-                    <a href="{{role['default_folder']}}" class="btn btn-primary stretched-link">Go</a>
+<div class="row flex-column flex-lg-row p-0 m-0 flex-grow-1 w-100">
+    <div class="container col-lg-9 order-2 order-lg-1 my-2 py-4">
+        <div class="row justify-content-center flex-wrap">
+            {% for role in role_info %}
+            {% if role['card']['title'] != "Help & Documentation" %}
+            <a href="{{role['default_folder']}}" class="role-wrapper h-100 m-3 text-decoration-none" style="width: 21rem;">
+                <div class="card align-items-center shadow-lg p-4">
+                    <i class="bi {{ role['card']['icon'] | d('bi-folder',True)}} fs-2 p-0" style="color: #6c757d"></i>
+                    <div class="card-body text-center w-100 flex-grow-1 py-2">
+                        <h5 class="card-title">{{role['card']['title']}}</h5>
+                        <p class="card-text overflow-auto" style="height: 3rem;">{{role['card']['description']}}</p>
+                        <!-- <a href="{{role['default_folder']}}" class="btn btn-primary stretched-link">Go</a> -->
+                    </div>
                 </div>
-            </div>
+            </a>
+            {% endif %}
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
-</div>
 
-<div style="padding-bottom: 150px; opacity: 0;"></div>
+    <div class="col-lg-3 order-1 order-lg-2 bg-white" id="my-favorites-container" style="display: none;">
+        <div class="p-3 pb-0">
+            <p class="fs-4 fw-semibold m-1">My Favorites</p>
+        </div>
+        <div id="my-favorites-listing" class="list-group" >
+        </div>
+    </div> 
+</div>
 
 {% endblock %}
