@@ -115,9 +115,10 @@ function bChart(chart_id, chart_data) {
     scales = {};
     xaxis_scale = {
         display: true,
+        type: config['xaxis-type'] || 'category',
         title: {
             display: true,
-            text: 'X Axis'
+            text: config['xaxis-title'] || 'X Axis'
         }
     };
 
@@ -356,6 +357,7 @@ function bChart(chart_id, chart_data) {
                     zoom: {
                         wheel: {
                             enabled: true,
+                            modifierKey: 'ctrl',
                         },
                         drag: {
                             enabled: true,
