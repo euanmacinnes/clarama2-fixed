@@ -37,7 +37,8 @@ Clarama:
       .slate.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
       .plan.yaml: [ 'explore','edit','raw','jobs','versioning', 'issues' ]
       .source.yaml: [ 'explore','raw','versioning', 'issues' ]
-      .table.yaml: [ 'raw','insert','update','data','layouts','edit','raw','versioning', 'issues' ]
+      .table.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
+      .layout.yaml: [ 'explore', 'edit', 'raw', 'versioning', 'issues' ]
       .query.yaml: [ 'raw','versioning', 'issues' ]
       .field.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
       .config.yaml: [ 'raw','versioning', 'issues' ]
@@ -72,7 +73,7 @@ Clarama:
       .plan.yaml: bi-diagram-3
       .table.yaml: bi-table
       .query.yaml: bi-question-circle
-      .layout.yaml: bi-columns-gap
+      .layout.yaml: bi-aspect-ratio
       .source.yaml: bi-database
       .field.yaml: bi-menu-app
       .environment.yaml: bi-eye
@@ -97,6 +98,7 @@ Clarama:
       .slate.yaml: yaml
       .plan.yaml: yaml
       .table.yaml: yaml
+      .layout.yaml: yaml
       .source.yaml: yaml
       .field.yaml: yaml
       .group.yaml: yaml
@@ -115,6 +117,7 @@ Clarama:
       .slate.yaml: Slate
       .plan.yaml: Plan
       .table.yaml: Data Table
+      .layout.yaml: Table Layout
       .source.yaml: Source
       .field.yaml: Field
       .group.yaml: Security Group
