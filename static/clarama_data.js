@@ -118,7 +118,7 @@ function ChartSeriesAxis(dataset, scales, axis) {
     }
 
     if (found === undefined) {
-        custom_yaxis = keys.length
+        var custom_yaxis = keys.length
 
         var pos = 'left';
         if (isEven(custom_yaxis))
