@@ -362,7 +362,6 @@ function bChart(chart_id, chart_data) {
     console.log(unique_labels);
 
     var config = {
-        type: 'line',
         data: {
             labels: unique_labels,
             datasets: datasets
