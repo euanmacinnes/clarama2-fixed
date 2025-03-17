@@ -61,7 +61,7 @@ function ChartSeriesFormat(dataset, formats) {
             if (format['format-nrx'] != '') {
                 var re = new RegExp(format['format-nrx']);
                 match = re.test(dataset['label']);
-                //console.log("RexEx test result: " + match)
+RegE                console.log("RexEx test result: " + dataset['label'] + " vs " + format['format-nrx'] + '=' + match)
             }
         }
 
@@ -361,6 +361,8 @@ function bChart(chart_id, chart_data) {
     console.log(chart_scales);
     console.log("FINAL LABELS: " + unique_labels.length);
     console.log(unique_labels);
+    console.log("FINAL FORMATS: " + Object.keys(formats).length);
+    console.log(chart_scales);
 
     var config = {
         data: {
