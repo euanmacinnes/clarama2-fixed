@@ -41,7 +41,6 @@ function run_socket(embedded) {
                 return response.json();
             }
             console.log(response);
-            flash(response.text());
             return Promise.reject(response);
         })
         .then((task_response) => {
@@ -89,7 +88,7 @@ function run_socket(embedded) {
                     sockets[socket_url] = webSocket;
 
                     webSocket.onerror = function (event) {
-                        onError(event, websocket_address, webSocket, task_results)
+                        onError(event, task_url, websocket_address, webSocket, task_results)
                     };
 
                     webSocket.onopen = function (event) {
@@ -104,6 +103,9 @@ function run_socket(embedded) {
                         onMessage(event, websocket_address, webSocket, element_prefix)
                     };
                 });
+        })
+        .catch((error) => {
+            flash(task_url + " error " + error, category = 'danger');
         });
 }
 
@@ -311,6 +313,6 @@ function onClose(event, socket_url, webSocket, task_results) {
     console.log('WebSocket Connection CLOSED ' + socket_url + " on socket " + webSocket + " with result " + task_results);
 }
 
-function onError(event, socket_url, webSocket, task_results) {
-    alert("WebSocket Error [" + event.data + "] from " + socket_url + " on socket " + webSocket + " with result " + task_results);
+function onError(event, task_url, socket_url, webSocket, task_results) {
+    flash("Task " + task_url + " WebSocket Error [" + event.data + "] from " + socket_url + " on socket " + webSocket + " with result " + task_results);
 }

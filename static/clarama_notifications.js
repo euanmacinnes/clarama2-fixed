@@ -36,4 +36,5 @@ function flash(message, category = "info") {
     $("#notification_popup").append(html);
 
     $(".flash-alert").delay(3200).fadeOut(300);
+    console.log(category + ":" + message);
 }

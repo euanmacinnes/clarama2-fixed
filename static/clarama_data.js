@@ -61,7 +61,7 @@ function ChartSeriesFormat(dataset, formats) {
             if (format['format-nrx'] != '') {
                 var re = new RegExp(format['format-nrx']);
                 match = re.test(dataset['label']);
-RegE                console.log("RexEx test result: " + dataset['label'] + " vs " + format['format-nrx'] + '=' + match)
+                console.log("RexEx test result: " + dataset['label'] + " vs " + format['format-nrx'] + '=' + match)
             }
         }
 
