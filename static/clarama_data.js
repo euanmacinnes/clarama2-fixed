@@ -201,12 +201,13 @@ function bChart(chart_id, chart_data) {
         var sg = config['series-groups'][i];
         var label = sg['series-y'];
 
-        xaxis_id = data['cols'].indexOf(sg['series-x']);
-        yaxis_id = data['cols'].indexOf(sg['series-y']);
-        zaxis_id = data['cols'].indexOf(sg['series-z']);
-        series_id = data['cols'].indexOf(sg['series-s']);
-        label_id = data['cols'].indexOf(sg['series-l']);
-        unit_id = data['cols'].indexOf(sg['series-u']);
+        var xaxis_id = data['cols'].indexOf(sg['series-x']);
+        var yaxis_id = data['cols'].indexOf(sg['series-y']);
+        var zaxis_id = data['cols'].indexOf(sg['series-z']);
+        var series_id = data['cols'].indexOf(sg['series-s']);
+        var label_id = data['cols'].indexOf(sg['series-l']);
+        var unit_id = data['cols'].indexOf(sg['series-u']);
+        var unit = undefined;
 
         if (xaxis_id >= 0 & yaxis_id >= 0) {
             xaxis = data['rows'][xaxis_id];

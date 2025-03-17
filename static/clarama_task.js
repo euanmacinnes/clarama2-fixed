@@ -54,11 +54,24 @@ function _task_run(socket) {
     console.log("Running Task " + task + ' with ' + json_data);
 
     // No point sending custom headers here, CORS will nerf any custom headers, so send as params ....
-    fetch(task)
+    fetch(task,
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "post",
+            body: JSON.stringify(field_registry)
+        })
         .then((response) => {
             console.log("TASK RUN RESPONSE " + task);
             console.log(response);
         });
+    /*fetch(task)
+        .then((response) => {
+            console.log("TASK RUN RESPONSE " + task);
+            console.log(response);
+        });*/
 }
 
 

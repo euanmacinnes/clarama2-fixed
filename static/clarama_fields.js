@@ -24,6 +24,7 @@ function get_field_values() {
             switch (input.attr('fieldtype')) {
                 case 'html':
                     result[input.attr('name')] = input.val();
+                    console.log('Field ' + input.attr('name') + ': ' + input.val());
                     break;
 
                 case 'aceeditor':
