@@ -10,16 +10,15 @@
         <div class="row justify-content-center flex-wrap">
             {% for role in role_info %}
             {% if role['card']['title'] != "Help & Documentation" %}
-            <a href="{{role['default_folder']}}" class="role-wrapper h-100 m-3 text-decoration-none" style="width: 21rem;">
-                <div class="card align-items-center shadow-lg p-4">
-                    <i class="bi {{ role['card']['icon'] | d('bi-folder',True)}} fs-2 p-0" style="color: #6c757d"></i>
-                    <div class="card-body text-center w-100 flex-grow-1 py-2">
-                        <h5 class="card-title">{{role['card']['title']}}</h5>
-                        <p class="card-text overflow-auto" style="height: 3rem;">{{role['card']['description']}}</p>
-                        <!-- <a href="{{role['default_folder']}}" class="btn btn-primary stretched-link">Go</a> -->
+                <a href="{{role['default_folder']}}" class="role-wrapper m-3 text-decoration-none" style="width: 21rem;">
+                    <div class="card align-items-center shadow-lg p-4" style="min-height: 100%;">
+                        <i class="bi {{ role['card']['icon'] | d('bi-folder',True)}} fs-2 p-0" style="color: #6c757d"></i>
+                        <div class="card-body text-center w-100 flex-grow-1 py-2">
+                            <h5 class="card-title">{{role['card']['title']}}</h5>
+                            <p class="card-text">{{role['card']['description']}}</p>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
             {% endif %}
             {% endfor %}
         </div>
