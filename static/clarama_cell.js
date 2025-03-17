@@ -27,6 +27,7 @@ function get_data_cell(cell) {
     var chart_title = cell.find('.chart-title').val();
     var chart_subtitle = cell.find('.chart-subtitle').val();
     var chart_legend = cell.find('.chart-legend').val();
+    var chart_xaxis_type = cell.find('.chart-xaxis-type').val();
 
     var chart_series_groups = [];
     var chart_series_formats = [];
@@ -70,6 +71,7 @@ function get_data_cell(cell) {
         'title': chart_title,
         'subtitle': chart_subtitle,
         'legend': chart_legend,
+        'xaxis-type': chart_xaxis_type,
         'series-groups': chart_series_groups,
         'series-formats': chart_series_formats
     }

@@ -92,6 +92,65 @@ function ChartSeriesFormat(dataset, formats) {
     return dataset;
 }
 
+function isEven(n) {
+    return n % 2 === 0;
+}
+
+/**
+ * ChartSeriesAxis looks at the specified series and tries to assign an axis to it (this function will be called assuming a unit axis is specified).
+ * @param {*|{}} dataset
+ * @param {*|{}} scales
+ * @param {string} axis
+ */
+function ChartSeriesAxis(dataset, scales, axis) {
+
+    const keys = Object.keys(scales);
+    console.log("UNIT AXIS: " + axis + ' ' + keys.length);
+    var found = undefined;
+    for (f = 0; f < keys.length; f++) {
+        var scale = scales[keys[f]];
+
+        if (scale['title']['text'] === axis) {
+            found = keys[f];
+            console.log("REUSING " + found);
+        }
+
+    }
+
+    if (found === undefined) {
+        var custom_yaxis = keys.length
+
+        var pos = 'left';
+        if (isEven(custom_yaxis))
+            pos = 'right';
+
+        scales['yAxis' + custom_yaxis] = {
+            type: 'linear',
+//            display: 'auto',
+            position: pos,
+//            bounds: 'data',
+//            clip: true,
+//            axis: 'y',
+            title: {
+                text: axis,
+                display: true,
+            }
+        }
+
+        if (keys.length > 1)
+            scales['yAxis' + custom_yaxis]['grid'] = {
+                drawOnChartArea: false, // only want the grid lines for one axis to show up
+            };
+
+        found = 'yAxis' + custom_yaxis;
+    }
+
+    if (found !== undefined) {
+        dataset['yAxisID'] = found
+    }
+}
+
+
 function bChart(chart_id, chart_data) {
     var data = chart_data['data'];
     var config = chart_data['chart'];
@@ -112,16 +171,17 @@ function bChart(chart_id, chart_data) {
     console.log(config);
 
 
-    scales = {};
-    xaxis_scale = {
+    var chart_scales = {};
+    var xaxis_scale = {
         display: true,
+        type: config['xaxis-type'] || 'category',
         title: {
             display: true,
-            text: 'X Axis'
+            text: config['xaxis-title'] || 'X Axis'
         }
     };
 
-    yaxis_scale = {
+    var yaxis_scale = {
         type: 'linear',
         display: true,
         position: 'left',
@@ -164,8 +224,10 @@ function bChart(chart_id, chart_data) {
 
             xaxis_scale['title']['text'] = sg['series-x'];
             yaxis_scale['title']['text'] = sg['series-y'];
-            scales['x'] = xaxis_scale;
-            scales['y'] = yaxis_scale;
+            chart_scales['x'] = xaxis_scale;
+
+            if (unit_id < 0)
+                chart_scales['y'] = yaxis_scale;
 
 
             console.log("X-AXIS");
@@ -177,18 +239,27 @@ function bChart(chart_id, chart_data) {
             if (series_id >= 0) {
                 series = data['rows'][series_id];
 
+                if (unit_id > 0)
+                    unit = data['rows'][unit_id];
+                else
+                    unit = undefined;
+
                 if (series !== undefined) {
                     var curr = series[0];
+
                     label = curr;
 
                     for (p = 0; p < xaxis.length; p++) {
-                        if (series[p] != curr)   // then pop the current dataset onto the datasets queue, and reset
+                        if (series[p] !== curr)   // then pop the current dataset onto the datasets queue, and reset
                         {
                             dataset = {
                                 label: label,
                                 data: points,
                                 type: sg['series-type'].toLowerCase()
                             }
+
+                            if (unit !== undefined)
+                                ChartSeriesAxis(dataset, chart_scales, unit[p - 1]);
 
                             datasets.push(ChartSeriesFormat(dataset, formats));
 
@@ -235,6 +306,9 @@ function bChart(chart_id, chart_data) {
                 type: sg['series-type'].toLowerCase(),
             }
 
+            if (unit !== undefined)
+                if (xaxis.length >= 1)
+                    ChartSeriesAxis(dataset, chart_scales, unit[xaxis.length - 1]);
 
             datasets.push(ChartSeriesFormat(dataset, formats));
 
@@ -245,9 +319,6 @@ function bChart(chart_id, chart_data) {
 
         console.log('i' + i);
     }
-
-    console.log("FINAL DATASETS");
-    console.log(datasets.length);
 
     var chartColors = {
         red: 'rgb(255, 50, 50)',
@@ -283,11 +354,19 @@ function bChart(chart_id, chart_data) {
 
     const unique_labels = [...new Set(labels)] // Get unique list of labels for the x axis
 
+    console.log("FINAL DATASETS: " + datasets.length);
+    console.log(datasets);
+    console.log("FINAL SCALES: " + Object.keys(chart_scales).length);
+    console.log(chart_scales);
+    console.log("FINAL LABELS: " + unique_labels.length);
+    console.log(unique_labels);
+
     var config = {
         data: {
             labels: unique_labels,
             datasets: datasets
         },
+        stacked: false,
         options: {
             responsive: true,
             maintainAspectRatio: maintain,
@@ -303,7 +382,7 @@ function bChart(chart_id, chart_data) {
             },
             animation: false,
             transitions: {active: {animation: {duration: 0}}},
-            scales: scales,
+            scales: chart_scales,
             onClick: (event, elements, chart) => {
                 chart_id = chart.canvas.id
 
@@ -356,6 +435,7 @@ function bChart(chart_id, chart_data) {
                     zoom: {
                         wheel: {
                             enabled: true,
+                            modifierKey: 'ctrl',
                         },
                         drag: {
                             enabled: true,
@@ -389,6 +469,9 @@ function bChart(chart_id, chart_data) {
             }
         }
     };
+
+    console.log("FINAL CHART");
+    console.log(config);
 
     var chart_id = "chart_" + chart_id;
     let chartStatus = Chart.getChart(chart_id); // <canvas> id
