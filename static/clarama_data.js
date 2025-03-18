@@ -5,7 +5,7 @@ function bTable(table_id, table_data) {
 
     console.log(table_id + " TABLE_DATA");
     //console.log(table_data);
-
+    //hello this is a test
 
     for (col of table_data['cols']) {
         headings.push(col);
