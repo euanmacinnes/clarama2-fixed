@@ -169,17 +169,19 @@ $.fn.initselect = function () {
                         url: embedded.attr("sourceurl"),
                         dataType: 'json',
                         contentType: "application/json; charset=utf-8",
+                        type: "POST",
                         data: function (params) {
                             var values = get_field_values()
                             var query = {
                                 search: params.term,
                                 values: values
                             }
-                            console.log("Fetching data " + params.term)
-                            return {values: JSON.stringify(query)};
+                            console.log("Fetching data " + params.term + " from " + embedded.attr("sourceurl"))
+                            return JSON.stringify(query);
                         },
                         processResults: function (data) {
                             console.log("Results")
+                            console.log(data)
                             var resultarr = [];
                             var rows = data['results']['rows'];
                             var headings = ['id', 'text', 'selected', 'disabled']
