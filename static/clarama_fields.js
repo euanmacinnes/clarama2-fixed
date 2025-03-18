@@ -164,7 +164,7 @@ $.fn.initselect = function () {
                 embedded.select2({
                     selectionCssClass: "col",
                     dataType: 'json',
-                    minimumResultsForSearch: 15,
+                    minimumResultsForSearch: 1,
                     ajax: {
                         url: embedded.attr("sourceurl"),
                         dataType: 'json',
