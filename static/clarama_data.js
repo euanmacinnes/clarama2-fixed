@@ -78,6 +78,14 @@ function ChartSeriesFormat(dataset, formats) {
             dataset['pointRadius'] = format['format-pr'];
             dataset['borderWidth'] = format['format-lw'];
 
+            if (format['format-miny'] !== undefined) {
+
+            }
+
+            if (format['format-maxy'] !== undefined) {
+
+            }
+
             if (format['format-dt'])
                 dataset['borderDash'] = [10, 5];
 
@@ -150,6 +158,20 @@ function ChartSeriesAxis(dataset, scales, axis) {
     }
 }
 
+// from https://medium.com/@abbas.ashraf19/8-best-methods-for-merging-nested-objects-in-javascript-ff3c813016d9
+function deepMerge(obj1, obj2) {
+    for (let key in obj2) {
+        if (obj2.hasOwnProperty(key)) {
+            if (obj2[key] instanceof Object && obj1[key] instanceof Object) {
+                obj1[key] = deepMerge(obj1[key], obj2[key]);
+            } else {
+                obj1[key] = obj2[key];
+            }
+        }
+    }
+    return obj1;
+}
+
 
 function bChart(chart_id, chart_data) {
     var data = chart_data['data'];
@@ -196,6 +218,7 @@ function bChart(chart_id, chart_data) {
     var datasets = [];
 
     for (i = 0; i < config['series-groups'].length; i++) {
+        var user_config = config['userconfig']
         console.log("SERIES GROUP " + i + " of " + config['series-groups'].length);
         console.log(config['series-groups'][i]);
         var sg = config['series-groups'][i];
@@ -472,6 +495,11 @@ function bChart(chart_id, chart_data) {
             }
         }
     };
+
+    if (user_config !== undefined) {
+        console.log("CHART deepMerging");
+        config = deepMerge(config, user_config);
+    }
 
     console.log("FINAL CHART");
     console.log(config);
