@@ -30,39 +30,42 @@ function perform_interact(field, args = {}) {
     var element = field.parents(".clarama-element").attr('id');
     var grid = field.parents(".grid-stack");
     var grid_id = field.parents(".clarama-element").attr('grid-id');
-    var element_array = eval(grid_id + "elements");
-    var eobj = element_array[element];
 
-    field_values = merge_dicts(get_field_values(), args);
-    //console.log(field_values);
+    if (grid_id !== undefined) {
+        var element_array = eval(grid_id + "elements");
+        var eobj = element_array[element];
 
-    if ('links' in eobj) {
-        links = eobj["links"]; // array of file names to refresh
-        //console.log(links);
-        //flash(element + ' links to ' + links);
-        for (const link of links) {
-            linked_element = grid.find('#' + link);
-            linked_type = linked_element.attr("element-type");
-            //console.log("Linking " + link + '->' + linked_type);
-            switch (linked_type) {
-                case ".task":
-                    field_values['clarama_var_run'] = 'True'
-                    reload(linked_element, field_values);
-                    break;
+        field_values = merge_dicts(get_field_values(), args);
+        //console.log(field_values);
 
-                case ".field":
-                    var form_field = linked_element.find(".clarama-field");
+        if ('links' in eobj) {
+            links = eobj["links"]; // array of file names to refresh
+            //console.log(links);
+            //flash(element + ' links to ' + links);
+            for (const link of links) {
+                linked_element = grid.find('#' + link);
+                linked_type = linked_element.attr("element-type");
+                //console.log("Linking " + link + '->' + linked_type);
+                switch (linked_type) {
+                    case ".task":
+                        field_values['clarama_var_run'] = 'True'
+                        reload(linked_element, field_values);
+                        break;
 
-                    if (form_field.hasClass('clarama-delay-field')) {
-                        //console.log("Reloading " + linked_element)
-                        reload(linked_element, field_values)
-                    } else {
-                        //console.log("Refreshing " + linked_element)
-                        form_field.empty().trigger('change')
-                    }
-                    break;
-                default:
-                    flash("Don't know how to interact " + linked_type + " - " + link);
+                    case ".field":
+                        var form_field = linked_element.find(".clarama-field");
+
+                        if (form_field.hasClass('clarama-delay-field')) {
+                            //console.log("Reloading " + linked_element)
+                            reload(linked_element, field_values)
+                        } else {
+                            //console.log("Refreshing " + linked_element)
+                            form_field.empty().trigger('change')
+                        }
+                        break;
+                    default:
+                        flash("Don't know how to interact " + linked_type + " - " + link);
+                }
             }
         }
     }

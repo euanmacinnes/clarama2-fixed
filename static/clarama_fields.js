@@ -23,18 +23,26 @@ function get_field_values() {
 
             switch (input.attr('fieldtype')) {
                 case 'html':
-                    result[input.attr('name')] = input.val();
-                    console.log('Field ' + input.attr('name') + ': ' + input.val());
+                    var inputval = input.val();
+
+                    if (input.prop('type') === 'checkbox') {
+                        console.log("CHECKBOX");
+                        inputval = input.prop('checked');
+                    }
+                    result[input.attr('name')] = inputval;
+                    console.log('Field (HTML)' + input.attr('name') + ': ' + inputval);
                     break;
 
                 case 'aceeditor':
                     var editor = ace.edit(input.attr('id'));
                     result[input.attr('name')] = editor.getValue();
+                    console.log('Field (ACE)' + input.attr('name') + ': ' + editor.getValue());
                     break;
 
                 case 'trumbowyg':
                     // console.log('trumbowyg' + input.trumbowyg('html'));
                     result[input.attr('name')] = input.trumbowyg('html');
+                    console.log('Field (trumbowyg)' + input.attr('name') + ': ' + input.trumbowyg('html'));
                     break;
             }
         }
