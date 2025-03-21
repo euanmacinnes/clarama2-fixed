@@ -460,8 +460,9 @@
     .then(response => response.json())
     .then(data => {
       console.log('posted: ', data);
-      if (data.success === true) {
+      if (data.retrieval === true) {
         // previewFiles(dataRefs);
+        window.location.reload();
       } else {
         console.log('URL: ', url, '  name: ', name)
       }
@@ -469,8 +470,6 @@
     .catch(error => {
       console.error('errored: ', error);
     });
-
-    history.go(0);
   }
 
 
