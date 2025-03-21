@@ -8,11 +8,11 @@
       <div class="modal-body">
         <!-- <p>Select Content</p> -->
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb" id="breadcrumb">
+          <ol class="breadcrumb" id="breadcrumb_addfield">
           </ol>
         </nav>
 
-        <select id="add_content"
+        <select id="add_content_addfield"
                 name="add_content"
                 size="10"
                 class="form-control">
@@ -29,6 +29,35 @@
   </div>
 </div>
 
+<div class="modal fade" tabindex="-1" id="browseFileModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Browse File</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb" id="breadcrumb_browsefile">
+          </ol>
+        </nav>
+
+        <select id="add_content_browsefile"
+                name="add_file"
+                size="10"
+                class="form-control">
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"
+                              onclick="add_selected_file()">Add
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
   function isDict(v) {
     return typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
@@ -39,8 +68,17 @@
       filters = $(".gridaddcontent").attr('filters');
       path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
 
-      navigateToPath(path);
+      navigateToPath(path, 'breadcrumb_addfield', 'add_content_addfield');
     });
+
+    $('#browseFileModal').on('shown.bs.modal', function () {
+      filters = $(".gridbrowsefile").attr('filters');
+      console.log(filters)
+      path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
+
+      navigateToPath(path, 'breadcrumb_browsefile', 'add_content_browsefile');
+    });
+
     //console.log("GRID");
     //console.log({{ grid_id }}elements);
     //console.log({{ grid_json | safe }});
@@ -190,6 +228,25 @@
     }
   };
 
+  function add_selected_file() {
+    inputId = $(".gridbrowsefile").attr('inputId');
+    const selected_val = $("#add_content_browsefile").val();
+    console.log("adding " + selected_val);
+  
+    if (selected_val == null) {
+      flash("No file selected!");
+    } else {
+      const targetInput = document.getElementById(inputId);
+  
+      if (targetInput) {
+        targetInput.value = $CLARAMA_ROOT +  selected_val;
+        flash("File path stored successfully! " + $CLARAMA_ROOT +  selected_val);
+      } else {
+        flash("Target input field not found!", "danger");
+      }
+    }
+  }
+
   function save(url) {
     slate_data = saveGrid();
     $.ajax({
@@ -244,11 +301,12 @@
     // Extract the current directory depth
     const currentPath = "{{ file_url | path }}";
     var relativePath;
-    function renderBreadcrumb(path) {
+    function renderBreadcrumb(path, breadcrumbId, selectId) {
+      console.log(path)
       const targetPath = path.split('?')[0].split('/').slice(3).join('/');
       relativePath = getRelativePath(currentPath, targetPath);
 
-      const breadcrumb = document.getElementById('breadcrumb');
+      const breadcrumb = document.getElementById(breadcrumbId);
       breadcrumb.innerHTML = '';
       const trimmedPath = path.split('/').slice(5); // Remove the first 5 parts
       trimmedPath.forEach((part, index, array) => {
@@ -258,7 +316,7 @@
           if (index < array.length - 1) {
             li.style.cursor = 'pointer';
             li.className = 'text-secondary';
-            li.addEventListener('click', () => navigateToPath(path.split('/').slice(0, index + 6).join('/') + "?subfolders=True&extensions=" + filters));
+            li.addEventListener('click', () => navigateToPath(path.split('/').slice(0, index + 6).join('/') + "?subfolders=True&extensions=" + filters, breadcrumbId, selectId));
             li.innerHTML = part + "&nbsp;>&nbsp;";
           } else {
             li.innerText = part.split('?')[0];
@@ -282,15 +340,20 @@
 
       // Navigate down to `to`
       const goDown = toParts.slice(i).join('/'); // extracts the remaining thats not common
+
+      if (!goUp && !goDown) {
+        return '.'
+      }
+      
       return goUp ? `${goUp}/${goDown}` : goDown; // if no goUp means we r in the correct folder
     }
 
-    function renderFilesNFolder(path) {
-      const selectElement = document.getElementById('add_content');
+    function renderFilesNFolder(path, breadcrumbId, selectId) {
+      const selectElement = document.getElementById(selectId);
       fetch(path)
         .then((response) => response.json())
         .then((json_files) => {
-          $('#add_content').empty();
+          $(`#${selectId}`).empty();
           const allPaths = json_files['results']['files'];
           const foldersSet = new Set();
           const filesSet = new Set();
@@ -313,7 +376,7 @@
             option.value = folder;
             option.className = "bi bi-folder-fill";
             option.innerHTML = `&nbsp; ${folder}`;
-            option.addEventListener('dblclick', () => navigateToPath(`${path.split('?')[0]}/${folder}` + "?subfolders=True&extensions=" + filters));
+            option.addEventListener('dblclick', () => navigateToPath(`${path.split('?')[0]}/${folder}` + "?subfolders=True&extensions=" + filters, breadcrumbId, selectId));
             selectElement.appendChild(option);
           });
 
@@ -340,9 +403,9 @@
     }
 
     // Function to navigate to a specific path
-    function navigateToPath(path) {
-      renderBreadcrumb(path);
-      renderFilesNFolder(path);
+    function navigateToPath(path, breadcrumbId, selectId) {
+      renderBreadcrumb(path, breadcrumbId, selectId);
+      renderFilesNFolder(path, breadcrumbId, selectId);
     }
 
 </script>
