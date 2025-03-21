@@ -80,7 +80,6 @@ function dragAndDrop() {
 function addSeriesGrp() {
     const newSG = document.createElement("li");
     newSG.className = "chart-series-groups";
-    newSG.setAttribute("draggable", "true");
 
     const div = document.createElement("div");
     div.className = "list-group-item d-flex align-items-center";
@@ -88,6 +87,7 @@ function addSeriesGrp() {
 
     const grip = document.createElement("i");
     grip.className = "bi bi-grip-vertical draggable-heading pe-3";
+    grip.setAttribute("draggable", "true");
     div.appendChild(grip);
 
     const select = document.createElement("select");

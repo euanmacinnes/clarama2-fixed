@@ -110,9 +110,9 @@
                     <i id="addSG" class="bi bi-plus-circle ms-1 data-cell-icon-hover add"></i>
                 </label>
                 {% for sgroup in seriesgroups %}
-                    <li class="chart-series-groups" draggable="true">
+                    <li class="chart-series-groups">
                         <div class="list-group-item d-flex align-items-center">
-                            <i class="bi bi-grip-vertical draggable-heading pe-3"></i>
+                            <i class="bi bi-grip-vertical draggable-heading pe-3" draggable="true"></i>
                             <select id="sg{{ loop_index }}" class="form-control series-type">
                                 <option {{ selected("Line",sgroup['series-type']) }}>Line</option>
                                 <option {{ selected("Scatter",sgroup['series-type']) }}>Scatter</option>
