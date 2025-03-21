@@ -26,6 +26,7 @@
 
 .grid-stack-item-content {
     padding-bottom: 2px;
+    overflow: visible !important;
 }
 
 .clarama-edit-element {
@@ -325,4 +326,11 @@ td * {
 .embedded-dropdown-menu {
     position: fixed !important;
     top: 0 !important;
+    position: absolute !important;
+    transform: none !important;
+    inset: unset !important;
+    /* overflow-y: scroll;
+    height: 305px; */
+    right: 0 !important;
+    z-index: 1000;
 }

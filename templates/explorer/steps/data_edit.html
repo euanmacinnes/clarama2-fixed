@@ -2,34 +2,46 @@
     <div class="bg-info rounded-top text-light" style="padding: 5px">
         <div class="rounded-top text-light row">
             <input id="task_step_{{ loop_index }}_output" type="hidden" value="{{ output or 'table' }}">
-            <div class="btn-group col">
+            <div class="btn-group col align-items-center">
                 <button id="task_step_{{ loop_index }}_table" type="button"
                         class="btn {% if output==" table" %}btn-primary{% else %}btn-secondary{% endif %}"
                         onclick="datacell_setOutput('task_step_{{ loop_index }}', 'table');"><i class="bi bi-table"></i>
                 </button>
                 <button id="task_step_{{ loop_index }}_chart" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseOptions" aria-expanded="false" aria-controls="collapseOptions"
-                        class="btn dropdown-toggle {% if output==" chart" %}btn-primary{% else %}btn-secondary{% endif %}"
+                        class="btn dropdown-togglew rounded-0 {% if output==" chart" %}btn-primary{% else %}btn-secondary{% endif %}"
                         onclick="datacell_setOutput('task_step_{{ loop_index }}', 'chart');"><i
                         class="bi bi-graph-up-arrow"></i></button>
 
                 <button id="task_step_{{ loop_index }}_code" type="button"
-                        class="btn {% if output==" code" %}btn-primary{% else %}btn-secondary{% endif %}"
+                        class="rounded-0 btn {% if output==" code" %}btn-primary{% else %}btn-secondary{% endif %}"
                         onclick="datacell_setOutput('task_step_{{ loop_index }}', 'code');"><i class="bi bi-code"></i>
                 </button>
-                <input id="task_step_{{ loop_index }}_source" type="text" class="form-control"
-                       placeholder="Data Source Filename" aria-label="Data source relative filename"
-                       value="{{ source }}">
-            </div>
 
-            <div class="btn-group rounded-top col-1" role="group">
-                <button id="task_step_{{ loop_index }}_browse" type="button"
-                        class="btn btn-secondary dropdown-toggle datasource" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">Browse
-                </button>
-                <div class="dropdown-menu" aria-labelledby="task_step_{{ loop_index }}_source">
-                    <a class="dropdown-item" href="#">Browse</a>
+                <div class="input-group">
+                    <input id="task_step_{{ loop_index }}_source" type="text" class="form-control rounded-0 border border-end-0 border-light-subtle"
+                    placeholder="Data Source Filename" aria-label="Data source relative filename"
+                    value="{{ source }}">
+                    <button type="button" class="gridbrowsefile border border-start-0 border-light-subtle bg-white" data-bs-toggle="modal" data-bs-target="#browseFileModal" inputId="task_step_{{ loop_index }}_source" filters="*.source.yaml|*.csv|*.xlsx">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <!-- <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item gridbrowsefile" type="button" data-bs-toggle="modal" data-bs-target="#browseFileModal"
+                            filters="*.source.yaml">Browse</a></li>
+                    </ul> -->
                 </div>
+                
+                <a href="{{ source }}" target="_blank" class="text-decoration-none text-white">
+                    <button id="task_step_{{ loop_index }}_browse" type="button"
+                        class="rounded-0 btn btn-secondary datasource" aria-haspopup="true"
+                        aria-expanded="false"><i class="bi bi-box-arrow-up-right"></i></button>
+                </a>
+
+                <!-- <div class="btn-group rounded-top col-1" role="group">
+                    <div class="dropdown-menu" aria-labelledby="task_step_{{ loop_index }}_source">
+                        <a class="dropdown-item" href="#">Browse</a>
+                    </div>
+                </div> -->
             </div>
         </div>
     </div>
