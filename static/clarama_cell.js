@@ -155,6 +155,16 @@ function get_url_cell(cell) {
     };
 }
 
+function get_shell_cell(cell) {
+    var id = cell.attr('id')
+    var editor = ace.edit(id);
+    var code = editor.getValue();
+
+    console.log("Getting shell " + id);
+
+    return {"type": "shell", "content": code};
+}
+
 
 /**
  * Call the specific get_<cell step>_cell function that will extract the entire cell information
