@@ -40,7 +40,7 @@ function bTable(table_id, table_data) {
             perform_interact($('#' + table_id), row);
         }
     });
-};
+}
 
 function ChartSeriesFormat(dataset, formats) {
     if (formats === undefined) {
@@ -514,4 +514,4 @@ function bChart(chart_id, chart_data) {
     console.log("Chart: " + chart_id + ' - ');
     console.log(chart_data);
     chart_element.attr("chart", new Chart(chart_element, config));
-};
+}

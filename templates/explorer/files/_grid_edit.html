@@ -133,7 +133,7 @@
       elem[element] = new_element_data;
       {{ grid_id }}elements = elem;
     }
-    ;
+
 
     {{ grid_id }}elements[element] = data;
 
@@ -201,7 +201,7 @@
         elem[element] = new_element_data;
         slate_data['elements'] = elem;
       }
-      ;
+
       console.log(slate_data)
 
       $.ajax({
@@ -226,7 +226,7 @@
         }
       })
     }
-  };
+  }
 
   function add_selected_file() {
     inputId = $(".gridbrowsefile").attr('inputId');
@@ -297,7 +297,7 @@
         flash("linking " + target + " to [" + element['links'] + "]");
       }
     }
-  };
+  }
     // Extract the current directory depth
     const currentPath = "{{ file_url | path }}";
     var relativePath;

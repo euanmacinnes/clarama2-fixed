@@ -130,12 +130,12 @@ $.fn.daterange = function () {
                     const custom_range = [start, end];
                     date_ranges[range_name] = custom_range;
                 }
-                ;
+
             }
-            ;
+
 
         }
-        ;
+
 
         let default_date_range = 'Last 7 Days';
 
@@ -146,7 +146,7 @@ $.fn.daterange = function () {
             start = date_ranges[default_date_range][0];
             end = date_ranges[default_date_range][1];
         }
-        ;
+
 
         embedded.daterangepicker({
             startDate: start,

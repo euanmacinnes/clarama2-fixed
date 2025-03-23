@@ -247,7 +247,7 @@ $.fn.load = function (onfinished, args) {
     return this.each(function () {
         var embedded = $(this);
         // console.log("GET loading " + embedded.attr("class") + " = " + embedded.attr("url") + ' with args ' + JSON.stringify(args));
-        ;
+
 
         if ((embedded.attr("clarama_loaded") !== "true") && (embedded.attr("autorun") !== "False")) {
             var url = embedded.attr("url");

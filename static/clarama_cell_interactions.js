@@ -79,11 +79,11 @@ function cell_insert_step(parent) {
                     enable_interactions($new_element);
                 });
         }
-        ;
+
         //alert("Insert " + step_type.attr("steptype") + ", stream " + step_parent.attr('stream') + " step " +  step_parent.attr('step'));
 
     });
-};
+}
 
 function cell_delete_step(parent) {
     parent.find(".delete_step").off('click');
@@ -134,5 +134,5 @@ function datacell_setOutput(id_template, value) {
         $('#' + id_template + '_chart').addClass('btn-secondary');
         $('#' + id_template + '_chart').removeClass('btn-primary');
     }
-    ;
+
 }
