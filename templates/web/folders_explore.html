@@ -489,7 +489,7 @@
             // No 'image/gif' or PDF or webp allowed here, but it's up to your use case.
             // Double checks the input "accept" attribute
             const isImageFile = file =>
-                ['image/jpeg', 'image/png', 'image/svg+xml', 'text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf', 'application/x-zip'].includes(file.type);
+                ['text/plain', 'image/jpeg', 'image/png', 'image/svg+xml', 'text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf', 'application/x-zip'].includes(file.type);
 
 
             // Based on: https://flaviocopes.com/how-to-upload-files-fetch/
@@ -513,24 +513,24 @@
                 const formData = new FormData();
                 formData.append("file", dataRefs.files[0]);
 
-    fetch(url, {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('posted: ', data);
-      if (data.retrieval === true) {
-        // previewFiles(dataRefs);
-        window.location.reload();
-      } else {
-        console.log('URL: ', url, '  name: ', name)
-      }
-    })
-    .catch(error => {
-      console.error('errored: ', error);
-    });
-  }
+                fetch(url, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('posted: ', data);
+                        if (data.retrieval === true) {
+                            // previewFiles(dataRefs);
+                            window.location.reload();
+                        } else {
+                            console.log('URL: ', url, '  name: ', name)
+                        }
+                    })
+                    .catch(error => {
+                        console.error('errored: ', error);
+                    });
+            }
 
 
             // Handle both selected and dropped files
