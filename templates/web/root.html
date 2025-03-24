@@ -182,7 +182,9 @@
       const checkFilesLoaded = setInterval(function () {
         if (favoriteFiles.length > 0) { // Wait until favoriteFiles is populated
           clearInterval(checkFilesLoaded);
-          document.getElementById("fav-dropdown").style = "display: block";
+          if (document.getElementById("fav-dropdown") !== null) {
+            document.getElementById("fav-dropdown").style.display = "block";
+          }
 
           if (document.getElementById("my-favorites-container") !== null) {
             render_my_favorites(); // Render the content
@@ -267,9 +269,8 @@
       });
     }
     
-    // this is the offcanvas that'll appear when favorites is selected in the navbar dropdown 
+    // this is the dropdown that'll appear when favorites dropdown is selected
     function render_favorites() {
-      // document.getElementById('no-favs').style.display = "none";
       const container = document.getElementById('favorites-listing');
       console.log(favoriteFiles)
 
