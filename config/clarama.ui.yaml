@@ -27,6 +27,11 @@ Clarama:
       - 'jfif'
       - 'svg'
       - 'svgz'
+      - 'html'
+      - 'task'
+      - 'task.yaml'
+      - 'slate.yaml'
+      - 'field.yaml'
       - 'pjpeg'
       - 'pjp'
     InternalModes: [ 'delete','raw','download','new','rename','paste','info','embed','view' ]
@@ -50,15 +55,20 @@ Clarama:
       .md: [ 'explore','raw','versioning', 'issues' ]
       .csv: [ 'explore','raw','versioning', 'issues' ]
       .tsv: [ 'explore','raw','versioning', 'issues' ]
-      .jpg: [ 'explore' ]
-      .png: [ 'explore' ]
-      .jpeg: [ 'explore' ]
-      .pdf: [ 'explore' ]
-      .svg: [ 'explore' ]
-      .svgz: [ 'explore' ]
-      .pjpeg: [ 'explore' ]
-      .pjp: [ 'explore' ]
-      .jfif: [ 'explore' ]
+      .task: [ 'raw','versioning', 'issues' ]
+      .plan: [ 'raw','versioning', 'issues' ]
+      .ipynb: [ 'raw','versioning', 'issues' ]
+      .txt: [ 'raw','versioning', 'issues' ]
+      .config: [ 'raw','versioning', 'issues' ]
+      .jpg: [ 'explore','issues' ]
+      .png: [ 'explore','issues' ]
+      .jpeg: [ 'explore','issues' ]
+      .pdf: [ 'explore','issues' ]
+      .svg: [ 'explore','issues' ]
+      .svgz: [ 'explore','issues' ]
+      .pjpeg: [ 'explore','issues' ]
+      .pjp: [ 'explore','issues' ]
+      .jfif: [ 'explore','issues' ]
     FiletypeCSS:
       .csv: bi-filetype-csv
       .tsv: bi-filetype-tsv
@@ -80,6 +90,7 @@ Clarama:
       .group.yaml: bi-people
       .config.yaml: bi-sliders
       .access.yaml: bi-fingerprint
+      .ipynb: bi-journal-richtext
       .jpg: bi-card-image
       .png: bi-card-image
       .jpeg: bi-card-image
@@ -93,7 +104,12 @@ Clarama:
     FiletypeRawEditor:
       .html: html
       .json: json
+      .ipynb: json
       .md: markdown
+      .txt: text
+      .task: yaml
+      .config: yaml
+      .plan: yaml
       .task.yaml: yaml
       .slate.yaml: yaml
       .plan.yaml: yaml
