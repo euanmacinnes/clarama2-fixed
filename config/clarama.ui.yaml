@@ -37,6 +37,7 @@ Clarama:
       - 'svg'
       - 'svgz'
       - 'html'
+      - 'json'
       - 'txt'
       - 'task'
       - 'task.yaml'
@@ -61,7 +62,7 @@ Clarama:
       .deploy.yaml: [ 'status','raw','versioning', 'issues' ]
       .access.yaml: [ 'raw','versioning', 'issues' ]
       .html: [ 'explore','raw','versioning', 'issues' ]
-      .json: [ 'explore','raw','versioning', 'issues' ]
+      .json: [ 'raw','versioning', 'issues' ]
       .md: [ 'explore','raw','versioning', 'issues' ]
       .csv: [ 'explore','raw','versioning', 'issues' ]
       .tsv: [ 'explore','raw','versioning', 'issues' ]
