@@ -1,13 +1,13 @@
-function chart_options_initialize() {
-    const addSGBtn = document.getElementById("addSG");
-    const seriesGrp = document.getElementById("seriesGrp");
+function chart_options_initialize(loop_index) {
+    const addSGBtn = document.getElementById("addSG"+loop_index);
+    const seriesGrp = document.getElementById("seriesGrp"+loop_index);
 
-    const addSFBtn = document.getElementById("addSF");
-    const seriesFormat = document.getElementById("seriesFormat");
+    const addSFBtn = document.getElementById("addSF"+loop_index);
+    const seriesFormat = document.getElementById("seriesFormat"+loop_index);
 
     // ==== DRAG N DROP ====
     $(document).ready(function () {
-        dragAndDrop();
+        dragAndDrop(loop_index);
     });
 
     // jQuery to handle click event for all sg remove buttons
@@ -69,8 +69,8 @@ function chart_options_initialize() {
 }
 
 // using jquery ui's sortable method to make list items draggable
-function dragAndDrop() {
-    $("#seriesGrp").sortable({
+function dragAndDrop(loop_index) {
+    $(`#seriesGrp${loop_index}`).sortable({
         handle: '.draggable-heading' // specifies that entire list item (.draggable-heading) can be used to drag item
     });
 }
@@ -91,7 +91,7 @@ function addSeriesGrp() {
     div.appendChild(grip);
 
     const select = document.createElement("select");
-    select.id = "sg1";
+    select.id = "sg";
     select.className = "form-control series-type";
     ["Line", "Scatter", "Bubble", "Bar", "Doughnut"].forEach(type => {
         const option = document.createElement("option");
@@ -101,14 +101,14 @@ function addSeriesGrp() {
     div.appendChild(select);
 
     const labels = [
-        { text: "X Axis", for: "x1", class: "series-x", name: "x", value: "Batch" },
-        { text: "Y Axis", for: "y1", class: "series-y", name: "y", value: "" },
-        { text: "Z Axis", for: "z1", class: "series-z", name: "z", value: "" },
-        { text: "Y Min Axis", for: "ymin1", class: "series-ymin", name: "ymin", value: "" },
-        { text: "Y Max Axis", for: "ymax1", class: "series-ymax", name: "ymax", value: "" },
-        { text: "Series Axis", for: "s1", class: "series-s", name: "s", value: "" },
-        { text: "Unit Axis", for: "u1", class: "series-u", name: "u", value: "" },
-        { text: "Label Axis", for: "l1", class: "series-l", name: "l", value: "" }
+        { text: "X Axis", for: "x", class: "series-x", name: "x", value: "Batch" },
+        { text: "Y Axis", for: "y", class: "series-y", name: "y", value: "" },
+        { text: "Z Axis", for: "z", class: "series-z", name: "z", value: "" },
+        { text: "Y Min Axis", for: "ymin", class: "series-ymin", name: "ymin", value: "" },
+        { text: "Y Max Axis", for: "ymax", class: "series-ymax", name: "ymax", value: "" },
+        { text: "Series Axis", for: "s", class: "series-s", name: "s", value: "" },
+        { text: "Unit Axis", for: "u", class: "series-u", name: "u", value: "" },
+        { text: "Label Axis", for: "l", class: "series-l", name: "l", value: "" }
     ];
 
     // eg,
