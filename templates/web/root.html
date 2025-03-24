@@ -65,9 +65,6 @@
                 </li>
               {% endfor %}
               <li><hr class="dropdown-divider bg-secondary"></li>
-              <!-- <li><a class="nav-link fw-light fst-italic dropdown-item py-2 px-3" data-bs-toggle="offcanvas" href="#offcanvasFavorites" role="button" aria-controls="offcanvasFavorites">
-                <i class="bi bi-star h5 me-2"></i>All Favourites
-              </a></li> -->
               <li><a class="nav-link fw-light fst-italic dropdown-item py-2 px-3">
                 <i class="bi bi-share h5 me-2"></i>Share
               </a></li>
@@ -89,11 +86,6 @@
             <div class="dropdown-menu">
               <div id="favorites-listing" class="list-group" >
               </div>
-              <!-- <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Separated link</a></li> -->
             </div>
           </div>
         {% endif %}
@@ -127,19 +119,6 @@
 {% block content %}{% endblock %}
 
   </div>
-  <!-- <div class="offcanvas offcanvas-end p-2" data-bs-scroll="true" tabindex="-1" id="offcanvasFavorites" aria-labelledby="offcanvasFavoritesLabel">
-    <div class="offcanvas-header pb-0">
-      <h5 class="offcanvas-title fw-semibold" id="offcanvasFavoritesLabel">My Favorites</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body p-0">
-      <div id="no-favs" class="text-center" style="display: block;">
-        <p class="fs-5 lh-base">No favorites at the moment<br><i>Save your favorite folders, files, or pages for quick access</i></p>
-      </div>
-      <div id="favorites-listing" class="list-group" >
-      </div>
-    </div>
-  </div>  -->
   <footer style="position: relative;">
     <div id="notification_popup" style="width: 99%; position: fixed; bottom: 0; z-index: 1000; left: 50%; transform: translate(-50%, 0%);">
           {% with messages = get_flashed_messages(with_categories=true) %}
