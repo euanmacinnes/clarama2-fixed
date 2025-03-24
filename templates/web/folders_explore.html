@@ -489,7 +489,7 @@
             // No 'image/gif' or PDF or webp allowed here, but it's up to your use case.
             // Double checks the input "accept" attribute
             const isImageFile = file =>
-                ['text/plain', 'image/jpeg', 'image/png', 'image/svg+xml', 'text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf', 'application/x-zip'].includes(file.type);
+                ['text/plain', 'text/html', 'image/jpeg', 'image/png', 'image/svg+xml', 'text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf', 'application/x-zip'].includes(file.type);
 
 
             // Based on: https://flaviocopes.com/how-to-upload-files-fetch/
@@ -539,13 +539,13 @@
                 let files = [...dataRefs.files];
 
                 // Remove unaccepted file types
-                files = files.filter(item => {
+                /*files = files.filter(item => {
                     if (!isImageFile(item)) {
                         console.log('Not an image, ', item.type);
                         alert(item.type + ' not a valid file for upload');
                     }
                     return isImageFile(item) ? item : null;
-                });
+                });*/
 
                 if (!files.length) return;
                 dataRefs.files = files;

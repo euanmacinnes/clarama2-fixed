@@ -17,17 +17,27 @@ Clarama:
     AllowedUploads:
       - 'md'
       - 'csv'
+      - 'py'
+      - 'js'
+      - 'sql'
       - 'xls'
+      - 'tar'
+      - 'tar.gz'
+      - 'zip'
+      - 'env'
+      - 'sh'
       - 'xlsx'
       - 'jpeg'
       - 'jpg'
       - 'png'
+      - 'css'
       - 'pdf'
       - 'zip'
       - 'jfif'
       - 'svg'
       - 'svgz'
       - 'html'
+      - 'txt'
       - 'task'
       - 'task.yaml'
       - 'slate.yaml'
@@ -59,7 +69,11 @@ Clarama:
       .plan: [ 'raw','versioning', 'issues' ]
       .ipynb: [ 'raw','versioning', 'issues' ]
       .txt: [ 'raw','versioning', 'issues' ]
-      .config: [ 'raw','versioning', 'issues' ]
+      .py: [ 'raw','versioning', 'issues' ]
+      .sql: [ 'raw','versioning', 'issues' ]
+      .css: [ 'raw','versioning', 'issues' ]
+      .ts: [ 'raw','versioning', 'issues' ]
+      .js: [ 'raw','versioning', 'issues' ]
       .jpg: [ 'explore','issues' ]
       .png: [ 'explore','issues' ]
       .jpeg: [ 'explore','issues' ]
@@ -71,12 +85,18 @@ Clarama:
       .jfif: [ 'explore','issues' ]
     FiletypeCSS:
       .csv: bi-filetype-csv
+      .css: bi-filetype-css
       .tsv: bi-filetype-tsv
       .xls: bi-filetype-xls
       .xlsx: bi-filetype-xlsx
       .json: bi-filetype-json
       .md: bi-blockquote-left
-      .html: bi-file-earmark-richtext
+      .html: bi-browser-edge
+      .txt: bi-file-earmark-text
+      .js: bi-filetype-js
+      .ts: bi-filetype-ts
+      .py: bi-filetype-py
+      .sql: bi-filetype-sql
       .help.yaml: bi-info-square
       .task.yaml: bi-journal-arrow-down
       .slate.yaml: bi-file-earmark-spreadsheet
@@ -101,12 +121,20 @@ Clarama:
       .pjp: bi-card-image
       .pdf: bi-file-pdf
       .zip: bi-file-zip
+      .tar: bi-file-zip
+      .tar.gz: bi-file-zip
     FiletypeRawEditor:
       .html: html
+      .js: javascript
+      .ts: typescript
       .json: json
       .ipynb: json
       .md: markdown
       .txt: text
+      .py: python
+      .csv: CSV
+      .css: css
+      .sql: sql
       .task: yaml
       .config: yaml
       .plan: yaml
@@ -127,6 +155,7 @@ Clarama:
       .xls: Excel Sheet
       .xlsx: Excel Sheet
       .html: Web Page
+      .txt: Text
       .json: JSON
       .md: Markdown
       .task.yaml: Task
