@@ -99,7 +99,7 @@ function cell_delete_step(parent) {
     });
 }
 
-function datacell_setOutput(id_template, value) {
+function datacell_setOutput(id_template, value, chartOptions) {
     $('#' + id_template + '_output').attr('value', value);
 
     console.log(id_template);
@@ -135,4 +135,10 @@ function datacell_setOutput(id_template, value) {
         $('#' + id_template + '_chart').removeClass('btn-primary');
     }
 
+    if (value === 'table' || value === 'code') {
+        // Close the accordion if 'table' or 'code' button is clicked
+        let accordion = document.getElementById(chartOptions);
+        let bsCollapse = new bootstrap.Collapse(accordion, { toggle: false });
+        bsCollapse.hide();
+    }
 }

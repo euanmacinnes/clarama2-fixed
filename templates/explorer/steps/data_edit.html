@@ -4,18 +4,18 @@
             <input id="task_step_{{ loop_index }}_output" type="hidden" value="{{ output or 'table' }}">
             <div class="btn-group col align-items-center">
                 <button id="task_step_{{ loop_index }}_table" type="button"
-                        class="btn {% if output==" table" %}btn-primary{% else %}btn-secondary{% endif %}"
-                        onclick="datacell_setOutput('task_step_{{ loop_index }}', 'table');"><i class="bi bi-table"></i>
+                        class="btn {% if output=='table' %}btn-primary{% else %}btn-secondary{% endif %}"
+                        onclick="datacell_setOutput('task_step_{{ loop_index }}', 'table', 'collapseOptions_{{ loop_index }}');"><i class="bi bi-table"></i>
                 </button>
                 <button id="task_step_{{ loop_index }}_chart" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseOptions" aria-expanded="false" aria-controls="collapseOptions"
-                        class="btn dropdown-togglew rounded-0 {% if output==" chart" %}btn-primary{% else %}btn-secondary{% endif %}"
-                        onclick="datacell_setOutput('task_step_{{ loop_index }}', 'chart');"><i
+                        data-bs-target="#collapseOptions_{{ loop_index }}" aria-expanded="{% if output=='chart' %}true{% else %}false{% endif %}" aria-controls="collapseOptions_{{ loop_index }}"
+                        class="btn dropdown-togglew rounded-0 {% if output=='chart' %}btn-primary{% else %}btn-secondary{% endif %}"
+                        onclick="datacell_setOutput('task_step_{{ loop_index }}', 'chart', 'collapseOptions_{{ loop_index }}');"><i
                         class="bi bi-graph-up-arrow"></i></button>
 
                 <button id="task_step_{{ loop_index }}_code" type="button"
-                        class="rounded-0 btn {% if output==" code" %}btn-primary{% else %}btn-secondary{% endif %}"
-                        onclick="datacell_setOutput('task_step_{{ loop_index }}', 'code');"><i class="bi bi-code"></i>
+                        class="rounded-0 btn {% if output=='code' %}btn-primary{% else %}btn-secondary{% endif %}"
+                        onclick="datacell_setOutput('task_step_{{ loop_index }}', 'code', 'collapseOptions_{{ loop_index }}');"><i class="bi bi-code"></i>
                 </button>
 
                 <div class="input-group">
@@ -33,8 +33,10 @@
                 
                 <a href="{{ source }}" target="_blank" class="text-decoration-none text-white">
                     <button id="task_step_{{ loop_index }}_browse" type="button"
-                        class="rounded-0 btn btn-secondary datasource" aria-haspopup="true"
-                        aria-expanded="false"><i class="bi bi-box-arrow-up-right"></i></button>
+                        class="btn btn-secondary datasource" aria-haspopup="true"
+                        aria-expanded="false" style="border-radius: 0px 4px 4px 0px;">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </button>
                 </a>
 
                 <!-- <div class="btn-group rounded-top col-1" role="group">
@@ -45,7 +47,7 @@
             </div>
         </div>
     </div>
-    <div id="collapseOptions" class="accordion-collapse collapse bg-dark text-light">
+    <div id="collapseOptions_{{ loop_index }}" class="accordion-collapse collapse bg-dark text-light {% if output=='chart' %}show{% endif %}">
         <div class="accordion-body" aria-labelledby="chart" style="padding: 8px;">
             <div class="container-fluid">
                 <div class="d-flex align-items-center my-3">
@@ -95,7 +97,7 @@
                 </div>
             </div>
 
-            <ul id="seriesGrp" class="list-group">
+            <ul id="seriesGrp{{ loop_index }}" class="list-group">
                 {% if chart is defined %}
                     {% set seriesgroups = chart['series-groups'] or [{}] %}
                     {% set seriesformats = chart['series-formats'] or [{}] %}
@@ -107,7 +109,7 @@
                 {% endif %}
                 <label for="sg{{ loop_index }}" class="form-label mb-2">
                     Series Groups
-                    <i id="addSG" class="bi bi-plus-circle ms-1 data-cell-icon-hover add"></i>
+                    <i id="addSG{{ loop_index }}" class="bi bi-plus-circle ms-1 data-cell-icon-hover add"></i>
                 </label>
                 {% for sgroup in seriesgroups %}
                     <li class="chart-series-groups">
@@ -152,9 +154,9 @@
 
             <label for="sg{{ loop_index }}" class="form-label mb-2"><br/>
                 Series Formats
-                <i id="addSF" class="bi bi-plus-circle ms-1 data-cell-icon-hover add"></i>
+                <i id="addSF{{ loop_index }}" class="bi bi-plus-circle ms-1 data-cell-icon-hover add"></i>
             </label>
-            <ul id="seriesFormat" class="list-group">
+            <ul id="seriesFormat{{ loop_index }}" class="list-group">
                 {% for sformat in seriesformats %}
                     <li class=" chart-series-formats">
                         <div class=" list-group-item d-flex align-items-center">
@@ -212,6 +214,6 @@
         var output = $('#task_step_{{ loop_index }}_output').attr('value');
         // datacell_setOutput('task_step_{{ loop_index }}', '{{ output }}');
 
-        chart_options_initialize();
+        chart_options_initialize('{{ loop_index }}');
     });
 </script>
