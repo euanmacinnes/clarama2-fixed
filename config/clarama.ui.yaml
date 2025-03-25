@@ -141,6 +141,7 @@ Clarama:
       .plan: yaml
       .task.yaml: yaml
       .slate.yaml: yaml
+      .deploy.yaml: yaml
       .plan.yaml: yaml
       .table.yaml: yaml
       .layout.yaml: yaml
