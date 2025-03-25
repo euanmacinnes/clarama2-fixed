@@ -234,6 +234,22 @@
         </div>
     </div>
 
+    <!-- Modal for Progress -->
+    <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="progressModalLabel">Uploading...</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="progress">
+                        <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         console.clear();
 
@@ -498,6 +514,26 @@
             // Based on: https://flaviocopes.com/how-to-upload-files-fetch/
             const imageUpload = dataRefs => {
 
+                const modal = new bootstrap.Modal(document.getElementById('progressModal'));
+                modal.show(); // Show the popup
+                
+                function startProgress() {
+                    let progress = 0;
+                    const progressBar = document.getElementById('progress-bar');
+                    const interval = setInterval(() => {
+                        if (progress < 90) { // Simulate progress up to 90%
+                            progress += 10;
+                            progressBar.style.width = progress + "%";
+                            progressBar.setAttribute('aria-valuenow', progress);
+                        } else {
+                            clearInterval(interval);
+                        }
+                    }, 200);
+                    return interval;
+                }
+
+                const progressInterval = startProgress();
+
                 // Multiple source routes, so double check validity
                 if (!dataRefs.files || !dataRefs.input) return;
 
@@ -516,24 +552,34 @@
                 const formData = new FormData();
                 formData.append("file", dataRefs.files[0]);
 
-    fetch(url, {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('posted: ', data);
-      if (data.retrieval === true) {
-        // previewFiles(dataRefs);
-        window.location.reload();
-      } else {
-        console.log('URL: ', url, '  name: ', name)
-      }
-    })
-    .catch(error => {
-      console.error('errored: ', error);
-    });
-  }
+                fetch(url, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    clearInterval(progressInterval);
+                    document.getElementById('progress-bar').style.width = "100%"; 
+                    document.getElementById('progress-bar').setAttribute('aria-valuenow', 100);
+                    setTimeout(() => {
+                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('progressModal'));
+                        modalInstance.hide(); // Hide the popup after upload
+                    }, 500);
+
+                    console.log('posted: ', data);
+                    if (data.retrieval === true) {
+                        // previewFiles(dataRefs);
+                        window.location.reload();
+                    } else {
+                        console.log('URL: ', url, '  name: ', name)
+                    }
+                })
+                .catch(error => {
+                    console.error('errored: ', error);
+                    document.getElementById('progressModalLabel').textContent = "Error!";
+                    document.getElementById('progress-bar').classList.add('bg-danger');
+                });
+            }
 
 
             // Handle both selected and dropped files
