@@ -257,8 +257,11 @@
         function context_rename() {
             console.log("Renaming " + $("#context-menu").attr("listing_file") + ' in ' + $("#context-menu").attr("file_div"));
             var file_div = $("#context-menu").attr("file_div");
-
+            var parent_link =  $('#' + file_div).closest("a");
             $('#' + file_div).attr('contenteditable', true).focus();
+            parent_link.click(function(event) {
+                event.preventDefault();
+            });
             $("#context-menu").removeClass("show").hide();
         }
 
