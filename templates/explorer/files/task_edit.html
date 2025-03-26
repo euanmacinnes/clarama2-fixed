@@ -34,27 +34,9 @@
                                    href="#"
                                    id="environment_{{ key | washed }}"
                                    env="{{ key }}"
-                                   onclick="set_environment('{{ key }}')">{{ env }}</a></li>
+                                   onclick="set_environment('{{ key }}')">{{ env }}</a>
+                            </li>
                         {% endfor %}
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li>
-                            <h4 class="dropdown-item-text">Task Environment Customizations</h4>
-                            <span class="dropdown-item-text">
-                                 Enter custom python dependencies here one per-line, including version information if desired. <br/><br/>
-
-                                 Note: iPyWidgets is not supported, so items like
-                                 matplotlib and plotly that depend on that, don't function.<br/><br/></span>
-
-
-                            <div id="task-environment-customizations"
-                                 name="task-environment-customizations"
-                                 class="form-control source-editor clarama-field-editor"
-                                 editor="yaml"
-                                 style="min-height: 100px; width: 600px;"></div>
-
-                        </li>
                     </ul>
                 </ul>
             </div>

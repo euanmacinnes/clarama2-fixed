@@ -56,7 +56,12 @@ function get_field_values() {
  * saveGrid is in the _grid_edit.html and is dynamically generated with the saved grid definition inside the HTML
  */
 function get_fields(fields, cell) {
-    var registry = {'streams': []}
+    let socket = $("#edit_socket");
+
+    var registry = {
+        'streams': [],
+        'environment': socket.attr("environment")
+    }
 
     if (fields) {
         this_grid = saveGrid();
