@@ -1,0 +1,57 @@
+<div class="container-fluid row tight" style="height: 100%; padding-bottom: 2px;">
+    <div id="{{ target }}" element-type="{{ file_type }}" grid-id="{{ grid_id }}" autorun="{{ autorun }}"
+         class="col clarama-element clarama-embedded clarama-edit-element slate-panel-target tight"
+         url="{{ embedded_url }}">
+    </div>
+    <div class="dropdown col-auto align-middle tight">
+        <i class="bi bi-three-dots-vertical element_editor" data-bs-toggle="dropdown" aria-expanded="false"></i>
+        <ul class="dropdown-menu embedded-dropdown-menu">
+            <li><a class="dropdown-item" href="/content/edit/{{ element_content_url }}" target="new"><i
+                    class="bi bi-pencil-square"></i> Edit {{ target_element['url'] }}</a></li>
+            <li><a class="dropdown-item" href="#" onclick="delete_element('{{ target }}');"><i class="bi bi-trash"></i>
+                Remove Element</a></li>
+            <li>
+                <table>
+                    <tr>
+                        <td><input type="checkbox" {{ get_checked }} id="{{ target }}_refresh"></td>
+                        <td><label class="form-check-label dropdown-item">Auto-Refresh</label></td>
+                    </tr>
+                </table>
+            </li>
+            {% if field %}
+                <li><select class="form-control">
+                    <option>Top Down</option>
+                    <option>Basic</option>
+                </select></li>
+            {% endif %}
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><h6 class="dropdown-header">On Change/Click, Refresh:</h6></li>
+            {% for element, value in elements.items() %}
+                {% if element != target %}
+                    <li class="form-check">
+                        <table width="100%">
+                            <tr>
+                                <td width="30px">
+                                    <input type="checkbox"
+                                            {% if 'links' in elements[target] %}
+                                                {% if element in elements[target]['links'] %}
+                                           checked
+                                                {% endif %}
+                                            {% endif %}
+                                           id="{{ target }}_{{ element }}"
+                                           onClick="link_elements('{{ target }}','{{ element }}');">
+                                </td>
+                                <td>
+                                    <label class="form-check-label dropdown-item">{{ elements[element]['url'] or '' }}
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
