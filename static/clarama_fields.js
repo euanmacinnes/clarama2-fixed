@@ -176,6 +176,7 @@ $.fn.initselect = function () {
                 console.log("Enabling data for select2: " + embedded.attr("sourceurl"))
                 embedded.select2({
                     selectionCssClass: "col",
+                    closeOnSelect: false,
                     dataType: 'json',
                     minimumResultsForSearch: 1,
                     ajax: {
@@ -217,7 +218,7 @@ $.fn.initselect = function () {
                     }
                 });
             } else {
-                embedded.select2({width: "100%"});
+                embedded.select2({width: "100%", closeOnSelect: embedded.attr('closeOnSelect') || false});
             }
 
             embedded.attr("clarama_data_set", true)
