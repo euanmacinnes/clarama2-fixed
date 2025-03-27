@@ -232,7 +232,16 @@ function bChart(chart_id, chart_data) {
         var unit_id = data['cols'].indexOf(sg['series-u']);
         var unit = undefined;
 
-        if (xaxis_id >= 0 & yaxis_id >= 0) {
+        console.log("General chart info: ");
+        console.log({
+            x: xaxis_id,
+            y: yaxis_id,
+            z: zaxis_id, s: series_id, l: label_id, u: unit_id, unit: sg['series-u']
+        });
+        if (unit_id < 0 && sg['series-u'] !== "")
+            yaxis_scale['title']['description'] = sg['series-u'];
+
+        if (xaxis_id >= 0 && yaxis_id >= 0) {
             xaxis = data['rows'][xaxis_id];
             yaxis = data['rows'][yaxis_id];
             labels = xaxis
@@ -250,8 +259,12 @@ function bChart(chart_id, chart_data) {
             yaxis_scale['title']['text'] = sg['series-y'];
             chart_scales['x'] = xaxis_scale;
 
-            if (unit_id < 0)
+            if (unit_id < 0 && sg['series-u'] === "") {
+                console.log("No units, creating default Y")
                 chart_scales['y'] = yaxis_scale;
+            } else {
+                console.log("Fark");
+            }
 
 
             console.log("X-AXIS");
@@ -265,8 +278,10 @@ function bChart(chart_id, chart_data) {
 
                 if (unit_id > 0)
                     unit = data['rows'][unit_id];
-                else
+
+                if (unit === '')
                     unit = undefined;
+
 
                 if (series !== undefined) {
                     var curr = series[0];
@@ -282,8 +297,13 @@ function bChart(chart_id, chart_data) {
                                 type: sg['series-type'].toLowerCase()
                             }
 
-                            if (unit !== undefined)
+                            if (unit !== undefined) {
+                                console.log("Data Unit Axis");
                                 ChartSeriesAxis(dataset, chart_scales, unit[p - 1]);
+                            } else if (sg['series-u'] !== "") {
+                                console.log("Labelled Unit Axis");
+                                ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
+                            }
 
                             datasets.push(ChartSeriesFormat(dataset, formats));
 
@@ -330,9 +350,11 @@ function bChart(chart_id, chart_data) {
                 type: sg['series-type'].toLowerCase(),
             }
 
-            if (unit !== undefined)
+            if (unit !== undefined) {
                 if (xaxis.length >= 1)
                     ChartSeriesAxis(dataset, chart_scales, unit[xaxis.length - 1]);
+            } else if (sg['series-u'] !== "")
+                ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
 
             datasets.push(ChartSeriesFormat(dataset, formats));
 
@@ -385,7 +407,7 @@ function bChart(chart_id, chart_data) {
     console.log("FINAL LABELS: " + unique_labels.length);
     console.log(unique_labels);
     console.log("FINAL FORMATS: " + Object.keys(formats).length);
-    console.log(chart_scales);
+    console.log(formats);
 
     var config = {
         data: {
