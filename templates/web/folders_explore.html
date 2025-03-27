@@ -243,7 +243,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="progress">
-                        <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                        <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated"
+                             style="width: 0%"></div>
                     </div>
                 </div>
             </div>
@@ -251,7 +252,6 @@
     </div>
 
     <script>
-        console.clear();
 
         function favorite_listing() {
             var file_div = $("#context-menu").attr('file_div').split("_");
@@ -273,9 +273,9 @@
         function context_rename() {
             console.log("Renaming " + $("#context-menu").attr("listing_file") + ' in ' + $("#context-menu").attr("file_div"));
             var file_div = $("#context-menu").attr("file_div");
-            var parent_link =  $('#' + file_div).closest("a");
+            var parent_link = $('#' + file_div).closest("a");
             $('#' + file_div).attr('contenteditable', true).focus();
-            parent_link.click(function(event) {
+            parent_link.click(function (event) {
                 event.preventDefault();
             });
             $("#context-menu").removeClass("show").hide();
@@ -556,29 +556,29 @@
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.json())
-                .then(data => {
-                    clearInterval(progressInterval);
-                    document.getElementById('progress-bar').style.width = "100%";
-                    document.getElementById('progress-bar').setAttribute('aria-valuenow', 100);
-                    setTimeout(() => {
-                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('progressModal'));
-                        modalInstance.hide(); // Hide the popup after upload
-                    }, 500);
+                    .then(response => response.json())
+                    .then(data => {
+                        clearInterval(progressInterval);
+                        document.getElementById('progress-bar').style.width = "100%";
+                        document.getElementById('progress-bar').setAttribute('aria-valuenow', 100);
+                        setTimeout(() => {
+                            const modalInstance = bootstrap.Modal.getInstance(document.getElementById('progressModal'));
+                            modalInstance.hide(); // Hide the popup after upload
+                        }, 500);
 
-                    console.log('posted: ', data);
-                    if (data.retrieval === true) {
-                        // previewFiles(dataRefs);
-                        window.location.reload();
-                    } else {
-                        console.log('URL: ', url, '  name: ', name)
-                    }
-                })
-                .catch(error => {
-                    console.error('errored: ', error);
-                    document.getElementById('progressModalLabel').textContent = "Error!";
-                    document.getElementById('progress-bar').classList.add('bg-danger');
-                });
+                        console.log('posted: ', data);
+                        if (data.retrieval === true) {
+                            // previewFiles(dataRefs);
+                            window.location.reload();
+                        } else {
+                            console.log('URL: ', url, '  name: ', name)
+                        }
+                    })
+                    .catch(error => {
+                        console.error('errored: ', error);
+                        document.getElementById('progressModalLabel').textContent = "Error!";
+                        document.getElementById('progress-bar').classList.add('bg-danger');
+                    });
             }
 
 
