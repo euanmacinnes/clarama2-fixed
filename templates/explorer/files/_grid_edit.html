@@ -348,8 +348,15 @@
       return goUp ? `${goUp}/${goDown}` : goDown; // if no goUp means we r in the correct folder
     }
 
+    function naturalSort(arr) {
+      return arr.sort((a, b) => {
+        return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+      })
+    }
+
     function renderFilesNFolder(path, breadcrumbId, selectId) {
       const selectElement = document.getElementById(selectId);
+      console.log(`fetch path: ${path}`)
       fetch(path)
         .then((response) => response.json())
         .then((json_files) => {
@@ -357,7 +364,7 @@
           const allPaths = json_files['results']['files'];
           const foldersSet = new Set();
           const filesSet = new Set();
-          console.log("All paths:", allPaths);
+          console.log(`json_files returned: ${allPaths}` );
 
           // Determine folders and files
           allPaths.forEach(filePath => {
@@ -370,8 +377,8 @@
             }
           });
 
-          const sortedFolders = [...foldersSet].sort((a, b) => a.localeCompare(b));
-          const sortedFiles = [...filesSet].sort((a, b) => a.localeCompare(b));
+          const sortedFolders = naturalSort([...foldersSet]);
+          const sortedFiles = naturalSort([...filesSet]);
 
           // Render folders
           sortedFolders.forEach(folder => {
