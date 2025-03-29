@@ -75,41 +75,43 @@ function run_socket(embedded) {
             webSocket.onmessage = function (event) {
                 onMessage(event, websocket_address, webSocket, element_prefix)
             };
-        });
 
-    console.log(socket_id + " " + element_prefix + ":=>Task connecting to " + task_url)
-    fetch(task_url)
-        .then((response) => {
-            if (response.ok) {
-                return response.json();
-            }
-            console.log(response);
-            return Promise.reject(response);
-        })
-        .then((task_response) => {
 
-            // console.log(JSON.stringify(task_response, null, 2));
-            let kernel_id = task_response['results']['kernel_id']
-            let task_environment = task_response['results']['environment_name']
-            let environment_file = task_response['results']['environment']
+            console.log(socket_id + " " + element_prefix + ":=>Task connecting to " + task_url)
+            fetch(task_url)
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    console.log(response);
+                    return Promise.reject(response);
+                })
+                .then((task_response) => {
 
-            embedded.attr('task_kernel_id', kernel_id);
-            console.log("CLARAMA_WEBSOCKET.js: TASK " + task_url + " connected to kernel " + kernel_id)
+                    // console.log(JSON.stringify(task_response, null, 2));
+                    let kernel_id = task_response['results']['kernel_id']
+                    let task_environment = task_response['results']['environment_name']
+                    let environment_file = task_response['results']['environment']
 
-            let active_selector = ('#environment_' + environment_file).replaceAll('.', "_");
+                    embedded.attr('task_kernel_id', kernel_id);
+                    console.log("CLARAMA_WEBSOCKET.js: TASK " + task_url + " connected to kernel " + kernel_id)
 
-            $("#kernel_status").html(kernel_id);
-            $("#environment").html(task_environment);
-            $(".environments").removeClass('active');
-            $(active_selector).addClass('active');
+                    let active_selector = ('#environment_' + environment_file).replaceAll('.', "_");
 
-            if (autorun === 'True') {
-                _task_run(socket_id)
-            }
+                    $("#kernel_status").html(kernel_id);
+                    $("#environment").html(task_environment);
+                    $(".environments").removeClass('active');
+                    $(active_selector).addClass('active');
 
-        })
-        .catch((error) => {
-            flash(task_url + " error " + error, category = 'danger');
+                    if (autorun === 'True') {
+                        _task_run(socket_id)
+                    }
+
+                })
+                .catch((error) => {
+                    flash(task_url + " error " + error, category = 'danger');
+                });
+
         });
 }
 
