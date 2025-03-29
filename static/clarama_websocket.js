@@ -23,7 +23,7 @@ function run_socket(embedded) {
     if (environment !== undefined) {
         env_url = '&environment=' + environment;
         refresh = true;
-        console.log("overriding environment with " + env_url);
+        console.log("CLARAMA_WEBSOCKET.js: overriding environment with " + env_url);
     }
 
 
@@ -33,6 +33,49 @@ function run_socket(embedded) {
     playbutton.removeClass("btn-primary")
 
     let task_url = $CLARAMA_ROOT + $CLARAMA_ENVIRONMENTS_TASK_OPEN + task + '?topic=' + topic + '&refresh=' + refresh + env_url;
+
+    let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
+
+    if (socket_url in sockets) {
+        console.log("CLARAMA_WEBSOCKET.js: CLOSING EXISTING SOCKET " + socket_url);
+        sockets[socket_url].close();
+    }
+
+    console.log("CLARAMA_WEBSOCKET.js:  SUBSCRIBING " + topic + " WebSocket " + socket_url + " for " + task_url);
+
+    fetch(socket_url)
+        .then((response) => response.json())
+        .then((response) => {
+            //console.log(response);
+
+            let server = response['results']['socket']
+            let uuid = response['results']['uuid']
+            let topic = response['results']['topic']
+
+            let websocket_address = server + 'ws/' + uuid + '/';
+            let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
+            console.log("CLARAMA_WEBSOCKET.js: Creating " + socket_url + " Websocket on " + websocket_address);
+
+            let webSocket = new WebSocket(websocket_address);
+
+            sockets[socket_url] = webSocket;
+
+            webSocket.onerror = function (event) {
+                onError(event, task_url, websocket_address, webSocket, task_results)
+            };
+
+            webSocket.onopen = function (event) {
+                onOpen(event, websocket_address, webSocket, task_results, socket_id)
+            };
+
+            webSocket.onclose = function (event) {
+                onClose(event, websocket_address, webSocket, task_results)
+            };
+
+            webSocket.onmessage = function (event) {
+                onMessage(event, websocket_address, webSocket, element_prefix)
+            };
+        });
 
     console.log(socket_id + " " + element_prefix + ":=>Task connecting to " + task_url)
     fetch(task_url)
@@ -45,22 +88,13 @@ function run_socket(embedded) {
         })
         .then((task_response) => {
 
-            let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
-
-            if (socket_url in sockets) {
-                console.log("CLOSING EXISTING SOCKET " + socket_url);
-                sockets[socket_url].close();
-            } else {
-                console.log("NOT CLOSING SOCKET " + socket_url);
-            }
-
             // console.log(JSON.stringify(task_response, null, 2));
             let kernel_id = task_response['results']['kernel_id']
             let task_environment = task_response['results']['environment_name']
             let environment_file = task_response['results']['environment']
-            console.log(" SUBSCRIBING " + topic + " WebSocket " + socket_url + " for kernel " + kernel_id + " in environment " + task_environment + ' in ' + environment_file);
 
             embedded.attr('task_kernel_id', kernel_id);
+            console.log("CLARAMA_WEBSOCKET.js: TASK " + task_url + " connected to kernel " + kernel_id)
 
             let active_selector = ('#environment_' + environment_file).replaceAll('.', "_");
 
@@ -69,40 +103,10 @@ function run_socket(embedded) {
             $(".environments").removeClass('active');
             $(active_selector).addClass('active');
 
-            fetch(socket_url)
-                .then((response) => response.json())
-                .then((response) => {
-                    //console.log(response);
+            if (autorun === 'True') {
+                _task_run(socket_id)
+            }
 
-                    let server = response['results']['socket']
-                    let uuid = response['results']['uuid']
-                    let topic = response['results']['topic']
-                    //embedded.attr("task_kernel_id", kernel_id)
-
-                    let websocket_address = server + 'ws/' + uuid + '/';
-                    let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
-                    console.log("Creating " + socket_url + " Websocket on " + websocket_address);
-
-                    let webSocket = new WebSocket(websocket_address);
-
-                    sockets[socket_url] = webSocket;
-
-                    webSocket.onerror = function (event) {
-                        onError(event, task_url, websocket_address, webSocket, task_results)
-                    };
-
-                    webSocket.onopen = function (event) {
-                        onOpen(event, websocket_address, webSocket, task_results, autorun, socket_id)
-                    };
-
-                    webSocket.onclose = function (event) {
-                        onClose(event, websocket_address, webSocket, task_results)
-                    };
-
-                    webSocket.onmessage = function (event) {
-                        onMessage(event, websocket_address, webSocket, element_prefix)
-                    };
-                });
         })
         .catch((error) => {
             flash(task_url + " error " + error, category = 'danger');
@@ -241,7 +245,7 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
 
             if (dict['class'] === "template_chart") {
                 let resulter = "#" + dict['step_id'];
-                console.log("WEBSOCKET CHART MESSAGE:" + webSocket.url);
+                console.log("CLARAMA_WEBSOCKET.js: WEBSOCKET CHART MESSAGE:" + webSocket.url);
                 process_template(dict['type'], dict['values'], $(resulter), element_prefix);
                 // Draw the table ID first, then let's put in the data
                 bChart(dict['values']['chart_id'], dict['results']);
@@ -280,18 +284,18 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
 
         } catch (err) {
             console.log(err);
-            console.log('exception raised processing:');
+            console.log('CLARAMA_WEBSOCKET.js: exception raised processing:');
             console.log(dict);
         }
     } else if ('progress' in dict) {
         $('#task_progress_' + dict['stream']).attr('aria-valuenow', dict['step_number']);
     } else {
-        console.log("WTF was this: " + dict)
+        console.log("CLARAMA_WEBSOCKET.js: WTF was this: " + dict)
     }
 }
 
-function onOpen(event, socket_url, webSocket, task_results, autorun, socket_id) {
-    console.log('WebSocket Connection established ' + socket_url);
+function onOpen(event, socket_url, webSocket, task_results, socket_id) {
+    console.log('CLARAMA_WEBSOCKET.js: WebSocket Connection established ' + socket_url);
     let kernel_status = $('#kernel_status');
     kernel_status.add("bi-check-circle")
     kernel_status.add("text-success")
@@ -302,15 +306,10 @@ function onOpen(event, socket_url, webSocket, task_results, autorun, socket_id) 
 
     playbutton.removeClass("btn-secondary")
     playbutton.addClass("btn-primary")
-
-    if (autorun === 'True') {
-        _task_run(socket_id)
-    }
-
 }
 
 function onClose(event, socket_url, webSocket, task_results) {
-    console.log('WebSocket Connection CLOSED ' + socket_url + " on socket " + webSocket + " with result " + task_results);
+    console.log('CLARAMA_WEBSOCKET.js: WebSocket Connection CLOSED ' + socket_url + " on socket " + webSocket + " with result " + task_results);
 }
 
 function onError(event, task_url, socket_url, webSocket, task_results) {

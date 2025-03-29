@@ -28,7 +28,7 @@ function _task_run(socket) {
     var field_registry = get_field_values();
     var field_merged = field_registry;
 
-    console.log("TASK RUN Socket " + socket + " looking for " + json_div)
+    console.log("CLARAMA_TASK.js : TASK RUN Socket " + socket + " looking for " + json_div)
     var json_data = document.getElementById(json_div)
 
 
@@ -39,19 +39,22 @@ function _task_run(socket) {
         //if (json_element != null && json_element.value == '') {
         //console.log("found json element for task in " + json_div);
         //console.log(field_merged);
+    } else {
+        console.error("CLARAMA_TASK.js : " + json_div + " div containing JSON is missing")
     }
 
+    var task_socket = $("#" + socket);
 
-    field_merged['clarama_task_kill'] = $("#" + socket).attr("task_kill");
+    field_merged['clarama_task_kill'] = task_socket.attr("task_kill");
 
-    task_kernel_id = $("#" + socket).attr("task_kernel_id");
+    task_kernel_id = task_socket.attr("task_kernel_id");
     url = $CLARAMA_ENVIRONMENTS_TASK_RUN + task_kernel_id;
 
     // Pass in the task's user-defined parameters from the field_registry, and paste into the header the internal configuration
 
     const task = get_url(url, field_merged);
 
-    console.log("Running Task " + task + ' with ' + json_data);
+    console.log("CLARAMA_TASK.js: Running Task " + task + ' with ' + json_data);
 
     // No point sending custom headers here, CORS will nerf any custom headers, so send as params ....
     fetch(task,
@@ -64,7 +67,7 @@ function _task_run(socket) {
             body: JSON.stringify(field_registry)
         })
         .then((response) => {
-            console.log("TASK RUN RESPONSE " + task);
+            console.log("CLARAMA_TASK.js: TASK RUN RESPONSE " + task);
             console.log(response);
         });
     /*fetch(task)
@@ -76,24 +79,24 @@ function _task_run(socket) {
 
 
 function cell_item_run(cell_button) {
-    console.log("RUNNING");
+    console.log("CLARAMA_TASK.js: RUNNING");
     var field_registry = get_field_values(); // Get only the field values, not the full field definitions, text or code
     var task_registry = get_cell_fields(cell_button);
     task_registry['parameters'] = field_registry
 
-    console.log("cell_edit_run Getting Socket");
+    console.log("CLARAMA_TASK.js: cell_edit_run Getting Socket");
     socket = $("#edit_socket");
 
     field_registry['clarama_task_kill'] = false;
 
-    console.log("cell_edit_run Getting Kernel");
+    console.log("CLARAMA_TASK.js: cell_edit_run Getting Kernel");
     task_kernel_id = socket.attr("task_kernel_id");
     url = $CLARAMA_ENVIRONMENTS_KERNEL_RUN + task_kernel_id;
 
     // Pass in the task's user-defined parameters from the field_registry, and paste into the header the internal configuration
     const task = get_url(url, field_registry);
 
-    console.log("Running Task " + task);
+    console.log("CLARAMA_TASK.js: Running Task " + task);
 
     $.ajax({
         type: 'POST',
@@ -103,11 +106,11 @@ function cell_item_run(cell_button) {
         data: JSON.stringify(task_registry),
         success: function (data) {
             if (data['data'] == 'ok') {
-                console.log('Submission was successful.');
+                console.log('CLARAMA_TASK.js: Submission was successful.');
                 console.log(data);
-                flash("Executing!");
+                flash("CLARAMA_TASK.js: Executing!");
             } else {
-                console.log('Submission was successful.');
+                console.log('CLARAMA_TASK.js: Submission was successful.');
                 console.log(data);
                 flash("Couldn't run content: " + data['error']);
             }
