@@ -2,7 +2,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Add Content (Fields or Tasks)</h5>
+        <h5 class="modal-title">Add Content</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -348,8 +348,15 @@
       return goUp ? `${goUp}/${goDown}` : goDown; // if no goUp means we r in the correct folder
     }
 
+    function naturalSort(arr) {
+      return arr.sort((a, b) => {
+        return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+      })
+    }
+
     function renderFilesNFolder(path, breadcrumbId, selectId) {
       const selectElement = document.getElementById(selectId);
+      console.log(`fetch path: ${path}`)
       fetch(path)
         .then((response) => response.json())
         .then((json_files) => {
@@ -357,7 +364,7 @@
           const allPaths = json_files['results']['files'];
           const foldersSet = new Set();
           const filesSet = new Set();
-          console.log("All paths:", allPaths);
+          console.log(`json_files returned: ${allPaths}` );
 
           // Determine folders and files
           allPaths.forEach(filePath => {
@@ -370,8 +377,11 @@
             }
           });
 
+          const sortedFolders = naturalSort([...foldersSet]);
+          const sortedFiles = naturalSort([...filesSet]);
+
           // Render folders
-          foldersSet.forEach(folder => {
+          sortedFolders.forEach(folder => {
             const option = document.createElement('option');
             option.value = folder;
             option.className = "bi bi-folder-fill";
@@ -381,7 +391,7 @@
           });
 
           // Render files with relative paths
-          allPaths.forEach(filePath => {
+          sortedFiles.forEach(filePath => {
             if (!foldersSet.has(filePath.split('/')[0])) { // Ensure it's not a folder
               const option = document.createElement('option');
               option.value = relativePath + "/" + filePath; // Store relative path in the value

@@ -33,7 +33,7 @@ function load_favorites(username) {
                     }
 
                     // if both same type, sort alphabetically
-                    return a[0].localeCompare(b[0]);
+                    return a[0].localeCompare(b[0], undefined, { numeric: true, sensitivity: 'base' });
                 });
 
                 console.log(favoriteFiles);
