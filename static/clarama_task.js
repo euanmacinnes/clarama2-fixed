@@ -106,6 +106,8 @@ function cell_item_run(cell_button) {
                 console.log('Submission was successful.');
                 console.log(data);
                 flash("Executing!");
+
+                moveToNextCell(cell_button);
             } else {
                 console.log('Submission was successful.');
                 console.log(data);
