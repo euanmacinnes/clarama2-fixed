@@ -37,7 +37,11 @@ function bTable(table_id, table_data) {
         data: table_rows,
         onClickRow: function (row, $element, field) {
             // alert(JSON.stringify(row));
-            perform_interact($('#' + table_id), row);
+            table_selection = {
+                row: row,
+                field: field
+            };
+            perform_interact($('#' + table_id), table_selection);
         }
     });
 }
