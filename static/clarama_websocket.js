@@ -4,12 +4,17 @@ function set_environment(environment) {
     $('#environment').html('...');
     let socket = $("#edit_socket");
     socket.attr("environment", environment);
-    run_socket(socket);
+    run_socket(socket, false);
+}
+
+function reset_environment() {
+    let socket = $("#edit_socket");
+    run_socket(socket, true);
 }
 
 let sockets = {};
 
-function run_socket(embedded) {
+function run_socket(embedded, reset_environment) {
     let task = embedded.attr("task")
     let topic = embedded.attr("topic");
     let task_results = embedded.attr("results_id");
@@ -32,7 +37,7 @@ function run_socket(embedded) {
     playbutton.addClass("btn-secondary")
     playbutton.removeClass("btn-primary")
 
-    let task_url = $CLARAMA_ROOT + $CLARAMA_ENVIRONMENTS_TASK_OPEN + task + '?topic=' + topic + '&refresh=' + refresh + env_url;
+    let task_url = $CLARAMA_ROOT + $CLARAMA_ENVIRONMENTS_TASK_OPEN + task + '?topic=' + topic + '&refresh=' + refresh + '&reset_environment=' + reset_environment + env_url;
 
     let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
 
@@ -126,7 +131,7 @@ $.fn.enablesocket = function () {
         console.log("Enabling socket " + $(this).attr('id'))
         console.log($(this));
         let embedded = $(this);
-        run_socket(embedded, true);
+        run_socket(embedded, false);
     });
 }
 
