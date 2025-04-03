@@ -14,6 +14,42 @@ function reset_environment() {
 
 let sockets = {};
 
+function get_task(embedded, task_url, socket_id, autorun) {
+    fetch(task_url)
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+            console.log(response);
+            return Promise.reject(response);
+        })
+        .then((task_response) => {
+
+            // console.log(JSON.stringify(task_response, null, 2));
+            let kernel_id = task_response['results']['kernel_id']
+            let task_environment = task_response['results']['environment_name']
+            let environment_file = task_response['results']['environment']
+
+            embedded.attr('task_kernel_id', kernel_id);
+            console.log("CLARAMA_WEBSOCKET.js: TASK " + task_url + " connected to kernel " + kernel_id)
+
+            let active_selector = ('#environment_' + environment_file).replaceAll('.', "_");
+
+            $("#kernel_status").html(kernel_id);
+            $("#environment").html(task_environment);
+            $(".environments").removeClass('active');
+            $(active_selector).addClass('active');
+
+            if (autorun === 'True') {
+                _task_run(socket_id)
+            }
+
+        })
+        .catch((error) => {
+            flash(task_url + " error " + error, category = 'danger');
+        });
+}
+
 function run_socket(embedded, reset_environment) {
     let task = embedded.attr("task")
     let topic = embedded.attr("topic");
@@ -42,82 +78,51 @@ function run_socket(embedded, reset_environment) {
     let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
 
     if (socket_url in sockets) {
-        console.log("CLARAMA_WEBSOCKET.js: CLOSING EXISTING SOCKET " + socket_url);
-        sockets[socket_url].close();
+        console.log("CLARAMA_WEBSOCKET.js: RE-USING EXISTING SOCKET " + socket_url);
+        //sockets[socket_url].close();
+        get_task(embedded, task_url, socket_id, autorun);
+    } else {
+        console.log("CLARAMA_WEBSOCKET.js:  SUBSCRIBING " + topic + " WebSocket " + socket_url + " for " + task_url);
+
+        fetch(socket_url)
+            .then((response) => response.json())
+            .then((response) => {
+                //console.log(response);
+
+                let server = response['results']['socket']
+                let uuid = response['results']['uuid']
+                let topic = response['results']['topic']
+
+                let websocket_address = server + 'ws/' + uuid + '/';
+                let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
+                console.log("CLARAMA_WEBSOCKET.js: Creating " + socket_url + " Websocket on " + websocket_address);
+
+                let webSocket = new WebSocket(websocket_address);
+
+                sockets[socket_url] = webSocket;
+
+                webSocket.onerror = function (event) {
+                    onError(event, task_url, websocket_address, webSocket, task_results)
+                };
+
+                webSocket.onopen = function (event) {
+                    onOpen(event, websocket_address, webSocket, task_results, socket_id)
+                };
+
+                webSocket.onclose = function (event) {
+                    onClose(event, websocket_address, webSocket, task_results)
+                };
+
+                webSocket.onmessage = function (event) {
+                    onMessage(event, websocket_address, webSocket, element_prefix)
+                };
+
+
+                console.log(socket_id + " " + element_prefix + ":=>Task connecting to " + task_url)
+                get_task(embedded, task_url, socket_id, autorun);
+
+            });
     }
-
-    console.log("CLARAMA_WEBSOCKET.js:  SUBSCRIBING " + topic + " WebSocket " + socket_url + " for " + task_url);
-
-    fetch(socket_url)
-        .then((response) => response.json())
-        .then((response) => {
-            //console.log(response);
-
-            let server = response['results']['socket']
-            let uuid = response['results']['uuid']
-            let topic = response['results']['topic']
-
-            let websocket_address = server + 'ws/' + uuid + '/';
-            let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
-            console.log("CLARAMA_WEBSOCKET.js: Creating " + socket_url + " Websocket on " + websocket_address);
-
-            let webSocket = new WebSocket(websocket_address);
-
-            sockets[socket_url] = webSocket;
-
-            webSocket.onerror = function (event) {
-                onError(event, task_url, websocket_address, webSocket, task_results)
-            };
-
-            webSocket.onopen = function (event) {
-                onOpen(event, websocket_address, webSocket, task_results, socket_id)
-            };
-
-            webSocket.onclose = function (event) {
-                onClose(event, websocket_address, webSocket, task_results)
-            };
-
-            webSocket.onmessage = function (event) {
-                onMessage(event, websocket_address, webSocket, element_prefix)
-            };
-
-
-            console.log(socket_id + " " + element_prefix + ":=>Task connecting to " + task_url)
-            fetch(task_url)
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                    console.log(response);
-                    return Promise.reject(response);
-                })
-                .then((task_response) => {
-
-                    // console.log(JSON.stringify(task_response, null, 2));
-                    let kernel_id = task_response['results']['kernel_id']
-                    let task_environment = task_response['results']['environment_name']
-                    let environment_file = task_response['results']['environment']
-
-                    embedded.attr('task_kernel_id', kernel_id);
-                    console.log("CLARAMA_WEBSOCKET.js: TASK " + task_url + " connected to kernel " + kernel_id)
-
-                    let active_selector = ('#environment_' + environment_file).replaceAll('.', "_");
-
-                    $("#kernel_status").html(kernel_id);
-                    $("#environment").html(task_environment);
-                    $(".environments").removeClass('active');
-                    $(active_selector).addClass('active');
-
-                    if (autorun === 'True') {
-                        _task_run(socket_id)
-                    }
-
-                })
-                .catch((error) => {
-                    flash(task_url + " error " + error, category = 'danger');
-                });
-
-        });
 }
 
 
