@@ -93,13 +93,19 @@ function ChartSeriesFormat(dataset, formats) {
             if (format['format-col'] !== undefined) {
                 console.log("SERIES colour of " + dataset['label'] + " set to '" + format['format-col']);
 
-                dataset['borderColor'] = format['format-col'];
+                if (chartColors[format['format-col']] !== undefined)
+                    dataset['borderColor'] = chartColors[format['format-col']]
+                else
+                    dataset['borderColor'] = format['format-col'];
             }
 
-            if (format['format-point-col'] !== undefined) {
-                console.log("SERIES colour of " + dataset['label'] + " set to '" + format['format-col']);
+            if (format['format-col-back'] !== undefined) {
+                console.log("SERIES colour of " + dataset['label'] + " set to '" + format['format-col-back']);
 
-                dataset['backgroundColor'] = format['format-col'];
+                if (chartColors[format['format-col-back']] !== undefined)
+                    dataset['backgroundColor'] = chartColors[format['format-col-back']]
+                else
+                    dataset['backgroundColor'] = format['format-col-back'];
             }
 
             if (format['format-dt'])
