@@ -56,3 +56,14 @@ input[type="search"]::-webkit-search-cancel-button {
     -webkit-box-shadow: none;
     box-shadow: none;
 }
+
+.clarama-edit-element.highlight {
+    border-color: #000 !important;
+    background-color: #eee !important; 
+    transition: background-color, border-color 0.2s ease-in-out;
+}
+
+.bi-plus-circle.elem-hover:hover {
+    color: #4bb785;
+    transition: color 0.2s ease-in-out;
+}
