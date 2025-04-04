@@ -90,7 +90,7 @@ function ChartSeriesFormat(dataset, formats) {
 
             }
 
-            if (format['format-title'] !== undefined) {
+            if (format['format-title'] !== undefined)
                 dataset['label'] = format['format-title'];
 
             if (format['format-col'] !== undefined) {
