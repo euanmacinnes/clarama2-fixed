@@ -90,6 +90,18 @@ function ChartSeriesFormat(dataset, formats) {
 
             }
 
+            if (format['format-col'] !== undefined) {
+                console.log("SERIES colour of " + dataset['label'] + " set to '" + format['format-col']);
+
+                dataset['borderColor'] = format['format-col'];
+            }
+
+            if (format['format-point-col'] !== undefined) {
+                console.log("SERIES colour of " + dataset['label'] + " set to '" + format['format-col']);
+
+                dataset['backgroundColor'] = format['format-col'];
+            }
+
             if (format['format-dt'])
                 dataset['borderDash'] = [10, 5];
 
