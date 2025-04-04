@@ -63,30 +63,42 @@
     return typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
   }
 
+  function isFolder(item) {
+    return item.hasClass('bi bi-folder-fill');
+  }
+
   $( document ).ready(() => {
     // double-click on a file in the modal
-    $('#add_content_addfield').on('dblclick', function () {
-      add_selected_content('/content/element/{{ file_url }}')
+    $('#add_content_addfield').on('dblclick', 'option', function () {
+      const selectedItem = $(this); 
+      if (!isFolder(selectedItem)) {
+        console.log("File selected: " + selectedItem.val());
+        add_selected_content('/content/element/{{ file_url }}')
+      }
     });
 
-    $('#add_content_browsefile').on('dblclick', function () {
-      add_selected_file();
+    $('#add_content_browsefile').on('dblclick', 'option', function () {
+      const selectedItem = $(this); 
+      if (!isFolder(selectedItem)) {
+        console.log("File selected: " + selectedItem.val());
+        add_selected_file();
+      }
     });
 
     $('#addfieldModal').on('shown.bs.modal', function () {
-      let filters = $(".gridaddcontent").attr('filters');
-      let path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
+      filters = $(".gridaddcontent").attr('filters');
+      path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
 
       navigateToPath(path, 'breadcrumb_addfield', 'add_content_addfield');
     });
 
     $('#browseFileModal').on('shown.bs.modal', function (event) {
-      let button = $(event.relatedTarget);
-      let filters = button.attr('filters'); 
-      let inputId = button.attr('inputId');
+      button = $(event.relatedTarget);
+      filters = button.attr('filters'); 
+      inputId = button.attr('inputId');
 
       $(this).data('inputId', inputId);
-      let path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
+      path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
 
       navigateToPath(path, 'breadcrumb_browsefile', 'add_content_browsefile');
     });
@@ -179,7 +191,7 @@
   }
 
   function add_selected_content(element_render_url) {
-    let selected_val = "./" + $("#add_content_addfield").val();
+    selected_val = "./" + $("#add_content_addfield").val();
     console.log("adding " + selected_val);
 
     if (selected_val == null) {
@@ -243,7 +255,7 @@
   }
 
   function add_selected_file() {
-    let inputId = $("#browseFileModal").data('inputId');
+    inputId = $("#browseFileModal").data('inputId');
     const selected_val = $("#add_content_browsefile").val();
     console.log("adding " + selected_val);
   
