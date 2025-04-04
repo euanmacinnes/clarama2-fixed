@@ -51,7 +51,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary"
-                              onclick="add_selected_file()">Ok
+                              onclick="add_selected_file()">Select
         </button>
       </div>
     </div>
@@ -71,8 +71,10 @@
       navigateToPath(path, 'breadcrumb_addfield', 'add_content_addfield');
     });
 
-    $('#browseFileModal').on('shown.bs.modal', function () {
-      filters = $(".gridbrowsefile").attr('filters');
+    $('#browseFileModal').on('shown.bs.modal', function (event) {
+      button = $(event.relatedTarget);
+      console.log(button)
+      filters = button.attr('filters'); 
       console.log(filters)
       path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
 
