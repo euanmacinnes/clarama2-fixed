@@ -64,19 +64,29 @@
   }
 
   $( document ).ready(() => {
+    // double-click on a file in the modal
+    $('#add_content_addfield').on('dblclick', function () {
+      add_selected_content('/content/element/{{ file_url }}')
+    });
+
+    $('#add_content_browsefile').on('dblclick', function () {
+      add_selected_file();
+    });
+
     $('#addfieldModal').on('shown.bs.modal', function () {
-      filters = $(".gridaddcontent").attr('filters');
-      path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
+      let filters = $(".gridaddcontent").attr('filters');
+      let path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
 
       navigateToPath(path, 'breadcrumb_addfield', 'add_content_addfield');
     });
 
     $('#browseFileModal').on('shown.bs.modal', function (event) {
-      button = $(event.relatedTarget);
-      console.log(button)
-      filters = button.attr('filters'); 
-      console.log(filters)
-      path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
+      let button = $(event.relatedTarget);
+      let filters = button.attr('filters'); 
+      let inputId = button.attr('inputId');
+
+      $(this).data('inputId', inputId);
+      let path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
 
       navigateToPath(path, 'breadcrumb_browsefile', 'add_content_browsefile');
     });
@@ -169,7 +179,7 @@
   }
 
   function add_selected_content(element_render_url) {
-    selected_val = "./" + $("#add_content_addfield").val();
+    let selected_val = "./" + $("#add_content_addfield").val();
     console.log("adding " + selected_val);
 
     if (selected_val == null) {
@@ -227,26 +237,40 @@
           flash("Couldn't render element content, access denied", "danger");
         }
       })
+      
+      $("#addfieldModal").modal('hide');
     }
   }
 
   function add_selected_file() {
-    inputId = $(".gridbrowsefile").attr('inputId');
+    let inputId = $("#browseFileModal").data('inputId');
     const selected_val = $("#add_content_browsefile").val();
     console.log("adding " + selected_val);
   
     if (selected_val == null) {
       flash("No file selected!");
-    } else {
-      const targetInput = document.getElementById(inputId);
-  
-      if (targetInput) {
-        targetInput.value = $CLARAMA_ROOT +  selected_val;
-        flash("File path stored successfully! " + $CLARAMA_ROOT +  selected_val);
-      } else {
-        flash("Target input field not found!", "danger");
-      }
+      return;
     }
+
+    const targetInput = document.getElementById(inputId);
+    if (targetInput) {
+      const newSource = $CLARAMA_ROOT + selected_val;
+      targetInput.value = newSource;
+
+      const btnId = inputId.replace("_source", "_browse");
+      const browseLink = document.getElementById(btnId + "_link");
+
+      if (browseLink) {
+        browseLink.href = newSource; 
+        browseLink.style.display = "inline-block";
+      }
+
+      flash("File path stored successfully! " + newSource);
+    } else {
+      flash("Target input field not found!", "danger");
+    }
+
+    $("#browseFileModal").modal('hide');
   }
 
   function save(url) {
