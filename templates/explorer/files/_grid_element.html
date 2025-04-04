@@ -5,25 +5,38 @@
     </div>
     <div class="dropdown col-auto align-middle tight">
         <i class="bi bi-three-dots-vertical element_editor" data-bs-toggle="dropdown" aria-expanded="false"></i>
-        <ul class="dropdown-menu embedded-dropdown-menu">
+        <ul class="dropdown-menu embedded-dropdown-menu ">
             <li><a class="dropdown-item" href="/content/edit/{{ element_content_url }}" target="new"><i
                     class="bi bi-pencil-square"></i> Edit {{ target_element['url'] }}</a></li>
             <li><a class="dropdown-item" href="#" onclick="delete_element('{{ target }}');"><i class="bi bi-trash"></i>
                 Remove Element</a></li>
-            <li>
-                <table>
-                    <tr>
-                        <td><input type="checkbox" {{ get_checked }} id="{{ target }}_refresh"></td>
-                        <td><label class="form-check-label dropdown-item">Auto-Refresh</label></td>
-                    </tr>
-                </table>
+            <li class="dropdown-item d-flex">
+                <input type="checkbox" {{ get_checked }} id="{{ target }}_refresh" class="me-1">
+                <label class="form-check-label">Auto-Refresh</label>
             </li>
             {% if field %}
-                <li><select class="form-control">
+                <li class="dropdown-item"><select class="form-control">
                     <option>Top Down</option>
                     <option>Basic</option>
                 </select></li>
             {% endif %}
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><h6 class="dropdown-header">Elements <i class="bi bi-plus-circle elem-hover" style="font-size: .8rem !important; cursor: pointer;" data-bs-toggle="modal"
+                data-bs-target="#addfieldModal"
+                filters="*.field.yaml|*.task.yaml"></i></h6></li>
+                    <div id="grid_element_target">
+                        {% for element, value in elements.items() %}
+                            <li class="dropdown-item slate-elem-dropdown-item" elem-id="{{element}}">
+                                <div class="list-group-item d-flex align-items-center">
+                                    <i class="bi bi-grip-vertical draggable-heading p-0" draggable="true"></i>
+                                    <button type="button" class="btn btn-outline-dark mx-1 d-flex justify-content-between mx-2 w-100 gridaddcontent" data-bs-toggle="modal" data-bs-target="#addfieldModal" filters="*.field.yaml|*.task.yaml"><p class="m-0">{{ elements[element]['url'] or '' }}</p><i class="bi bi-folder-symlink ms-4"></i></button>
+                                    <!-- <i class="bi bi-trash p-0"></i> -->
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </div>
             <li>
                 <hr class="dropdown-divider">
             </li>

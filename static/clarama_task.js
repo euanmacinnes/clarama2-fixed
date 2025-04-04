@@ -109,6 +109,8 @@ function cell_item_run(cell_button) {
                 console.log('CLARAMA_TASK.js: Submission was successful.');
                 console.log(data);
                 flash("CLARAMA_TASK.js: Executing!");
+
+                moveToNextCell(cell_button);
             } else {
                 console.log('CLARAMA_TASK.js: Submission was successful.');
                 console.log(data);

@@ -142,3 +142,21 @@ function datacell_setOutput(id_template, value, chartOptions) {
         bsCollapse.hide();
     }
 }
+
+function moveToNextCell(currentButton) {
+    var currentStep = parseInt(currentButton.attr("step")); 
+
+    if (!isNaN(currentStep)) { 
+        var nextCell = $("li.clarama-cell-item[step='" + (currentStep + 1) + "']"); 
+        
+        if (nextCell.length) {
+            var nextEditorDiv = nextCell.find(".ace_editor").eq(0);
+            
+            if (nextEditorDiv.length) {
+                var editor = nextEditorDiv.get(0).env.editor;
+                editor.focus();
+                editor.gotoLine(editor.session.getLength() + 1, 0);
+            }
+        }
+    }
+}
