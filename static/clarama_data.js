@@ -59,13 +59,13 @@ function ChartSeriesFormat(dataset, formats) {
         var format = formats[f];
         var match = true;
 
-        if (format['format-nrx'] == dataset['label']) {
+        if (format['format-nrx'] == dataset['id']) {
             match = true;
         } else {
             if (format['format-nrx'] != '') {
                 var re = new RegExp(format['format-nrx']);
-                match = re.test(dataset['label']);
-                console.log("RexEx test result: " + dataset['label'] + " vs " + format['format-nrx'] + '=' + match)
+                match = re.test(dataset['id']);
+                console.log("RexEx test result: " + dataset['id'] + " vs " + format['format-nrx'] + '=' + match)
             }
         }
 
@@ -90,8 +90,11 @@ function ChartSeriesFormat(dataset, formats) {
 
             }
 
+            if (format['format-title'] !== undefined) {
+                dataset['label'] = format['format-title'];
+
             if (format['format-col'] !== undefined) {
-                console.log("SERIES colour of " + dataset['label'] + " set to '" + format['format-col']);
+                console.log("SERIES colour of " + dataset['id'] + " set to '" + format['format-col']);
 
                 if (chartColors[format['format-col']] !== undefined)
                     dataset['borderColor'] = chartColors[format['format-col']]
@@ -100,7 +103,7 @@ function ChartSeriesFormat(dataset, formats) {
             }
 
             if (format['format-col-back'] !== undefined) {
-                console.log("SERIES colour of " + dataset['label'] + " set to '" + format['format-col-back']);
+                console.log("SERIES colour of " + dataset['id'] + " set to '" + format['format-col-back']);
 
                 if (chartColors[format['format-col-back']] !== undefined)
                     dataset['backgroundColor'] = chartColors[format['format-col-back']]
@@ -314,6 +317,7 @@ function bChart(chart_id, chart_data) {
                         if (series[p] !== curr)   // then pop the current dataset onto the datasets queue, and reset
                         {
                             dataset = {
+                                id: label,
                                 label: label,
                                 data: points,
                                 type: sg['series-type'].toLowerCase()

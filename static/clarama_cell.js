@@ -62,7 +62,8 @@ function get_data_cell(cell) {
             'format-pr': $(this).find('.format-pr').val(),              // point size
             'format-lw': $(this).find('.format-lw').val(),              // line width
             'format-col': $(this).find('.format-col').val(),            // colour
-            'format-col-back': $(this).find('.format-col-back').val()   // background colour
+            'format-col-back': $(this).find('.format-col-back').val(),  // background colour
+            'format-title': $(this).find('.format-title').val()         // series title
         };
         console.log(srs);
         chart_series_formats.push(srs);
