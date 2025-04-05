@@ -59,6 +59,18 @@
                         {%- if sformat['format-col']=="rgb(201, 203, 207)" -%}selected{%- endif -%}>
                     Grey
                 </option>
+                <option value="rgb(128, 128, 128)"
+                        {%- if sformat['format-col']=="rgb(128, 128, 128)" -%}selected{%- endif -%}>
+                    Medium Grey
+                </option>
+                <option value="rgb(64, 64, 64)"
+                        {%- if sformat['format-col']=="rgb(64, 64, 64)" -%}selected{%- endif -%}>
+                    Dark Grey
+                </option>
+                <option value="rgb(20, 20, 20)"
+                        {%- if sformat['format-col']=="rgb(20, 20, 20)" -%}selected{%- endif -%}>
+                    Black
+                </option>
                 <option value="custom"
                         {%- if sformat['format-col'].startswith('#') -%}selected{%- endif -%}>Custom
                     Colour
@@ -103,6 +115,18 @@
                 <option value="rgb(201, 203, 207)"
                         {%- if sformat['format-col-back']=="rgb(201, 203, 207)" -%}selected{%- endif -%}>
                     Grey
+                </option>
+                <option value="rgb(128, 128, 128)"
+                        {%- if sformat['format-col-back']=="rgb(128, 128, 128)" -%}selected{%- endif -%}>
+                    Medium Grey
+                </option>
+                <option value="rgb(64, 64, 64)"
+                        {%- if sformat['format-col-back']=="rgb(64, 64, 64)" -%}selected{%- endif -%}>
+                    Dark Grey
+                </option>
+                <option value="rgb(20, 20, 20)"
+                        {%- if sformat['format-col-back']=="rgb(20, 20, 20)" -%}selected{%- endif -%}>
+                    Black
                 </option>
                 <option value="custom">Custom Colour</option>
             </select>

@@ -405,6 +405,8 @@ function bChart(chart_id, chart_data) {
         blue: 'rgb(54, 162, 235)',
         purple: 'rgb(153, 102, 255)',
         grey: 'rgb(201, 203, 207)',
+        mediumgrey: 'rgb(128, 128, 128)',
+        darkgrey: 'rgb(64, 64, 64)',
         black: 'rgb(20, 20, 20)'
     };
 
