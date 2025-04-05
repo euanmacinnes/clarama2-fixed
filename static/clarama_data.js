@@ -375,6 +375,7 @@ function bChart(chart_id, chart_data) {
 
             }
             dataset = {
+                id: label,
                 label: label,
                 data: points,
                 type: sg['series-type'].toLowerCase(),
