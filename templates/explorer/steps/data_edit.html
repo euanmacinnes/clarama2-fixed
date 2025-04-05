@@ -153,5 +153,7 @@
         // datacell_setOutput('task_step_{{ loop_index }}', '{{ output }}');
 
         chart_options_initialize('{{ loop_index }}');
+
+        $('[data-toggle="tooltip"]').tooltip({html: true});
     });
 </script>

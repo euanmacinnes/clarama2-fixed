@@ -63,9 +63,13 @@ function ChartSeriesFormat(dataset, formats) {
             match = true;
         } else {
             if (format['format-nrx'] != '') {
-                var re = new RegExp(format['format-nrx']);
-                match = re.test(dataset['id']);
-                console.log("RexEx test result: " + dataset['id'] + " vs " + format['format-nrx'] + '=' + match)
+                try {
+                    var re = new RegExp(format['format-nrx']);
+                    match = re.test(dataset['id']);
+                    console.log("RexEx test result: " + dataset['id'] + " vs " + format['format-nrx'] + '=' + match)
+                } catch (e) {
+                    alert("RegEx " + format['format-nrx'] + " caused " + e);
+                }
             }
         }
 
