@@ -5,40 +5,49 @@
             <div class="btn-group col align-items-center">
                 <button id="task_step_{{ loop_index }}_table" type="button"
                         class="btn {% if output=='table' %}btn-primary{% else %}btn-secondary{% endif %}"
-                        onclick="datacell_setOutput('task_step_{{ loop_index }}', 'table', 'collapseOptions_{{ loop_index }}');"><i class="bi bi-table"></i>
+                        onclick="datacell_setOutput('task_step_{{ loop_index }}', 'table', 'collapseOptions_{{ loop_index }}');">
+                    <i class="bi bi-table"></i>
                 </button>
                 <button id="task_step_{{ loop_index }}_chart" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseOptions_{{ loop_index }}" aria-expanded="{% if output=='chart' %}true{% else %}false{% endif %}" aria-controls="collapseOptions_{{ loop_index }}"
+                        data-bs-target="#collapseOptions_{{ loop_index }}"
+                        aria-expanded="{% if output=='chart' %}true{% else %}false{% endif %}"
+                        aria-controls="collapseOptions_{{ loop_index }}"
                         class="btn dropdown-togglew rounded-0 {% if output=='chart' %}btn-primary{% else %}btn-secondary{% endif %}"
-                        onclick="datacell_setOutput('task_step_{{ loop_index }}', 'chart', 'collapseOptions_{{ loop_index }}');"><i
-                        class="bi bi-graph-up-arrow"></i></button>
+                        onclick="datacell_setOutput('task_step_{{ loop_index }}', 'chart', 'collapseOptions_{{ loop_index }}');">
+                    <i
+                            class="bi bi-graph-up-arrow"></i></button>
 
                 <button id="task_step_{{ loop_index }}_code" type="button"
                         class="rounded-0 btn {% if output=='code' %}btn-primary{% else %}btn-secondary{% endif %}"
-                        onclick="datacell_setOutput('task_step_{{ loop_index }}', 'code', 'collapseOptions_{{ loop_index }}');"><i class="bi bi-code"></i>
+                        onclick="datacell_setOutput('task_step_{{ loop_index }}', 'code', 'collapseOptions_{{ loop_index }}');">
+                    <i class="bi bi-code"></i>
                 </button>
-                
-                <button type="button" class="gridbrowsefile border border-0 bg-white input-group align-items-center" data-bs-toggle="modal" data-bs-target="#browseFileModal" inputId="task_step_{{ loop_index }}_source" filters="*.source.yaml|*.csv|*.xlsx">
+
+                <button type="button" class="gridbrowsefile border border-0 bg-white input-group align-items-center"
+                        data-bs-toggle="modal" data-bs-target="#browseFileModal"
+                        inputId="task_step_{{ loop_index }}_source" filters="*.source.yaml|*.csv|*.xlsx">
                     <input id="task_step_{{ loop_index }}_source" type="text" class="form-control border-0"
-                        placeholder="Data Source Filename" aria-label="Data source relative filename"
-                        value="{{ source }}">
-                        <i class="bi bi-folder2-open px-2"></i>
+                           placeholder="Data Source Filename" aria-label="Data source relative filename"
+                           value="{{ source }}">
+                    <i class="bi bi-folder2-open px-2"></i>
                     </input>
                 </button>
-                
+
                 {% if source %}
-                    <a href="{{ source }}" target="_blank" id="task_step_{{ loop_index }}_browse_link" class="text-decoration-none text-white">
+                    <a href="{{ source }}" target="_blank" id="task_step_{{ loop_index }}_browse_link"
+                       class="text-decoration-none text-white">
                         <button id="task_step_{{ loop_index }}_browse" type="button"
-                            class="btn btn-secondary datasource" aria-haspopup="true"
-                            aria-expanded="false" style="border-radius: 0px 4px 4px 0px;">
+                                class="btn btn-secondary datasource" aria-haspopup="true"
+                                aria-expanded="false" style="border-radius: 0px 4px 4px 0px;">
                             <i class="bi bi-pen"></i>
                         </button>
                     </a>
                 {% else %}
-                    <a href="#" target="_blank" id="task_step_{{ loop_index }}_browse_link" class="text-decoration-none text-white" style="display:none;">
+                    <a href="#" target="_blank" id="task_step_{{ loop_index }}_browse_link"
+                       class="text-decoration-none text-white" style="display:none;">
                         <button id="task_step_{{ loop_index }}_browse" type="button"
-                            class="btn btn-secondary datasource" aria-haspopup="true"
-                            aria-expanded="false" style="border-radius: 0px 4px 4px 0px;">
+                                class="btn btn-secondary datasource" aria-haspopup="true"
+                                aria-expanded="false" style="border-radius: 0px 4px 4px 0px;">
                             <i class="bi bi-pen"></i>
                         </button>
                     </a>
@@ -46,7 +55,8 @@
             </div>
         </div>
     </div>
-    <div id="collapseOptions_{{ loop_index }}" class="accordion-collapse collapse bg-dark text-light {% if output=='chart' %}show{% endif %}">
+    <div id="collapseOptions_{{ loop_index }}"
+         class="accordion-collapse collapse bg-dark text-light {% if output=='chart' %}show{% endif %}">
         <div class="accordion-body" aria-labelledby="chart" style="padding: 8px;">
             <div class="container-fluid">
                 <div class="d-flex align-items-center my-3">
@@ -177,21 +187,90 @@
                             <label for="lw{{ loop_index }}" class="form-label">Line Width</label>
                             <input type="number" step="1" min="0" max="100" class="form-control format-lw"
                                    id="lw{{ loop_index }}" name="lw" value="{{ sformat['format-lw'] }}">
-                            <label for="col{{ loop_index }}" class="form-label">Colour (named or hex)</label>
+                            <label for="col{{ loop_index }}" class="form-label">Colour</label>
                             <div class="color-picker-container d-flex align-items-center">
                                 <select class="form-control format-col" id="col{{ loop_index }}" name="color">
-                                    <option value="rgb(255, 99, 132)">Red</option>
-                                    <option value="rgb(255, 159, 64)">Orange</option>
-                                    <option value="rgb(255, 205, 86)">Yellow</option>
-                                    <option value="rgb(75, 192, 192)">Green</option>
-                                    <option value="rgb(54, 162, 235)">Blue</option>
-                                    <option value="rgb(153, 102, 255)">Purple</option>
-                                    <option value="rgb(201, 203, 207)">Grey</option>
+                                    <option value="" {%- if sformat['format-col']=="" -%}selected{%- endif -%}>Default
+                                    </option>
+                                    <option value="rgb(255, 99, 132)"
+                                            {%- if sformat['format-col']=="rgb(255, 99, 132)" -%}selected{%- endif -%}>
+                                        Red
+                                    </option>
+                                    <option value="rgb(255, 159, 64)"
+                                            {%- if sformat['format-col']=="rgb(255, 159, 64)" -%}selected{%- endif -%}>
+                                        Orange
+                                    </option>
+                                    <option value="rgb(255, 205, 86)"
+                                            {%- if sformat['format-col']=="rgb(255, 205, 86)" -%}selected{%- endif -%}>
+                                        Yellow
+                                    </option>
+                                    <option value="rgb(75, 192, 192)"
+                                            {%- if sformat['format-col']=="rgb(75, 192, 192)" -%}selected{%- endif -%}>
+                                        Green
+                                    </option>
+                                    <option value="rgb(54, 162, 235)"
+                                            {%- if sformat['format-col']=="rgb(54, 162, 235)" -%}selected{%- endif -%}>
+                                        Blue
+                                    </option>
+                                    <option value="rgb(153, 102, 255)"
+                                            {%- if sformat['format-col']=="rgb(153, 102, 255)" -%}selected{%- endif -%}>
+                                        Purple
+                                    </option>
+                                    <option value="rgb(201, 203, 207)"
+                                            {%- if sformat['format-col']=="rgb(201, 203, 207)" -%}selected{%- endif -%}>
+                                        Grey
+                                    </option>
+                                    <option value="custom"
+                                            {%- if sformat['format-col'].startswith('#') -%}selected{%- endif -%}>Custom
+                                        Colour
+                                    </option>
+                                </select>
+                                <i class="bi bi-three-dots-vertical ellipsis"></i>
+                                <input type="color" selected="format-col" class="form-control format-col-picker"
+                                       id="col{{ loop_index }}"
+                                       name="cc" value="{{ sformat['format-col'] }}">
+                            </div>
+                            <label for="col-back{{ loop_index }}" class="form-label">Fill Colour</label>
+                            <div class="color-picker-container d-flex align-items-center">
+                                <select class="form-control format-col-back" id="col-back{{ loop_index }}"
+                                        name="color-back">
+                                    <option value="" {%- if sformat['format-col-back']=="" -%}selected{%- endif -%}>
+                                        Default
+                                    </option>
+                                    <option value="rgb(255, 99, 132)"
+                                            {%- if sformat['format-col-back']=="rgb(255, 99, 132)" -%}selected{%- endif -%}>
+                                        Red
+                                    </option>
+                                    <option value="rgb(255, 159, 64)"
+                                            {%- if sformat['format-col-back']=="rgb(255, 159, 64)" -%}selected{%- endif -%}>
+                                        Orange
+                                    </option>
+                                    <option value="rgb(255, 205, 86)"
+                                            {%- if sformat['format-col-back']=="rgb(255, 205, 86)" -%}selected{%- endif -%}>
+                                        Yellow
+                                    </option>
+                                    <option value="rgb(75, 192, 192)"
+                                            {%- if sformat['format-col-back']=="rgb(75, 192, 192)" -%}selected{%- endif -%}>
+                                        Green
+                                    </option>
+                                    <option value="rgb(54, 162, 235)"
+                                            {%- if sformat['format-col-back']=="rgb(54, 162, 235)" -%}selected{%- endif -%}>
+                                        Blue
+                                    </option>
+                                    <option value="rgb(153, 102, 255)"
+                                            {%- if sformat['format-col-back']=="rgb(153, 102, 255)" -%}selected{%- endif -%}>
+                                        Purple
+                                    </option>
+                                    <option value="rgb(201, 203, 207)"
+                                            {%- if sformat['format-col-back']=="rgb(201, 203, 207)" -%}selected{%- endif -%}>
+                                        Grey
+                                    </option>
                                     <option value="custom">Custom Colour</option>
                                 </select>
                                 <i class="bi bi-three-dots-vertical ellipsis"></i>
-                                <input type="color" class="form-control format-col-picker" id="col{{ loop_index }}"
-                                       name="cc">
+                                <input type="color" selected="format-col-back" class="form-control format-col-picker"
+                                       id="col-back{{ loop_index }}"
+                                       name="cc" value="{{ sformat['format-col-back'] }}">
                             </div>
 
                             <i class="bi bi-trash ps-3 cell-delete-series-format data-cell-icon-hover remove"></i>
