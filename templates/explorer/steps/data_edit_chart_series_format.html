@@ -28,7 +28,8 @@
                title="Set to 0 to disable lines">
         <label for="col{{ loop_index }}" class="form-label">Colour</label>
         <div class="color-picker-container d-flex align-items-center">
-            <select class="form-control format-col" id="col{{ loop_index }}" name="color">
+            <select class="form-control format-col" id="col{{ loop_index }}" name="color"
+                    style="background-color: {{ sformat['format-col'] }}; ">
                 <option value="" {%- if sformat['format-col']=="" -%}selected{%- endif -%}>Default
                 </option>
                 <option value="rgb(255, 99, 132)"
@@ -84,7 +85,7 @@
         <label for="col-back{{ loop_index }}" class="form-label">Fill Colour</label>
         <div class="color-picker-container d-flex align-items-center">
             <select class="form-control format-col-back" id="col-back{{ loop_index }}"
-                    name="color-back">
+                    name="color-back" style="background-color: {{ sformat['format-col-back'] }}; ">
                 <option value="" {%- if sformat['format-col-back']=="" -%}selected{%- endif -%}>
                     Default
                 </option>
@@ -128,7 +129,9 @@
                         {%- if sformat['format-col-back']=="rgb(20, 20, 20)" -%}selected{%- endif -%}>
                     Black
                 </option>
-                <option value="custom">Custom Colour</option>
+                <option value="custom" {%- if sformat['format-col-back'].startswith('#') -%}selected{%- endif -%}>Custom
+                    Colour
+                </option>
             </select>
             <i class="bi bi-three-dots-vertical ellipsis"></i>
             <input type="color" selected="format-col-back" class="form-control format-col-picker-back"

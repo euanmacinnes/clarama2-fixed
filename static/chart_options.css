@@ -3,6 +3,11 @@
     color: #000;
 }
 
+.format-col-back option {
+    background-color: #fff;
+    color: #000;
+}
+
 .clarama-cell-content .form-label {
     margin-bottom: 0;
 }

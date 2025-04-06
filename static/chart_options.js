@@ -1,3 +1,34 @@
+/// Tried to do $(this) directly in here, $(this) didn't survive the function call, so it's passed as a parameter instead.
+function chart_colour_select_custom(jqthis, variant) {
+    if (jqthis.val() === "custom") {
+        // trigger the ellipsis, which triggers color picker
+        jqthis.siblings(".format-col-picker" + variant).trigger("click");
+    } else {
+        const color = jqthis.val();
+        jqthis.css("background-color", color);
+        jqthis.css("color", isDarkColor(color) ? "white" : "black");
+    }
+}
+
+function pick_colour(jqthis, variant) {
+    const color = jqthis.val();
+    const selectField = jqthis.siblings(".format-col" + variant);
+    selectField.css("background-color", color);
+    selectField.css("color", isDarkColor(color) ? "white" : "black");
+}
+
+function update_colour(jqthis, variant) {
+    const color = jqthis.val();
+    const selectField = jqthis.siblings(".format-col" + variant);
+    selectField.css("background-color", color);
+    selectField.css("color", isDarkColor(color) ? "white" : "black");
+
+    // add new color as a selectable option
+    const newOption = new Option(color, color, true, true);
+    selectField.find("option[value='custom']").before(newOption);
+}
+
+// MAIN INITIALIZE
 function chart_options_initialize(loop_index) {
     const addSGBtn = document.getElementById("addSG" + loop_index);
     const seriesGrp = document.getElementById("seriesGrp" + loop_index);
@@ -32,26 +63,12 @@ function chart_options_initialize(loop_index) {
 
     // add event listener to dynamically added color select elements
     $(document).on("change", ".format-col", function () {
-        if ($(this).val() === "custom") {
-            // trigger the ellipsis, which triggers color picker
-            $(this).siblings(".format-col-picker").trigger("click");
-        } else {
-            const color = $(this).val();
-            $(this).css("background-color", color);
-            $(this).css("color", isDarkColor(color) ? "white" : "black");
-        }
+        chart_colour_select_custom($(this), '');
     });
 
     // add event listener to dynamically added color select elements
     $(document).on("change", ".format-col-back", function () {
-        if ($(this).val() === "custom") {
-            // trigger the ellipsis, which triggers color picker
-            $(this).siblings(".format-col-picker-back").trigger("click");
-        } else {
-            const color = $(this).val();
-            $(this).css("background-color", color);
-            $(this).css("color", isDarkColor(color) ? "white" : "black");
-        }
+        chart_colour_select_custom($(this), '-back');
     });
 
     // when ellipsis is clicked, open color picker dialog
@@ -59,44 +76,28 @@ function chart_options_initialize(loop_index) {
         $(this).next(".format-col-picker").trigger("click");
     })
 
+    $(".ellipsis2").on("click", function () {
+        $(this).next(".format-col-picker-back").trigger("click");
+    })
+
     // this is so that when user is choosing the color from the color picker, the select field changes the bg color immediately
     $(document).on("input", ".format-col-picker", function () {
-        const color = $(this).val();
-        const selectField = $(this).siblings(".format-col");
-        selectField.css("background-color", color);
-        selectField.css("color", isDarkColor(color) ? "white" : "black");
+        pick_colour($(this), '');
     });
 
     // this is so that when user is choosing the color from the color picker, the select field changes the bg color immediately
     $(document).on("input", ".format-col-picker-back", function () {
-        const color = $(this).val();
-        const selectField = $(this).siblings(".format-col-back");
-        selectField.css("background-color", color);
-        selectField.css("color", isDarkColor(color) ? "white" : "black");
+        pick_colour($(this), '-back');
     });
 
     // the select option will be updated to the latest color the user picked once the color picker dialog is closed
     $(document).on("change", ".format-col-picker", function () {
-        const color = $(this).val();
-        const selectField = $(this).siblings(".format-col");
-        selectField.css("background-color", color);
-        selectField.css("color", isDarkColor(color) ? "white" : "black");
-
-        // add new color as a selectable option
-        const newOption = new Option(color, color, true, true);
-        selectField.find("option[value='custom']").before(newOption);
+        update_colour($(this), '');
     });
 
     // the select option will be updated to the latest color the user picked once the color picker dialog is closed
     $(document).on("change", ".format-col-picker-back", function () {
-        const color = $(this).val();
-        const selectField = $(this).siblings(".format-col-back");
-        selectField.css("background-color", color);
-        selectField.css("color", isDarkColor(color) ? "white" : "black");
-
-        // add new color as a selectable option
-        const newOption = new Option(color, color, true, true);
-        selectField.find("option[value='custom']").before(newOption);
+        update_colour($(this), '-back');
     });
 }
 
@@ -110,6 +111,20 @@ function dragAndDrop(loop_index) {
 // ==== SERIES GROUP ====
 // fn to add a new series group row with a remove btn
 function addSeriesGrp() {
+    // INSTEAD:
+    // <div class="clarama-embedded-post new-series-format"
+    //        url="/explorer/template/web/explorer/steps/data_edit_chart_series_format.html?loop_index=">
+    // </div>
+    //
+    // <script>enable_interactions($(".new-series-format"));</script>
+    //
+    // This will dynamically load (via POST) the server-side format as-used by the data grid on load, and
+    // include the security token in the header
+    // the user will need "template" permission in the user role.
+
+    // Any changes on the server side then immediately get reflected here (e.g. new colours, change of colour dialog, etc..)
+
+
     const newSG = document.createElement("li");
     newSG.className = "chart-series-groups";
 
