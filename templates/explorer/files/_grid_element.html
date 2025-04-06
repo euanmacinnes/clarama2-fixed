@@ -23,11 +23,11 @@
             <li>
                 <hr class="dropdown-divider">
             </li>
-            <li><h6 class="dropdown-header">Interactions: <i class="bi bi-plus-circle elem-hover"
+            <li><h6 class="dropdown-header">Interactions: <!-- Temporarily commented out <i class="bi bi-plus-circle elem-hover"
                                                              style="font-size: .8rem !important; cursor: pointer;"
                                                              data-bs-toggle="modal"
                                                              data-bs-target="#addfieldModal"
-                                                             filters="*.field.yaml|*.task.yaml"></i></h6></li>
+                                                             filters="*.field.yaml|*.task.yaml"></i>--></h6></li>
             <div id="grid_element_target">
                 {% for element, value in elements.items() %}
                     <li class="dropdown-item slate-elem-dropdown-item" elem-id="{{ element }}">
@@ -45,7 +45,7 @@
                                     class="mx-2 flex-grow-1 w-100 align-middle"
                             >
                                 {{ elements[element]['url'] or '' }}</div>
-                            <!--<button type="button"
+                            <!-- Temporarily commented out <button type="button"
                                     class="btn btn-outline-dark mx-1   mx-2 text-xs-align gridaddcontent"
                                     data-bs-toggle="modal" data-bs-target="#addfieldModal"
                                     filters="*.field.yaml|*.task.yaml"><i
