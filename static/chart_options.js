@@ -46,7 +46,7 @@ function chart_options_initialize(loop_index) {
     $(document).on("change", ".format-col-back", function () {
         if ($(this).val() === "custom") {
             // trigger the ellipsis, which triggers color picker
-            $(this).siblings(".format-col-picker").trigger("click");
+            $(this).siblings(".format-col-picker-back").trigger("click");
         } else {
             const color = $(this).val();
             $(this).css("background-color", color);
@@ -67,10 +67,30 @@ function chart_options_initialize(loop_index) {
         selectField.css("color", isDarkColor(color) ? "white" : "black");
     });
 
+    // this is so that when user is choosing the color from the color picker, the select field changes the bg color immediately
+    $(document).on("input", ".format-col-picker-back", function () {
+        const color = $(this).val();
+        const selectField = $(this).siblings(".format-col-back");
+        selectField.css("background-color", color);
+        selectField.css("color", isDarkColor(color) ? "white" : "black");
+    });
+
     // the select option will be updated to the latest color the user picked once the color picker dialog is closed
     $(document).on("change", ".format-col-picker", function () {
         const color = $(this).val();
         const selectField = $(this).siblings(".format-col");
+        selectField.css("background-color", color);
+        selectField.css("color", isDarkColor(color) ? "white" : "black");
+
+        // add new color as a selectable option
+        const newOption = new Option(color, color, true, true);
+        selectField.find("option[value='custom']").before(newOption);
+    });
+
+    // the select option will be updated to the latest color the user picked once the color picker dialog is closed
+    $(document).on("change", ".format-col-picker-back", function () {
+        const color = $(this).val();
+        const selectField = $(this).siblings(".format-col-back");
         selectField.css("background-color", color);
         selectField.css("color", isDarkColor(color) ? "white" : "black");
 
@@ -281,7 +301,7 @@ function addSeriesFormat() {
 
     const colorPicker2 = document.createElement("input");
     colorPicker2.type = "color";
-    colorPicker2.className = "form-control format-col-picker";
+    colorPicker2.className = "form-control format-col-picker-back";
     colorPicker2.id = `col-back${newIndex}`;
     colorPicker2.name = "cc2";
 

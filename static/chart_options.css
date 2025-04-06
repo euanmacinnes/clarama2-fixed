@@ -25,11 +25,21 @@
 }
 
 .color-picker-container select {
-    background-color: rgb(255, 99, 132); 
+    background-color: rgb(255, 99, 132);
     width: 120px;
 }
 
 .color-picker-container .format-col-picker {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    width: 14px;
+    padding: 0;
+    opacity: 0;
+}
+
+.color-picker-container .format-col-picker-back {
     position: absolute;
     bottom: 0;
     right: 0;
