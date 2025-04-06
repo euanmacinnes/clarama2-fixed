@@ -72,10 +72,11 @@
                         {%- if sformat['format-col']=="rgb(20, 20, 20)" -%}selected{%- endif -%}>
                     Black
                 </option>
-                <option value="custom"
-                        {%- if sformat['format-col'].startswith('#') -%}selected{%- endif -%}>Custom
-                    Colour
-                </option>
+                {% if sformat['format-col'].startswith('#') %}
+                    <option value="{{ sformat['format-col'] }}" selected>{{ sformat['format-col'] }}</option>
+                {% else %}
+                    <option value="custom">Custom Colour</option>
+                {% endif %}
             </select>
             <i class="bi bi-three-dots-vertical ellipsis"></i>
             <input type="color" selected="format-col" class="form-control format-col-picker"
@@ -129,9 +130,11 @@
                         {%- if sformat['format-col-back']=="rgb(20, 20, 20)" -%}selected{%- endif -%}>
                     Black
                 </option>
-                <option value="custom" {%- if sformat['format-col-back'].startswith('#') -%}selected{%- endif -%}>Custom
-                    Colour
-                </option>
+                {% if sformat['format-col-back'].startswith('#') %}
+                    <option value="{{ sformat['format-col-back'] }}" selected>{{ sformat['format-col-back'] }}</option>
+                {% else %}
+                    <option value="custom">Custom Colour</option>
+                {% endif %}
             </select>
             <i class="bi bi-three-dots-vertical ellipsis"></i>
             <input type="color" selected="format-col-back" class="form-control format-col-picker-back"
