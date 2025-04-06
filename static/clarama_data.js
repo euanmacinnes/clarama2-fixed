@@ -221,7 +221,8 @@ function bChart(chart_id, chart_data) {
     console.log('CHART aspect ' + aspect_ratio + ' with maintain ' + maintain);
     console.log(config);
 
-
+    var time = (config['xaxis-type'] || 'category') === 'time';
+    
     var chart_scales = {};
     var xaxis_scale = {
         display: true,
@@ -341,6 +342,11 @@ function bChart(chart_id, chart_data) {
                             points = [];
                             curr = series[p];
                         }
+
+                        var x = xaxis[p];
+
+                        if (time)
+                            x = new Date(x);
 
                         point = {
                             x: xaxis[p],

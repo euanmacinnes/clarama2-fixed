@@ -75,7 +75,7 @@
                         {%- if sformat['format-col']=="rgb(20, 20, 20)" -%}selected{%- endif -%}>
                     Black
                 </option>
-                {% if sformat['format-col'].startswith('#') %}
+                {% if (sformat['format-col']).startswith('#') %}
                     <option value="{{ sformat['format-col'] }}" selected>{{ sformat['format-col'] }}</option>
                 {% else %}
                     <option value="custom">Custom Colour</option>
@@ -133,7 +133,7 @@
                         {%- if sformat['format-col-back']=="rgb(20, 20, 20)" -%}selected{%- endif -%}>
                     Black
                 </option>
-                {% if sformat['format-col-back'].startswith('#') %}
+                {% if (sformat['format-col-back'] or '').startswith('#') %}
                     <option value="{{ sformat['format-col-back'] }}" selected>{{ sformat['format-col-back'] }}</option>
                 {% else %}
                     <option value="custom">Custom Colour</option>
