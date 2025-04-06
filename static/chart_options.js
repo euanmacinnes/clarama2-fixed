@@ -32,9 +32,11 @@ function update_colour(jqthis, variant) {
 function chart_options_initialize(loop_index) {
     const addSGBtn = document.getElementById("addSG" + loop_index);
     const seriesGrp = document.getElementById("seriesGrp" + loop_index);
+    const seriesGrpJQ = $("#seriesGrp" + loop_index);
 
     const addSFBtn = document.getElementById("addSF" + loop_index);
     const seriesFormat = document.getElementById("seriesFormat" + loop_index);
+    const seriesFormatJQ = $("#seriesFormat" + loop_index);
 
     // ==== DRAG N DROP ====
     $(document).ready(function () {
@@ -49,6 +51,7 @@ function chart_options_initialize(loop_index) {
     addSGBtn.addEventListener("click", function () {
         // append new li to series grp
         seriesGrp.appendChild(addSeriesGrp());
+        enable_interactions(seriesGrpJQ); // This loads the URL defined in the DIV
     });
 
     // jQuery to handle click event for all sf remove buttons
@@ -59,6 +62,7 @@ function chart_options_initialize(loop_index) {
     addSFBtn.addEventListener("click", function () {
         // append new li to series format
         seriesFormat.appendChild(addSeriesFormat());
+        enable_interactions(seriesFormatJQ); // This loads the URL defined in the DIV
     });
 
     // add event listener to dynamically added color select elements
@@ -111,79 +115,10 @@ function dragAndDrop(loop_index) {
 // ==== SERIES GROUP ====
 // fn to add a new series group row with a remove btn
 function addSeriesGrp() {
-    // INSTEAD:
-    // <div class="clarama-embedded-post new-series-format"
-    //        url="/explorer/template/web/explorer/steps/data_edit_chart_series_format.html?loop_index=">
-    // </div>
-    //
-    // <script>enable_interactions($(".new-series-format"));</script>
-    //
-    // This will dynamically load (via POST) the server-side format as-used by the data grid on load, and
-    // include the security token in the header
-    // the user will need "template" permission in the user role.
-
-    // Any changes on the server side then immediately get reflected here (e.g. new colours, change of colour dialog, etc..)
-
-
-    const newSG = document.createElement("li");
-    newSG.className = "chart-series-groups";
-
-    const div = document.createElement("div");
-    div.className = "list-group-item d-flex align-items-center";
-    newSG.appendChild(div);
-
-    const grip = document.createElement("i");
-    grip.className = "bi bi-grip-vertical draggable-heading pe-3";
-    grip.setAttribute("draggable", "true");
-    div.appendChild(grip);
-
-    const select = document.createElement("select");
-    select.id = "sg";
-    select.className = "form-control series-type";
-    ["Line", "Scatter", "Bubble", "Bar", "Doughnut"].forEach(type => {
-        const option = document.createElement("option");
-        option.textContent = type;
-        select.appendChild(option);
-    });
-    div.appendChild(select);
-
-    const labels = [
-        {text: "X Axis", for: "x", class: "series-x", name: "x", value: "Batch"},
-        {text: "Y Axis", for: "y", class: "series-y", name: "y", value: ""},
-        {text: "Z Axis", for: "z", class: "series-z", name: "z", value: ""},
-        {text: "Y Min Axis", for: "ymin", class: "series-ymin", name: "ymin", value: ""},
-        {text: "Y Max Axis", for: "ymax", class: "series-ymax", name: "ymax", value: ""},
-        {text: "Series Axis", for: "s", class: "series-s", name: "s", value: ""},
-        {text: "Unit Axis", for: "u", class: "series-u", name: "u", value: ""},
-        {text: "Label Axis", for: "l", class: "series-l", name: "l", value: ""}
-    ];
-
-    // eg,
-    // <label for="x1" class="form-label">X Axis</label>
-    // <input type="string" class="form-control series-x" id="x1" name="x" value="Batch">
-    labels.forEach(labelInfo => {
-        const label = document.createElement("label");
-        label.setAttribute("for", labelInfo.for);
-        label.className = "form-label";
-        label.textContent = labelInfo.text;
-
-        const input = document.createElement("input");
-        input.type = "string";
-        input.id = labelInfo.for;
-        input.className = `form-control ${labelInfo.class}`;
-        input.setAttribute("name", labelInfo.name);
-        input.setAttribute("value", labelInfo.value);
-
-        div.appendChild(label);
-        label.appendChild(document.createTextNode(" "));
-        div.appendChild(input);
-        div.appendChild(document.createTextNode(" "));
-    });
-
-    // Create a remove button to delete the row
-    const removeBtn = document.createElement("i");
-    removeBtn.className = "bi bi-trash ps-3 cell-delete-series-group data-cell-icon-hover remove";
-    div.appendChild(removeBtn);
+    const newIndex = $(".chart-series-groups").length;
+    const newSG = document.createElement("div");
+    newSG.className = "clarama-post-embedded clarama-replaceable"; // clarama-replaceable means that the div itself gets replaced.
+    newSG.setAttribute("url", `/template/render/explorer/steps/data_edit_chart_series_group?loop_index=${newIndex}`);
     return newSG;
 }
 
@@ -192,151 +127,9 @@ function addSeriesGrp() {
 function addSeriesFormat() {
     const newIndex = $(".chart-series-formats").length;
 
-    const newSF = document.createElement("li");
-    newSF.className = "chart-series-formats";
-
-    const div = document.createElement("div");
-    div.className = "list-group-item d-flex align-items-center";
-    newSF.appendChild(div);
-
-    const labels = [
-        {text: "Series Name / Regex", for: `nrx${newIndex}`, class: "format-nrx", name: "x", type: "string", value: ""},
-        {text: "Filled", for: `f${newIndex}`, class: "format-f", name: "f", type: "checkbox"},
-        {text: "Stepped", for: `p${newIndex}`, class: "format-p", name: "p", type: "checkbox"},
-        {text: "Dotted", for: `dt${newIndex}`, class: "format-dt", name: "dt", type: "checkbox"},
-        {
-            text: "Point Size",
-            for: `pr${newIndex}`,
-            class: "format-pr",
-            name: "pr",
-            type: "number",
-            value: "",
-            step: "1",
-            min: "0",
-            max: "100"
-        },
-        {
-            text: "Line Width",
-            for: `lw${newIndex}`,
-            class: "format-lw",
-            name: "lw",
-            type: "number",
-            value: "",
-            step: "1",
-            min: "0",
-            max: "100"
-        }
-    ];
-    labels.forEach(labelInfo => {
-        const label = document.createElement("label");
-        label.setAttribute("for", labelInfo.for);
-        label.className = "form-label";
-        label.textContent = labelInfo.text;
-
-        const input = document.createElement("input");
-        input.type = labelInfo.type;
-        if (labelInfo.type === "checkbox") {
-            input.className = `form-check-input ${labelInfo.class}`;
-        } else {
-            input.className = `form-control ${labelInfo.class}`;
-            input.value = labelInfo.value;
-        }
-        input.id = labelInfo.for;
-        input.name = labelInfo.name;
-        if (labelInfo.type === "number") {
-            input.step = labelInfo.step;
-            input.min = labelInfo.min;
-            input.max = labelInfo.max;
-        }
-
-        div.appendChild(label);
-        div.appendChild(input);
-    })
-
-    const clabel = document.createElement("label");
-    clabel.setAttribute("for", `col${newIndex}`);
-    clabel.className = "form-label";
-    clabel.textContent = "Colour";
-
-    const clabel2 = document.createElement("label");
-    clabel2.setAttribute("for", `col-back${newIndex}`);
-    clabel2.className = "form-label";
-    clabel2.textContent = "Fill Colour";
-
-    const divColorPicker = document.createElement("div");
-    divColorPicker.className = "color-picker-container d-flex align-items-center";
-
-    const divColorPicker2 = document.createElement("div");
-    divColorPicker2.className = "color-picker-container d-flex align-items-center";
-
-    const select = document.createElement("select");
-    select.className = "form-control format-col";
-    select.id = `col${newIndex}`;
-    select.name = "color";
-
-    const select2 = document.createElement("select");
-    select2.className = "form-control format-col-back";
-    select2.id = `col-back${newIndex}`;
-    select2.name = "color";
-
-    const options = [
-        {text: "Default", value: ""},
-        {text: "Red", value: "rgb(255, 99, 132)"},
-        {text: "Orange", value: "rgb(255, 159, 64)"},
-        {text: "Yellow", value: "rgb(255, 205, 86)"},
-        {text: "Green", value: "rgb(75, 192, 192)"},
-        {text: "Blue", value: "rgb(54, 162, 235)"},
-        {text: "Purple", value: "rgb(153, 102, 255)"},
-        {text: "Grey", value: "rgb(201, 203, 207)"},
-        {text: "Custom Colour", value: "custom"}
-    ];
-    options.forEach(optionInfo => {
-        const option = document.createElement("option");
-        option.textContent = optionInfo.text;
-        option.value = optionInfo.value;
-        select.appendChild(option);
-
-        const option2 = document.createElement("option");
-        option2.textContent = optionInfo.text;
-        option2.value = optionInfo.value;
-        select2.appendChild(option2);
-    });
-
-    const ellipsis = document.createElement("i");
-    ellipsis.className = "bi bi-three-dots-vertical ellipsis";
-
-    const ellipsis2 = document.createElement("i");
-    ellipsis2.className = "bi bi-three-dots-vertical ellipsis";
-
-    const colorPicker = document.createElement("input");
-    colorPicker.type = "color";
-    colorPicker.className = "form-control format-col-picker";
-    colorPicker.id = `col${newIndex}`;
-    colorPicker.name = "cc";
-
-    const colorPicker2 = document.createElement("input");
-    colorPicker2.type = "color";
-    colorPicker2.className = "form-control format-col-picker-back";
-    colorPicker2.id = `col-back${newIndex}`;
-    colorPicker2.name = "cc2";
-
-    div.appendChild(clabel);
-    div.appendChild(divColorPicker);
-    div.appendChild(clabel2);
-    div.appendChild(divColorPicker2);
-    divColorPicker.appendChild(select);
-    divColorPicker.appendChild(ellipsis);
-    divColorPicker.appendChild(colorPicker);
-
-    divColorPicker2.appendChild(select2);
-    divColorPicker2.appendChild(ellipsis2);
-    divColorPicker2.appendChild(colorPicker2);
-
-    // Create a remove button to delete the row
-    const removeBtn = document.createElement("i");
-    removeBtn.className = "bi bi-trash ps-3 cell-delete-series-format data-cell-icon-hover remove";
-    div.appendChild(removeBtn);
-
+    const newSF = document.createElement("div");
+    newSF.className = "clarama-post-embedded clarama-replaceable"; // clarama-replaceable means that the div itself gets replaced.
+    newSF.setAttribute("url", `/template/render/explorer/steps/data_edit_chart_series_format?loop_index=${newIndex}`);
     return newSF;
 }
 

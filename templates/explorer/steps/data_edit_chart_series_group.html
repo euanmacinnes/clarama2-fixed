@@ -1,3 +1,6 @@
+{% if sgroup is not defined %}
+    {% set sgroup = {"series-type" : "Line"} %}
+{% endif %}
 <li class="chart-series-groups">
     <div class="list-group-item d-flex align-items-center">
         <i class="bi bi-grip-vertical draggable-heading pe-3" draggable="true"></i>

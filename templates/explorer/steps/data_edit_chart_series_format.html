@@ -1,3 +1,6 @@
+{% if sformat is not defined %}
+    {% set sformat = {"format-col" : "", "format-col-back" : ""} %}
+{% endif %}
 <li class=" chart-series-formats">
     <div class=" list-group-item d-flex align-items-center">
         <label for="nrx{{ loop_index }}" class="form-label">Series Name /

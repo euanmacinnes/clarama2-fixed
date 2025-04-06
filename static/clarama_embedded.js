@@ -166,10 +166,17 @@ $.fn.load_post = function (onfinished, args) {
                     //console.log({ 'html': html })
                     try {
                         console.log(final_url)
-                        embedded.html(html).promise()
-                            .done(function () {
-                                enable_interactions(embedded);
-                            });
+
+                        if (embedded.hasClass("clarama-replaceable")) {
+                            parent = embedded.parent();
+                            embedded.replaceWith(html);
+                            enable_interactions(parent);
+                        } else {
+                            embedded.html(html).promise()
+                                .done(function () {
+                                    enable_interactions(embedded);
+                                });
+                        }
                         //console.log('POST onfinished:' + typeof(onfinished) + '-' + onfinished);
 
                         if (typeof onfinished === 'function') {
