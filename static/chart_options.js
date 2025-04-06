@@ -42,6 +42,18 @@ function chart_options_initialize(loop_index) {
         }
     });
 
+    // add event listener to dynamically added color select elements
+    $(document).on("change", ".format-col-back", function () {
+        if ($(this).val() === "custom") {
+            // trigger the ellipsis, which triggers color picker
+            $(this).siblings(".format-col-picker").trigger("click");
+        } else {
+            const color = $(this).val();
+            $(this).css("background-color", color);
+            $(this).css("color", isDarkColor(color) ? "white" : "black");
+        }
+    });
+
     // when ellipsis is clicked, open color picker dialog
     $(".ellipsis").on("click", function () {
         $(this).next(".format-col-picker").trigger("click");
