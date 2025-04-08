@@ -116,9 +116,12 @@ function loadHTML(url, element) {
         });
 }
 
-$.fn.load_post = function (onfinished, args) {
+$.fn.load_post = function (onfinished, args, json) {
     if (args === undefined)
         args = {};
+
+    if (json === undefined)
+        json = {};
 
     return this.each(function () {
         var embedded = $(this);
@@ -130,7 +133,7 @@ $.fn.load_post = function (onfinished, args) {
             //console.log("Looking for " + json_div + " for " + url)
             var json_element = document.getElementById(json_div);
 
-            var json_payload = {};
+            var json_payload = json;
 
             if (json_element !== undefined) {
                 try {
@@ -141,6 +144,8 @@ $.fn.load_post = function (onfinished, args) {
                 }
             }
 
+            console.log("JSON Payload");
+            console.log(json_payload);
             const final_url = merge_url_params(url, args);
 
             fetch($CLARAMA_ROOT + final_url,
@@ -229,8 +234,10 @@ function reload(embedded, args) {
     if (embedded.hasClass('clarama-embedded'))
         embedded.load(undefined, args);
 
-    if (embedded.hasClass('clarama-post-embedded'))
-        embedded.load_post(undefined, args);
+    if (embedded.hasClass('clarama-post-embedded')) {
+        console.log("RELOAD POST " + embedded, args);
+        embedded.load_post(undefined, undefined, args);
+    }
 }
 
 $.fn.load = function (onfinished, args) {

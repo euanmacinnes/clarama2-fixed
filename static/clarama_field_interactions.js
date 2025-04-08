@@ -36,7 +36,7 @@ function perform_interact(field, args = {}) {
         var eobj = element_array[element];
 
         field_values = merge_dicts(get_field_values(), args);
-        //console.log(field_values);
+        console.log(field_values);
 
         if ('links' in eobj) {
             links = eobj["links"]; // array of file names to refresh
