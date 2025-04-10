@@ -43,8 +43,11 @@ Clarama:
       - 'task.yaml'
       - 'slate.yaml'
       - 'field.yaml'
+      - 'config.yaml'
       - 'pjpeg'
       - 'pjp'
+      - 'ipynb'
+      - 'py'
     InternalModes: [ 'delete','raw','download','new','rename','paste','info','embed','view' ]
     VisibleModes: # Internal modes are 'view', 'info' and 'embed', and are not selectable by the user.
       folders: [ 'explore', 'jobs', 'versioning', 'issues' ]
@@ -68,7 +71,7 @@ Clarama:
       .tsv: [ 'explore','raw','versioning', 'issues' ]
       .task: [ 'raw','versioning', 'issues' ]
       .plan: [ 'raw','versioning', 'issues' ]
-      .ipynb: [ 'raw','versioning', 'issues' ]
+      .ipynb: [ 'run','explore','raw','versioning', 'issues' ]
       .txt: [ 'raw','versioning', 'issues' ]
       .py: [ 'raw','versioning', 'issues' ]
       .sql: [ 'raw','versioning', 'issues' ]
@@ -150,6 +153,7 @@ Clarama:
       .group.yaml: yaml
       .environment.yaml: yaml
       .config.yaml: yaml
+      .locker.yaml: yaml
       .access.yaml: yaml
     FiletypeNames:
       .csv: Comma-Separated Values
@@ -175,6 +179,8 @@ Clarama:
       .jpg: Jpeg Image
       .png: PNG Image
       .pdf: Adobe PDF
+      .ipynb: Jupyter Notebook
+      .py: Python
     ModeIcons:
       explore: bi-view-list
       run: bi-play text-success
