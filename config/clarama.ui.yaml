@@ -44,6 +44,9 @@ Clarama:
       - 'slate.yaml'
       - 'field.yaml'
       - 'config.yaml'
+      - 'deploy.yaml'
+      - 'locker.yaml'
+      - 'yaml'
       - 'pjpeg'
       - 'pjp'
       - 'ipynb'
@@ -62,7 +65,7 @@ Clarama:
       .field.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
       .config.yaml: [ 'raw','versioning', 'issues' ]
       .environment.yaml: [ 'raw','versioning', 'issues' ]
-      .deploy.yaml: [ 'status','raw','versioning', 'issues' ]
+      .deploy.yaml: [ 'raw','versioning', 'issues' ]
       .access.yaml: [ 'raw','versioning', 'issues' ]
       .html: [ 'explore','raw','versioning', 'issues' ]
       .json: [ 'raw','versioning', 'issues' ]
