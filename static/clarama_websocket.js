@@ -322,10 +322,10 @@ function onOpen(event, socket_url, webSocket, task_results, socket_id) {
 
 function onClose(event, socket_url, webSocket, task_results) {
     console.log('CLARAMA_WEBSOCKET.js: WebSocket Connection CLOSED ' + socket_url + " on socket " + webSocket + " with result " + task_results);
-    alert("SOCKET lost", "danger");
+    flash("SOCKET lost", "danger");
 }
 
 function onError(event, task_url, socket_url, webSocket, task_results) {
     flash("Task " + task_url + " WebSocket Error [" + event.data + "] from " + socket_url + " on socket " + webSocket + " with result " + task_results);
-    alert("SOCKET error " + event.data, "danger");
+    //alert("SOCKET error " + event.data, "danger");
 }
