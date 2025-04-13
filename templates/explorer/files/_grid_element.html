@@ -16,8 +16,13 @@
             </li>
             {% if field %}
                 <li class="dropdown-item"><select class="form-control">
-                    <option>Top Down</option>
-                    <option>Basic</option>
+                    <option id="text_left">Left-Aligned Text</option>
+                    <option id="text_right">Right-Aligned Text</option>
+                    <option id="text_top">Text appears on top</option>
+                    <option id="text_bottom">Text appears underneath</option>
+                    <option id="tight">Grouped. Text appears on left, boxed, with a</option>
+                    <option id="tight">Tight (small, title only)</option>
+                    <option id="basic">Basic (No text shown)</option>
                 </select></li>
             {% endif %}
             <li>
