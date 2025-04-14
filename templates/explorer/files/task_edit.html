@@ -112,7 +112,8 @@
 </form>
 
 <div class="clarama-task">
-    <div id="edit_socket" class="clarama-websocket clarama-task" topic="{{ internal_topic }}"
+    <div id="edit_socket" environment="{{ environment }}" class="clarama-websocket clarama-task"
+         topic="{{ internal_topic }}"
          task="{{ file_url }}" task_kill="False"></div>
 </div>
 
