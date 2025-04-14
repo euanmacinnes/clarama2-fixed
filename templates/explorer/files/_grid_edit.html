@@ -110,6 +110,8 @@
 
   const {{ grid_id }}elements = {{ element_json | safe }};
 
+
+
   let {{ grid_id }}subOptions = {
     cellHeight: 55, // should be 50 - top/bottom
     acceptWidgets: true, // will accept .grid-stack-item by default
@@ -175,8 +177,24 @@
       removable: '.trash'
     })
 
-    $('.clarama-embedded').load();
+    $('.clarama-post-embedded').load();
   }
+
+function delete_element(element) {
+      delete {{ grid_id }}elements[element];
+
+      gs_element = $('.grid-stack-item');
+      console.log(gs_element);
+      let remove = undefined;
+
+    gs_element.each(function() {
+        if ($(this).attr("gs-id") === element)
+           remove = $(this);
+    })
+
+      console.log(remove);
+    remove.remove();
+}
 
 
   function saveGrid() {

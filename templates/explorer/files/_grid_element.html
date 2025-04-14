@@ -10,10 +10,6 @@
                     class="bi bi-pencil-square"></i> Edit {{ target_element['url'] }}</a></li>
             <li><a class="dropdown-item" href="#" onclick="delete_element('{{ target }}');"><i class="bi bi-trash"></i>
                 Remove Element</a></li>
-            <li class="dropdown-item d-flex">
-                <input type="checkbox" {{ get_checked }} id="{{ target }}_refresh" class="me-1">
-                <label class="form-check-label">Auto-Refresh</label>
-            </li>
             {% if field %}
                 <li class="dropdown-item"><select class="form-control">
                     <option id="text_left">Left-Aligned Text</option>
@@ -24,6 +20,11 @@
                     <option id="tight">Tight (small, title only)</option>
                     <option id="basic">Basic (No text shown)</option>
                 </select></li>
+            {% else %}
+                <li class="dropdown-item d-flex">
+                    <input type="checkbox" {{ get_checked }} id="{{ target }}_refresh" class="me-1">
+                    <label class="form-check-label">Auto-Refresh Task</label>
+                </li>
             {% endif %}
             <li>
                 <hr class="dropdown-divider">
