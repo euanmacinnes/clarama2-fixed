@@ -206,7 +206,6 @@ $.fn.initselect = function () {
                             if (data['data'] != 'ok') {
                                 var error_lines = data['error'].split(/\r?\n/)
                                 var i = 0
-                                rows = []
                                 for (var r in error_lines) {
 
                                     if (r !== undefined) {
