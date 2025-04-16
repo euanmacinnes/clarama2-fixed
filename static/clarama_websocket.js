@@ -53,6 +53,7 @@ function get_task(embedded, task_url, socket_id, autorun) {
 function run_socket(embedded, reset_environment) {
     let task = embedded.attr("task")
     let topic = embedded.attr("topic");
+    let mode = embedded.attr("mode"); // For passing internally to the kernel, so that the kernel knows it's original mode
     let task_results = embedded.attr("results_id");
     let autorun = embedded.attr("autorun");
     let socket_id = embedded.attr("id");
@@ -73,7 +74,7 @@ function run_socket(embedded, reset_environment) {
     playbutton.addClass("btn-secondary")
     playbutton.removeClass("btn-primary")
 
-    let task_url = $CLARAMA_ROOT + $CLARAMA_ENVIRONMENTS_TASK_OPEN + task + '?topic=' + topic + '&refresh=' + refresh + '&reset_environment=' + reset_environment + env_url;
+    let task_url = $CLARAMA_ROOT + $CLARAMA_ENVIRONMENTS_TASK_OPEN + task + '?topic=' + topic + '&mode=' + mode + '&refresh=' + refresh + '&reset_environment=' + reset_environment + env_url;
 
     let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
 
