@@ -196,18 +196,38 @@ $.fn.initselect = function () {
                         processResults: function (data) {
                             console.log("Results")
                             console.log(data)
+
+
                             var resultarr = [];
                             var rows = data['results']['rows'];
                             var headings = ['id', 'text', 'selected', 'disabled']
                             var hcount = headings.length;
 
-                            for (var row in rows) {
-                                var result = {};
-                                for (var i = 0; i < hcount; i++) {
-                                    result[headings[i]] = rows[row][i];
-                                }
+                            if (data['data'] != 'ok') {
+                                var error_lines = data['error'].split(/\r?\n/)
+                                var i = 0
+                                rows = []
+                                for (var r in error_lines) {
 
-                                resultarr.push(result);
+                                    if (r !== undefined) {
+                                        if (typeof error_lines[r] !== 'function') {
+                                            var result = {};
+                                            result['id'] = 'error' + i;
+                                            result['text'] = error_lines[r];
+                                            resultarr.push(result);
+                                            i = i + 1;
+                                        }
+                                    }
+                                }
+                            } else {
+                                for (var row in rows) {
+                                    var result = {};
+                                    for (var i = 0; i < hcount; i++) {
+                                        result[headings[i]] = rows[row][i];
+                                    }
+
+                                    resultarr.push(result);
+                                }
                             }
 
                             console.log(resultarr);
