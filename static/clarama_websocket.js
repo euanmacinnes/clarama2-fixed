@@ -250,7 +250,7 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
 
             if (dict['class'] === "template_table") {
                 let resulter = "#" + dict['step_id'];
-                //console.log("WEBSOCKET MESSAGE:" + dict['step_id']);
+                console.log("CLARAMA_WEBSOCKET.js: WEBSOCKET TABLE MESSAGE:" + webSocket.url);
                 process_template(dict['type'], dict['values'], $(resulter), element_prefix);
                 // Draw the table ID first, then let's put in the data
                 bTable(dict['values']['table_id'], dict['results']);
