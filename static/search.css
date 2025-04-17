@@ -51,7 +51,7 @@ input[type="search"]::-webkit-search-cancel-button {
     filter: invert(100%);
 }
 
-.gridbrowsefile input:focus {
+.gridbrowsefile_input:focus {
     border-color: inherit;
     -webkit-box-shadow: none;
     box-shadow: none;
