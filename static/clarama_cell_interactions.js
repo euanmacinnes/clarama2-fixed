@@ -48,7 +48,7 @@ function cell_insert_step(parent) {
             var step_stream_id = step_stream.attr('stream');
             var step_stream_file = step_stream.attr('stream-file');
 
-            var insert_step = step_stream.find("li")[step - 1];
+            var insert_step = step_stream.find("li.clarama-cell-item")[step - 1];
 
 
             console.log('cell_insert_step:' + step_cell.attr("id") + '=' + step_stream_id + '@' + step + ' from file ' + step_stream_file);
@@ -138,20 +138,20 @@ function datacell_setOutput(id_template, value, chartOptions) {
     if (value === 'table' || value === 'code') {
         // Close the accordion if 'table' or 'code' button is clicked
         let accordion = document.getElementById(chartOptions);
-        let bsCollapse = new bootstrap.Collapse(accordion, { toggle: false });
+        let bsCollapse = new bootstrap.Collapse(accordion, {toggle: false});
         bsCollapse.hide();
     }
 }
 
 function moveToNextCell(currentButton) {
-    var currentStep = parseInt(currentButton.attr("step")); 
+    var currentStep = parseInt(currentButton.attr("step"));
 
-    if (!isNaN(currentStep)) { 
-        var nextCell = $("li.clarama-cell-item[step='" + (currentStep + 1) + "']"); 
-        
+    if (!isNaN(currentStep)) {
+        var nextCell = $("li.clarama-cell-item[step='" + (currentStep + 1) + "']");
+
         if (nextCell.length) {
             var nextEditorDiv = nextCell.find(".ace_editor").eq(0);
-            
+
             if (nextEditorDiv.length) {
                 var editor = nextEditorDiv.get(0).env.editor;
                 editor.focus();
