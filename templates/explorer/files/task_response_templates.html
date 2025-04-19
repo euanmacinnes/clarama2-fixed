@@ -1,26 +1,13 @@
-<template id="{{ element_prefix }}task_step_error" target_class="cell-results">
-    <div class="row alert alert-danger">
-        <b>Error</b>
-        <div class="card card-body">
-            {query_content}
-        </div>
-        <div>
-            <pre class="pre_response"><code class="code_response">{error_content}</code></pre>
-        </div>
-    </div>
-</template>
-
-
 <template id="{{ element_prefix }}task_step_exception" target_class="cell-results">
     <div class="row alert alert-danger">
         <b>Exception</b>
         <div>{exception_content}
-            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
-                    aria-expanded="false" aria-controls="collapseExample">
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{instance}"
+                    aria-expanded="false" aria-controls="collapse{instance}">
                 ...
             </button>
         </div>
-        <div class="collapse" id="collapseExample">
+        <div class="collapse" id="collapse{instance}">
             <div class="card card-body">
                 <pre class="pre_response"><code class="code_response">{last_traceback_content}</code></pre>
             </div>
@@ -28,9 +15,56 @@
     </div>
 </template>
 
+<template id="{{ element_prefix }}task_step_error" target_class="cell-results">
+    <div class="row alert alert-danger">
+        <b>Error</b>
+        <div>{message_content}
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse{instance_content}"
+                    aria-expanded="false" aria-controls="collapse{instance_content}">
+                ...
+            </button>
+        </div>
+        <div class="collapse" id="collapse{instance_content}">
+            <div class="card card-body">
+                <pre class="pre_response"><code class="code_response">{details_content}</code></pre>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="{{ element_prefix }}task_step_warn" target_class="cell-results">
+    <div class="row alert alert-warning">
+        <b>Warning</b>
+        <div>{message_content}
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse{instance_content}"
+                    aria-expanded="false" aria-controls="collapse{instance_content}">
+                ...
+            </button>
+        </div>
+        <div class="collapse" id="collapse{instance_content}">
+            <div class="card card-body">
+                <pre class="pre_response"><code class="code_response">{details_content}</code></pre>
+            </div>
+        </div>
+    </div>
+</template>
+
 <template id="{{ element_prefix }}task_step_info" target_class="cell-results">
-    <div class="row alert alert-info">
-        <div>{info_content}
+    <div class="row alert alert-primary">
+        <b>Info</b>
+        <div>{message_content}
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse{instance_content}"
+                    aria-expanded="false" aria-controls="collapse{instance_content}">
+                ...
+            </button>
+        </div>
+        <div class="collapse" id="collapse{instance_content}">
+            <div class="card card-body">
+                <pre class="pre_response"><code class="code_response">{details_content}</code></pre>
+            </div>
         </div>
     </div>
 </template>
