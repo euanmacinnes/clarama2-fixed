@@ -41,7 +41,8 @@
                                     </td>
                                     <td width="32px">
                                         <i class="bi bi-arrow-counterclockwise"
-                                           onclick="reset_environment();"></i>
+                                           env="{{ key }}"
+                                           onclick="reset_environment('{{ key }}');"></i>
                                     </td>
                                 </tr>
                             {% endfor %}

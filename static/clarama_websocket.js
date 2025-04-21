@@ -7,8 +7,12 @@ function set_environment(environment) {
     run_socket(socket, false);
 }
 
-function reset_environment() {
+function reset_environment(environment) {
+    flash("Resetting environment to " + environment);
+    $('#kernel_status').html('Restarting..');
+    $('#environment').html('...');
     let socket = $("#edit_socket");
+    socket.attr("environment", environment);
     run_socket(socket, true);
 }
 
