@@ -21,9 +21,9 @@ Clarama:
     Runners: "http://127.0.0.1:5000/runners/"
     Compiler: "http://127.0.0.1:5010/compiler/fetch/files/dynamic/content/"
     Config: "http://127.0.0.1:5010/compiler/config/files/dynamic/content/"
-    Redis: "redis://clarama.local:6379/1"
-    Postgres: "clarama.local:5432"        # Default database for Jobs, Notifications. Can be replaced with other SQL databases.
-    InfluxDB: "http://clarama.local:8080" # Demo database. Feel free to add your own, replace this. Core Clarama will run without it.
+    Redis: "redis://c2.local:6379/1"
+    Postgres: "c2.local:5432"        # Default database for Jobs, Notifications. Can be replaced with other SQL databases.
+    InfluxDB: "http://c2.local:8080" # Demo database. Feel free to add your own, replace this. Core Clarama will run without it.
     ClaramaSourceDB: "/System/Data/Sources/clarama postgres.source.yaml" # Leave static. Values inside will live populate from the instance. Update username / password / database if needed
     ClaramaSourceTimeseriesDB: "/System/Data/Sources/clarama influx.source.yaml" # Leave static. Values inside will live populate from the instance. Update token / org if needed
     ClaramaSourceMemoryDB: "/System/Data/Sources/clarama redis.source.yaml" # Leave static. Values inside will live populate from the instance.
