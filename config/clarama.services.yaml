@@ -1,0 +1,29 @@
+Clarama:
+  # This config file will be overridden by environment variables in a kubernetes or docker environment
+  # These values are only going to apply here for local non-orchestrating environments.
+  # however, for k8s and Docker, they are placeholders, without which, the environment variables will not get updated.
+  Services:
+    AllowURLToken: True # Allow the user to visibly pass the token in the URL parameter. VERY INSECURE! Use for testing only!
+    DefaultOrchestrator: native
+    Instance: demo
+    # External
+    Web: "http://127.0.0.1:5000/"  # the deployment config will update this with either HTTPS or HTTP and the public domain name
+    Messenger_WS: "ws://127.0.0.1:5006/"  # For receiving notifications. the deployment config will update this with either HTTPS or HTTP and the public domain name
+    # Internal, called by the Web service. Configure a zone of clarama.local with an A record for primary in the local DNS to reroute
+    Data: "http://127.0.0.1:5000/data/"
+    Explorer: "http://127.0.0.1:5000/explorer/"
+    Jobs: "http://127.0.0.1:5000/jobs/"
+    Gitinsights: "http://127.0.0.1:5000/version/git/"
+    Environments: "http://127.0.0.1:5000/environments/"
+    Messenger: "http://127.0.0.1:5006/"  # For registration and publishing
+    AccessControl: "http://127.0.0.1:5000/accesscontrol/"
+    Scheduler: "http://127.0.0.1:5007/scheduler/"
+    Runners: "http://127.0.0.1:5000/runners/"
+    Compiler: "http://127.0.0.1:5010/compiler/fetch/files/dynamic/content/"
+    Config: "http://127.0.0.1:5010/compiler/config/files/dynamic/content/"
+    Redis: "redis://c2.local:6379/1"
+    Postgres: "c2.local:5432"        # Default database for Jobs, Notifications. Can be replaced with other SQL databases.
+    InfluxDB: "http://c2.local:8080" # Demo database. Feel free to add your own, replace this. Core Clarama will run without it.
+    ClaramaSourceDB: "/System/Data/Sources/clarama instance postgres.source.yaml" # Leave static. Values inside will live populate from the instance. Update username / password / database if needed
+    ClaramaSourceTimeseriesDB: "/System/Data/Sources/clarama instance influx.source.yaml" # Leave static. Values inside will live populate from the instance. Update token / org if needed
+    ClaramaSourceMemoryDB: "/System/Data/Sources/clarama instance redis.source.yaml" # Leave static. Values inside will live populate from the instance.
