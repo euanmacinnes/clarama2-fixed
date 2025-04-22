@@ -222,7 +222,7 @@ function bChart(chart_id, chart_data) {
     console.log(config);
 
     var time = (config['xaxis-type'] || 'category') === 'time';
-    
+
     var chart_scales = {};
     var xaxis_scale = {
         display: true,
@@ -398,7 +398,7 @@ function bChart(chart_id, chart_data) {
             console.log("DATASETS");
             console.log(datasets.length);
         } else
-            alert("Didn't find X and Y axis for chart in " + data['cols'] + '. X: ' + sg['series-x'] + '. Y: ' + sg['series-y']);
+            flash("Didn't find X and Y axis for chart in columns [" + data['cols'] + ']. X: ' + sg['series-x'] + '. Y: ' + sg['series-y']);
 
         console.log('i' + i);
     }

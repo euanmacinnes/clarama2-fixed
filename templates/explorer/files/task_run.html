@@ -110,7 +110,9 @@
     {% endfor %}
 </form>
 <div class="clarama-task">
-    <div id="run_socket" class="clarama-websocket clarama-task" topic="{{ internal_topic }}"
+    <div id="run_socket" class="clarama-websocket clarama-task"
+         mode="run"
+         topic="{{ internal_topic }}"
          task="{{ file_url }}" kill="True" refresh="True"></div>
 </div>
 

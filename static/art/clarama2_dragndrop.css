@@ -29,6 +29,10 @@
     bottom: 0px;
 }
 
+.clarama-capitalize {
+    text-transform: capitalize;
+}
+
 .grid-stack-item-content {
     padding-bottom: 2px;
     overflow: visible !important;
