@@ -4,8 +4,8 @@
     {% for stream, steps in streamslist.items() %}
         {% if stream=='main' %}
             <div class="container-fluid tight" style="height: 100%;">
-                <div class="row bg-white text-dark clarama-cell-item tight"
-                     id="{{ (internal_topic ~ '_stream_' ~ stream ~ '_step') }}_exception">
+                <div class="bg-white text-dark clarama-cell-item tight"
+                     id="{{ (internal_topic ~ '_stream_main') }}_exception">
                     <div id="results_exception" class="cell-results tight">
                     </div>
                 </div>
@@ -58,6 +58,8 @@
         json_pprint
         |
         safe }}
+
+
 
 
 

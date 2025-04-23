@@ -109,6 +109,12 @@
         {% endfor %}
     {% endfor %}
 </form>
+
+<div class="bg-white text-dark clarama-cell-item tight"
+     id="{{ (internal_topic ~ '_stream_main') }}_exception">
+    <div id="results_exception" class="cell-results tight">
+    </div>
+</div>
 <div class="clarama-task">
     <div id="run_socket" class="clarama-websocket clarama-task"
          mode="run"

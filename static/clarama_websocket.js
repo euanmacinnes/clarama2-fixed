@@ -161,8 +161,10 @@ function replace_keys(text, key_dict) {
 // https://stackoverflow.com/questions/18673860/defining-a-html-template-to-append-using-jquery
 
 function process_template(template_id, substitutions, target_div, element_prefix) {
-    if (target_div === undefined)
+    if (target_div === undefined) {
+        console.warn("Skipping template " + template_id + ", target_div is undefined");
         return;
+    }
 
     let full_template_id = element_prefix + template_id;
 
@@ -235,7 +237,8 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
 
             if (dict['class'] === "template") {
                 let resulter = "#" + dict['step_id'];
-                //console.log("WEBSOCKET MESSAGE:" + dict['step_id']);
+                console.log("WEBSOCKET MESSAGE:" + dict['step_id']);
+                console.log(dict);
                 //console.log("TEMPLATE RESULTER --[" + resulter + ']--');
                 process_template(dict['type'], dict['values'], $(resulter), element_prefix);
             }

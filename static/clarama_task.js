@@ -40,7 +40,7 @@ function _task_run(socket) {
         //console.log("found json element for task in " + json_div);
         //console.log(field_merged);
     } else {
-        console.error("CLARAMA_TASK.js : " + json_div + " div containing JSON is missing")
+        console.warn("CLARAMA_TASK.js : " + json_div + " div containing JSON is missing")
     }
 
     var task_socket = $("#" + socket);
