@@ -237,8 +237,8 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
 
             if (dict['class'] === "template") {
                 let resulter = "#" + dict['step_id'];
-                console.log("WEBSOCKET MESSAGE:" + dict['step_id']);
-                console.log(dict);
+                //console.log("WEBSOCKET MESSAGE:" + dict['step_id']);
+                //console.log(dict);
                 //console.log("TEMPLATE RESULTER --[" + resulter + ']--');
                 process_template(dict['type'], dict['values'], $(resulter), element_prefix);
             }

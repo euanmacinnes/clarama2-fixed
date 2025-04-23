@@ -274,7 +274,21 @@ function bChart(chart_id, chart_data) {
         if (xaxis_id >= 0 && yaxis_id >= 0) {
             xaxis = data['rows'][xaxis_id];
             yaxis = data['rows'][yaxis_id];
-            labels = xaxis
+
+            var labels = xaxis
+
+            if (time) {
+                for (p = 0; p < labels.length; p++) {
+                    console.log(labels[p]);
+                    ndt = new Date(labels[p]);
+                    xaxis[p] = ndt;
+                    labels[p] = ndt;
+                }
+
+                console.log("Converted X Axis");
+                console.log(xaxis);
+            }
+
 
             if (zaxis_id >= 0)
                 zaxis = data['rows'][zaxis_id];
@@ -343,11 +357,6 @@ function bChart(chart_id, chart_data) {
                             curr = series[p];
                         }
 
-                        var x = xaxis[p];
-
-                        if (time)
-                            x = new Date(x);
-
                         point = {
                             x: xaxis[p],
                             y: yaxis[p]
@@ -366,11 +375,10 @@ function bChart(chart_id, chart_data) {
             } else {
 
                 for (p = 0; p < xaxis.length; p++) {
-
                     point = {
                         x: xaxis[p],
                         y: yaxis[p]
-                    };
+                    }
 
                     if (label_id >= 0)
                         point['text'] = labelaxis[p];
