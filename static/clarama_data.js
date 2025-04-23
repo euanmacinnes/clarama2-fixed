@@ -275,19 +275,18 @@ function bChart(chart_id, chart_data) {
             xaxis = data['rows'][xaxis_id];
             yaxis = data['rows'][yaxis_id];
 
-            var labels = xaxis
 
             if (time) {
-                for (p = 0; p < labels.length; p++) {
-                    console.log(labels[p]);
-                    ndt = new Date(labels[p]);
+                for (p = 0; p < xaxis.length; p++) {
+                    ndt = new Date(xaxis[p] + 'Z');
                     xaxis[p] = ndt;
-                    labels[p] = ndt;
                 }
 
                 console.log("Converted X Axis");
                 console.log(xaxis);
             }
+
+            labels = xaxis
 
 
             if (zaxis_id >= 0)
