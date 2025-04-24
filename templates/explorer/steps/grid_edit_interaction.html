@@ -1,0 +1,13 @@
+<li class="dropdown-item slate-elem-dropdown-item" elem-id="{{ element }}" draggable="true">
+    <div class="list-group-item d-flex align-items-center">
+        <i class="bi bi-grip-vertical draggable-heading p-0" draggable="true"></i>
+        <div class="mx-2 flex-grow-1 w-100 align-middle">{{ elements[element]['url'] or '' }}</div>
+        <i class="bi bi-folder-symlink mx-1 mx-2 gridbrowsefile"
+            data-bs-toggle="modal" 
+            data-bs-target="#browseFileModal" 
+            inputId="grid-elem" 
+            fileTarget="{{ element }}"
+            filters="*.field.yaml|*.task.yaml|*.md"></i>
+        <i class="bi bi-trash p-0" onClick="link_elements('{{ target }}','{{ element }}', false);"></i>
+    </div>
+</li>

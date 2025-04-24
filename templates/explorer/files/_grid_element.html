@@ -3,8 +3,9 @@
          class="col clarama-element clarama-post-embedded clarama-edit-element slate-panel-target tight"
          url="{{ embedded_url }}">
     </div>
-    <div class="dropdown col-auto align-middle tight">
-        <i class="bi bi-three-dots-vertical element_editor" data-bs-toggle="dropdown" aria-expanded="false"></i>
+    <div id="grid-elem-dropdown-{{ target }}" class="dropdown col-auto align-middle tight" style="position: absolute; top: 4px; right: 3px;">
+        <i class="bi bi-three-dots-vertical element_editor grid-elem-menu" data-bs-toggle="dropdown" aria-expanded="false" target="{{ target }}"
+            elems="{{ elements }}"></i>
         <ul class="dropdown-menu embedded-dropdown-menu ">
             <li><a class="dropdown-item" href="/content/edit/{{ element_content_url }}" target="new"><i
                     class="bi bi-pencil-square"></i> Edit {{ target_element['url'] }}</a></li>
@@ -29,36 +30,20 @@
             <li>
                 <hr class="dropdown-divider">
             </li>
-            <li><h6 class="dropdown-header">Interactions: <!-- Temporarily commented out <i class="bi bi-plus-circle elem-hover"
-                                                             style="font-size: .8rem !important; cursor: pointer;"
-                                                             data-bs-toggle="modal"
-                                                             data-bs-target="#addfieldModal"
-                                                             filters="*.field.yaml|*.task.yaml"></i>--></h6></li>
-            <div id="grid_element_target">
+            <li><h6 class="dropdown-header">Interactions: </h6>
+                <div class="dropdown-item align-items-center gap-2" id="grid-menu-select-{{ target }}" target="{{ target }}">
+                    <select id="add_content_interactions-{{ target }}" class="form-select" name="add_interactions" style="width: auto;"></select>
+                    <i class="bi bi-plus-circle grid-interaction-add"
+                        style="cursor: pointer;"></i>
+                </div>
+            </li>
+            <div id="grid_element_target-{{ target }}">
                 {% for element, value in elements.items() %}
-                    <li class="dropdown-item slate-elem-dropdown-item" elem-id="{{ element }}">
-                        <div class="list-group-item d-flex align-items-center">
-                            <i class="bi bi-grip-vertical draggable-heading p-0" draggable="true"></i>
-                            <input type="checkbox" class="big-checkbox form-check-input"
-                                    {% if 'links' in elements[target] %}
-                                        {% if element in elements[target]['links'] %}
-                                   checked
-                                        {% endif %}
-                                    {% endif %}
-                                   id="{{ target }}_{{ element }}"
-                                   onClick="link_elements('{{ target }}','{{ element }}');">
-                            <div
-                                    class="mx-2 flex-grow-1 w-100 align-middle"
-                            >
-                                {{ elements[element]['url'] or '' }}</div>
-                            <!-- Temporarily commented out <button type="button"
-                                    class="btn btn-outline-dark mx-1   mx-2 text-xs-align gridaddcontent"
-                                    data-bs-toggle="modal" data-bs-target="#addfieldModal"
-                                    filters="*.field.yaml|*.task.yaml"><i
-                                    class="bi bi-folder-symlink ms-4"></i></button>
-                             <i class="bi bi-trash p-0"></i> -->
-                        </div>
-                    </li>
+                    {% if 'links' in elements[target] %}
+                        {% if element in elements[target]['links'] %}
+                            {% include "explorer/steps/grid_edit_interaction.html" %}
+                        {% endif %}
+                    {% endif %}
                 {% endfor %}
             </div>
         </ul>

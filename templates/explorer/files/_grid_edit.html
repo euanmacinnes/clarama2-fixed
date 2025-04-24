@@ -96,8 +96,10 @@
       button = $(event.relatedTarget);
       filters = button.attr('filters'); 
       inputId = button.attr('inputId');
+      fileTarget = button.attr('fileTarget');
 
       $(this).data('inputId', inputId);
+      $(this).data('fileTarget', fileTarget);
       path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
 
       navigateToPath(path, 'breadcrumb_browsefile', 'add_content_browsefile');
@@ -109,8 +111,6 @@
   });
 
   const {{ grid_id }}elements = {{ element_json | safe }};
-
-
 
   let {{ grid_id }}subOptions = {
     cellHeight: 55, // should be 50 - top/bottom
@@ -273,13 +273,21 @@ function delete_element(element) {
   }
 
   function add_selected_file() {
-    inputId = $("#browseFileModal").data('inputId');
-    const selected_val = $("#add_content_browsefile").val();
+    const selected_val = "./" + $("#add_content_browsefile").val();
     console.log("adding " + selected_val);
   
     if (selected_val == null) {
       flash("No file selected!");
       return;
+    }
+
+    inputId = $("#browseFileModal").data('inputId');
+    if (inputId == "grid-elem") {
+      fileTarget = $("#browseFileModal").data('fileTarget');
+      var element = {{ grid_id }}elements[fileTarget];
+      element['url'] = selected_val;
+      $("#browseFileModal").modal('hide');
+      return; 
     }
 
     const targetInput = document.getElementById(inputId);
@@ -330,27 +338,34 @@ function delete_element(element) {
     })
   }
 
-  function link_elements(target, linked) {
-    var value = $("#" + target + "_" + linked).is(':checked');
-    // flash("linking " + target + " to " + linked + " with " + value);
-
+  function link_elements(target, linked, should_link = true) {
     if (linked in {{ grid_id }}elements) {
-
       if (target in {{ grid_id }}elements) {
         var element = {{ grid_id }}elements[target];
-
-        if (!(element.hasOwnProperty("links"))) {
-          element['links'] = []
+        if (!element.hasOwnProperty("links")) {
+          element['links'] = [];
         }
 
-
-        if (value) if (!(element['links'].includes(linked))) element['links'].push(linked);
-        if (!(value))
-          if (element['links'].includes(linked)) {
-            element['links'].splice(element['links'].indexOf(linked), 1);
+        if (should_link) {
+          if (!element['links'].includes(linked)) {
+            element['links'].push(linked);
           }
+        } else {
+          var index = element['links'].indexOf(linked);
+          if (index !== -1) {
+            element['links'].splice(index, 1);
+          }
+        }
 
         flash("linking " + target + " to [" + element['links'] + "]");
+        save('/content/save/{{ file_url }}');
+        const modal = bootstrap.Modal.getInstance(document.getElementById('addInteractions'));
+        modal.hide();
+
+        const elemdropdown = document.getElementById("grid-elem-dropdown-" + target);
+        console.log("elemdropdown", elemdropdown)
+        elemdropdown.className = "clarama-replaceable"; 
+        elemdropdown.setAttribute("url", `/template/render/explorer/files/_grid_element_dropdown?target=${target}`);
       }
     }
   }
@@ -364,7 +379,10 @@ function delete_element(element) {
 
       const breadcrumb = document.getElementById(breadcrumbId);
       breadcrumb.innerHTML = '';
-      const trimmedPath = path.split('/').slice(5); // Remove the first 5 parts
+      console.log("path", path)
+      const trimmedPath = path.split('/').slice(3); // Remove the first 5 parts
+      console.log("trimmedPath", trimmedPath)
+
       trimmedPath.forEach((part, index, array) => {
         console.log(part)
           const li = document.createElement('li');
@@ -372,7 +390,7 @@ function delete_element(element) {
           if (index < array.length - 1) {
             li.style.cursor = 'pointer';
             li.className = 'text-secondary';
-            li.addEventListener('click', () => navigateToPath(path.split('/').slice(0, index + 6).join('/') + "?subfolders=True&extensions=" + filters, breadcrumbId, selectId));
+            li.addEventListener('click', () => navigateToPath(path.split('/').slice(0, index + 4).join('/') + "?subfolders=True&extensions=" + filters, breadcrumbId, selectId));
             li.innerHTML = part + "&nbsp;>&nbsp;";
           } else {
             li.innerText = part.split('?')[0];
@@ -398,7 +416,7 @@ function delete_element(element) {
       const goDown = toParts.slice(i).join('/'); // extracts the remaining thats not common
 
       if (!goUp && !goDown) {
-        return '.'
+        return ''
       }
       
       return goUp ? `${goUp}/${goDown}` : goDown; // if no goUp means we r in the correct folder
@@ -450,7 +468,13 @@ function delete_element(element) {
           sortedFiles.forEach(filePath => {
             if (!foldersSet.has(filePath.split('/')[0])) { // Ensure it's not a folder
               const option = document.createElement('option');
-              option.value = relativePath + "/" + filePath; // Store relative path in the value
+
+              // Store relative path in the value
+              if (relativePath == '') {
+                option.value = relativePath + filePath;
+              } else {
+                option.value = relativePath + "/" + filePath;
+              }
 
               let matchedIcon = Object.entries(filetypeCSS)
                 .find(([ext, _]) => filePath.endsWith(ext));

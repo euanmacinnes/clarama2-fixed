@@ -63,7 +63,7 @@ input[type="search"]::-webkit-search-cancel-button {
     transition: background-color, border-color 0.2s ease-in-out;
 }
 
-.bi-plus-circle.elem-hover:hover {
+.bi-plus-circle.grid-interaction-add:hover {
     color: #4bb785;
     transition: color 0.2s ease-in-out;
 }
