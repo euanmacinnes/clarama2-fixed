@@ -24,6 +24,7 @@ function get_data_cell(cell) {
     var source = $("#" + source_id).val();
     var output = $("#" + output_id).val();
 
+    var table_title = cell.find('.table-title').val();
     var chart_title = cell.find('.chart-title').val();
     var chart_subtitle = cell.find('.chart-subtitle').val();
     var chart_legend = cell.find('.chart-legend').val();
@@ -78,7 +79,9 @@ function get_data_cell(cell) {
         'series-formats': chart_series_formats
     }
 
-    var table = {}
+    var table = {
+        'title': table_title
+    }
 
     return {
         "type": "data",
