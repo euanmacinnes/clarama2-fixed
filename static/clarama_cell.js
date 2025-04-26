@@ -25,6 +25,15 @@ function get_data_cell(cell) {
     var output = $("#" + output_id).val();
 
     var table_title = cell.find('.table-title').val();
+    var table_search = cell.find('.table-search').prop('checked');
+    var table_export = cell.find('.table-export').prop('checked');
+    var table_filter = cell.find('.table-filter').prop('checked');
+    var table_checkbox = cell.find('.table-checkbox').prop('checked');
+    var table_multiselect_row = cell.find('.table-multiselect-row').prop('checked');
+    var table_pagination = cell.find('.table-pagination').prop('checked');
+    var table_sortable = cell.find('.table-sortable').prop('checked');
+    var table_pagesize = cell.find('.table-pagesize').val();
+
     var chart_title = cell.find('.chart-title').val();
     var chart_subtitle = cell.find('.chart-subtitle').val();
     var chart_legend = cell.find('.chart-legend').val();
@@ -80,7 +89,15 @@ function get_data_cell(cell) {
     }
 
     var table = {
-        'title': table_title
+        'title': table_title,
+        'search': table_search,
+        'export': table_export,
+        'filter': table_filter,
+        'checkbox': table_checkbox,
+        'multiselect-row': table_multiselect_row,
+        'pagination': table_pagination,
+        'sortable': table_sortable,
+        'pagesize': table_pagesize
     }
 
     return {
