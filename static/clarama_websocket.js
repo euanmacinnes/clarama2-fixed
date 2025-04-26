@@ -94,11 +94,12 @@ function run_socket(embedded, reset_environment) {
             .then((response) => {
                 //console.log(response);
 
-                let server = response['results']['socket']
+                //let server = response['results']['socket']
                 let uuid = response['results']['uuid']
                 let topic = response['results']['topic']
 
-                let websocket_address = server + 'ws/' + uuid + '/';
+                let server = location.origin.replace(/^http/, 'ws')
+                let websocket_address = server + '/ws/' + uuid + '/';
                 let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
                 console.log("CLARAMA_WEBSOCKET.js: Creating " + socket_url + " Websocket on " + websocket_address);
 
