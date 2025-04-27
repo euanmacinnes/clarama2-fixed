@@ -5,6 +5,7 @@ Clarama:
   Services:
     AllowURLToken: True # Allow the user to visibly pass the token in the URL parameter. VERY INSECURE! Use for testing only!
     DefaultOrchestrator: native
+    Websocket_Dynamic: True # Auto-generate the websocket address from the inbound address.
     Instance: demo
     # External
     Web: "http://127.0.0.1:5000/"  # the deployment config will update this with either HTTPS or HTTP and the public domain name
