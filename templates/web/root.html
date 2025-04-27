@@ -336,10 +336,12 @@
 
     $(document).ready(() => {
         $('.source-editor').editor();
-        var output = $('#task_step_{{ loop_index }}_output').attr('value');
+        // var output = $('#task_step_{{ loop_index }}_output').attr('value');
         // datacell_setOutput('task_step_{{ loop_index }}', '{{ output }}');
 
-        chart_options_initialize('{{ loop_index }}');
+        // This should not be here. data cells load dynamically
+        // chart_options_initialize('{{ loop_index }}');
+
 
         $('[data-toggle="tooltip"]').tooltip({html: true});
     });

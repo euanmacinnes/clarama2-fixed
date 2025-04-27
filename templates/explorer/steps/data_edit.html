@@ -232,3 +232,10 @@
 <div id="content_chart_{{ loop_index }}">
 
 </div>
+
+<script type="text/javascript">
+    $( document ).ready(() => {
+        chart_options_initialize('{{  loop_index }}')
+        $('[data-toggle="tooltip"]').tooltip({html: true});
+    });
+</script>
