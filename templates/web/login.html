@@ -67,12 +67,13 @@
                             {% endif %}
 
                             {% if basic_enabled %}
+                                {% set show_basic = ldap_enabled or oauth_providers|length > 0 %}
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingTwo">
                                         <button id="basic_login"
-                                                class="accordion-button {% if ldap_enabled %}collapsed{% endif %}"
+                                                class="accordion-button {% if show_basic %}collapsed{% endif %}"
                                                 type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                                                {% if ldap_enabled %}aria-expanded="false"
+                                                {% if show_basic %}aria-expanded="false"
                                                 {% else %}
                                                 aria-expanded="true"
                                                 {% endif %}
@@ -81,7 +82,7 @@
                                         </button>
                                     </h2>
                                     <div id="collapseTwo"
-                                         class="accordion-collapse {% if ldap_enabled %}collapse{% endif %}"
+                                         class="accordion-collapse {% if show_basic %}collapse{% endif %}"
                                          aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             {% include "web/login_basic.html" %}
