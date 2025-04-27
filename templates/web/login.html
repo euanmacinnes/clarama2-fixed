@@ -43,13 +43,11 @@
                 <div class="card shadow-lg bg-light" style="width:400px; min-height:400px; background-color: gainsboro">
                     <div class="card-header bg-light text-white align-items-center justify-content-center text-center d-flex">
                         <div>
-                            <img src="/static/art/clarama_logo_c2_512.png" width="196" height="196" alt="">
+                            <img src="/static/art/clarama_logo_c2_512.png" width="256" height="256" alt="">
                         </div>
                     </div>
-                    <div style="padding: 45px; ">
-                        <p class="card-text">
-                        <h3 class="text-center">{{ login_message | safe }}</h3></p>
-                        <div class="accordion" id="accordionExample">
+                    <div>
+                        <div class="accordion" id="accordionExample" style="padding: 45px;">
                             {% if ldap_enabled %}
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingOne">
