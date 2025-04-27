@@ -102,7 +102,7 @@ function run_socket(embedded, reset_environment) {
                     server = location.origin.replace(/^http/, 'ws')
                     console.log("Using Dynamic Websocket address " + server);
 
-                let websocket_address = (server + '/ws/' + uuid + '/').replace("//ws", "/ws");
+                let websocket_address = (server + '/ws/' + uuid + '/').replace("//ws/", "/ws/");
                 let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
                 console.log("CLARAMA_WEBSOCKET.js: Creating " + socket_url + " Websocket on " + websocket_address);
 
