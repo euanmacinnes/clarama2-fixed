@@ -110,7 +110,7 @@
     //console.log({{ grid_json | safe }});
   });
 
-  const {{ grid_id }}elements = {{ element_json | safe }};
+  let {{ grid_id }}elements = {{ element_json | safe }};
 
   let {{ grid_id }}subOptions = {
     cellHeight: 55, // should be 50 - top/bottom
@@ -379,9 +379,17 @@ function delete_element(element) {
 
       const breadcrumb = document.getElementById(breadcrumbId);
       breadcrumb.innerHTML = '';
-      console.log("path", path)
-      const trimmedPath = path.split('/').slice(3); // Remove the first 5 parts
-      console.log("trimmedPath", trimmedPath)
+
+      console.log("path", path);
+      const trimmedPath = path.split('/').slice(3); 
+      console.log("trimmedPath", trimmedPath);
+
+      // const root = document.createElement('li');
+      // root.style.cursor = 'pointer';
+      // root.className = 'text-secondary';
+      // root.addEventListener('click', () => navigateToPath(path.split('/').slice(0, 3).join('/') + "?subfolders=True&extensions=" + filters, breadcrumbId, selectId));
+      // root.innerHTML = "Clarama&nbsp;>&nbsp;";
+      // breadcrumb.appendChild(root);
 
       trimmedPath.forEach((part, index, array) => {
         console.log(part)
@@ -466,14 +474,16 @@ function delete_element(element) {
 
           // Render files with relative paths
           sortedFiles.forEach(filePath => {
-            if (!foldersSet.has(filePath.split('/')[0])) { // Ensure it's not a folder
+            console.log("filePath", filePath)
+            if (!foldersSet.has(filePath.split('/')[0])) { // ensure it's not a folder
               const option = document.createElement('option');
 
-              // Store relative path in the value
-              if (relativePath == '') {
-                option.value = relativePath + filePath;
+              // store relative path in val
+              const trimmedPath = relativePath.trim();
+              if (/^(?:\.\.\/)+$/.test(trimmedPath) || trimmedPath === '') {
+                option.value = trimmedPath + filePath;
               } else {
-                option.value = relativePath + "/" + filePath;
+                option.value = trimmedPath + "/" + filePath;
               }
 
               let matchedIcon = Object.entries(filetypeCSS)
