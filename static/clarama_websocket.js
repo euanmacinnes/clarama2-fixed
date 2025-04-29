@@ -99,7 +99,7 @@ function run_socket(embedded, reset_environment) {
                 let topic = response['results']['topic']
 
                 if ($CLARAMA_WEBSOCKET_DYNAMIC === 'True') {
-                    server = location.origin.replace(/^http/, 'ws') + 'ws/';
+                    server = location.origin.replace(/^http/, 'ws') + '/ws/';
                     console.log("Using Dynamic Websocket address " + server);
                 } else
                     console.log("Using Preconfigured Websocket address " + server);
