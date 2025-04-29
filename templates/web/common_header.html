@@ -96,10 +96,13 @@
     }
 
     $CLARAMA_ROOT = {{ request.script_root|tojson }};
+    $CLARAMA_WEBSOCKET_DYNAMIC = '{{ clarama['Services']['Websocket_Dynamic'] or False }}';
     $CLARAMA_WEBSOCKET_REGISTER = '{{ url_for('clarama_websockets.socket_subscribe', topic="") }}';
     $CLARAMA_ENVIRONMENTS_TASK_OPEN = '{{ url_for('clarama_webenvironments.task_open', task="") }}';
     $CLARAMA_ENVIRONMENTS_TASK_RUN = '{{ url_for('clarama_webenvironments.task_run', task_kernel_id="") }}';
     $CLARAMA_ENVIRONMENTS_KERNEL_RUN = '{{ url_for('clarama_webenvironments.kernel_run', task_kernel_id="") }}';
+    console.log('Root:' + $CLARAMA_ROOT);
+    console.log('Websocket Dynamic:' + $CLARAMA_WEBSOCKET_DYNAMIC);
 </script>
 <script src="{{ url_for('static', filename='chart_options.js') }}" type="text/javascript"></script>
 <script src="{{ url_for('static', filename='clarama_cell.js') }}" type="text/javascript"></script>

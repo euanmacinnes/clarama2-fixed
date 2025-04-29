@@ -40,16 +40,14 @@
         <div class="row align-items-center" style="height: 90vh;">
             <div class="d-flex justify-content-center ">
                 <input name="next" type="hidden" value="{{ request.args.get('next', '') }}">
-                <div class="card shadow-lg bg-light" style="width:500px; min-height:400px; background-color: gainsboro">
-                    <div class="card-header bg-secondary text-white align-items-center justify-content-center text-center d-flex">
+                <div class="card shadow-lg bg-light" style="width:400px; min-height:400px; background-color: gainsboro">
+                    <div class="card-header bg-light text-white align-items-center justify-content-center text-center d-flex">
                         <div>
-                            <img src="/static/art/clarama_logo_c2_512.png" width="196" height="196" alt="">
+                            <img src="/static/art/clarama_logo_c2_512.png" width="256" height="256" alt="">
                         </div>
                     </div>
-                    <div style="padding: 15px;">
-                        <p class="card-text"><br/>
-                        <h3 class="text-center">{{ login_message | safe }}</h3></p>
-                        <div class="accordion" id="accordionExample">
+                    <div>
+                        <div class="accordion" id="accordionExample" style="padding: 45px;">
                             {% if ldap_enabled %}
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingOne">
@@ -69,16 +67,22 @@
                             {% endif %}
 
                             {% if basic_enabled %}
+                                {% set show_basic = ldap_enabled or oauth_providers|length > 0 %}
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingTwo">
                                         <button id="basic_login"
-                                                class="accordion-button {% if ldap_enabled %}collapsed{% endif %}"
+                                                class="accordion-button {% if show_basic %}collapsed{% endif %}"
                                                 type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                                                aria-expanded="false" aria-controls="collapseTwo">
-                                            Basic Login
+                                                {% if show_basic %}aria-expanded="false"
+                                                {% else %}
+                                                aria-expanded="true"
+                                                {% endif %}
+                                                aria-controls="collapseTwo">
+                                            Login
                                         </button>
                                     </h2>
-                                    <div id="collapseTwo" class="accordion-collapse collapse"
+                                    <div id="collapseTwo"
+                                         class="accordion-collapse {% if show_basic %}collapse{% endif %}"
                                          aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             {% include "web/login_basic.html" %}
@@ -91,7 +95,7 @@
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="heading_{{ provider }}">
                                         <button id="sso_{{ provider }}"
-                                                class="accordion-button {% if ldap_enabled %}collapsed{% endif %}"
+                                                class="accordion-button"
                                                 type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#collapse_{{ provider }}" aria-expanded="false"
                                                 aria-controls="collapse_{{ provider }}">
@@ -99,7 +103,7 @@
                                         </button>
                                     </h2>
                                     <div id="collapse_{{ provider }}"
-                                         class="accordion-collapse {% if ldap_enabled %}collapse{% endif %}"
+                                         class="accordion-collapse"
                                          aria-labelledby="heading_{{ provider }}" data-bs-parent="#accordionExample">
                                         <div class="accordion-body text-center justify-content-center">
                                             <br/>

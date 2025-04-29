@@ -110,7 +110,7 @@
     //console.log({{ grid_json | safe }});
   });
 
-  let {{ grid_id }}elements = {{ element_json | safe }};
+  var {{ grid_id }}elements = {{ element_json | safe }};
 
   let {{ grid_id }}subOptions = {
     cellHeight: 55, // should be 50 - top/bottom
@@ -153,15 +153,15 @@
 
   function addContent(element, data, html) {
     if (isDict({{ grid_id }}elements)) {
-      {{ grid_id }}elements[element] = new_element_data;
+      {{ grid_id }}elements[element] = data;
     } else {
       var elem = {};
-      elem[element] = new_element_data;
+      elem[element] = data;
       {{ grid_id }}elements = elem;
     }
 
 
-    {{ grid_id }}elements[element] = data;
+    //{{ grid_id }}elements[element] = data;
 
     {{ grid_id }}grid.addWidget({
       x: 0,
