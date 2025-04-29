@@ -275,135 +275,138 @@ function bChart(chart_id, chart_data) {
             xaxis = data['rows'][xaxis_id];
             yaxis = data['rows'][yaxis_id];
 
+            if (xaxis !== undefined && yaxis !== undefined) {
 
-            if (time) {
-                for (p = 0; p < xaxis.length; p++) {
-                    ndt = new Date(xaxis[p] + 'Z');
-                    xaxis[p] = ndt;
+                if (time) {
+                    for (p = 0; p < xaxis.length; p++) {
+                        ndt = new Date(xaxis[p] + 'Z');
+                        xaxis[p] = ndt;
+                    }
+
+                    console.log("Converted X Axis");
+                    console.log(xaxis);
                 }
 
-                console.log("Converted X Axis");
-                console.log(xaxis);
-            }
-
-            labels = xaxis
+                labels = xaxis
 
 
-            if (zaxis_id >= 0)
-                zaxis = data['rows'][zaxis_id];
+                if (zaxis_id >= 0)
+                    zaxis = data['rows'][zaxis_id];
 
-            if (label_id >= 0)
-                labelaxis = data['rows'][label_id];
+                if (label_id >= 0)
+                    labelaxis = data['rows'][label_id];
 
-            if (unit_id >= 0)
-                unitaxis = data['rows'][unit_id];
+                if (unit_id >= 0)
+                    unitaxis = data['rows'][unit_id];
 
-            xaxis_scale['title']['text'] = sg['series-x'];
-            yaxis_scale['title']['text'] = sg['series-y'];
-            chart_scales['x'] = xaxis_scale;
+                xaxis_scale['title']['text'] = sg['series-x'];
+                yaxis_scale['title']['text'] = sg['series-y'];
+                chart_scales['x'] = xaxis_scale;
 
-            if (unit_id < 0 && sg['series-u'] === "") {
-                console.log("No units, creating default Y")
-                chart_scales['y'] = yaxis_scale;
-            } else {
-                console.log("Fark");
-            }
-
-
-            console.log("X-AXIS");
-            //console.log(xaxis);
+                if (unit_id < 0 && sg['series-u'] === "") {
+                    console.log("No units, creating default Y")
+                    chart_scales['y'] = yaxis_scale;
+                } else {
+                    console.log("Fark");
+                }
 
 
-            var points = [];
-
-            if (series_id >= 0) {
-                series = data['rows'][series_id];
-
-                if (unit_id > 0)
-                    unit = data['rows'][unit_id];
-
-                if (unit === '')
-                    unit = undefined;
+                console.log("X-AXIS");
+                //console.log(xaxis);
 
 
-                if (series !== undefined) {
-                    var curr = series[0];
+                var points = [];
 
-                    label = curr;
+                if (series_id >= 0) {
+                    series = data['rows'][series_id];
+
+                    if (unit_id > 0)
+                        unit = data['rows'][unit_id];
+
+                    if (unit === '')
+                        unit = undefined;
+
+
+                    if (series !== undefined) {
+                        var curr = series[0];
+
+                        label = curr;
+
+                        for (p = 0; p < xaxis.length; p++) {
+                            if (series[p] !== curr)   // then pop the current dataset onto the datasets queue, and reset
+                            {
+                                dataset = {
+                                    id: label,
+                                    label: label,
+                                    data: points,
+                                    type: sg['series-type'].toLowerCase()
+                                }
+
+                                if (unit !== undefined) {
+                                    console.log("Data Unit Axis");
+                                    ChartSeriesAxis(dataset, chart_scales, unit[p - 1]);
+                                } else if (sg['series-u'] !== "") {
+                                    console.log("Labelled Unit Axis");
+                                    ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
+                                }
+
+                                datasets.push(ChartSeriesFormat(dataset, formats));
+
+                                label = series[p];
+                                points = [];
+                                curr = series[p];
+                            }
+
+                            point = {
+                                x: xaxis[p],
+                                y: yaxis[p]
+                            }
+
+                            if (zaxis_id >= 0)
+                                point['z'] = zaxis[p];
+
+                            if (label_id >= 0)
+                                point['text'] = labelaxis[p];
+
+                            points.push(point);
+                        }
+                    }
+
+                } else {
 
                     for (p = 0; p < xaxis.length; p++) {
-                        if (series[p] !== curr)   // then pop the current dataset onto the datasets queue, and reset
-                        {
-                            dataset = {
-                                id: label,
-                                label: label,
-                                data: points,
-                                type: sg['series-type'].toLowerCase()
-                            }
-
-                            if (unit !== undefined) {
-                                console.log("Data Unit Axis");
-                                ChartSeriesAxis(dataset, chart_scales, unit[p - 1]);
-                            } else if (sg['series-u'] !== "") {
-                                console.log("Labelled Unit Axis");
-                                ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
-                            }
-
-                            datasets.push(ChartSeriesFormat(dataset, formats));
-
-                            label = series[p];
-                            points = [];
-                            curr = series[p];
-                        }
-
                         point = {
                             x: xaxis[p],
                             y: yaxis[p]
                         }
 
-                        if (zaxis_id >= 0)
-                            point['z'] = zaxis[p];
-
                         if (label_id >= 0)
                             point['text'] = labelaxis[p];
 
                         points.push(point);
-                    }
-                }
 
-            } else {
-
-                for (p = 0; p < xaxis.length; p++) {
-                    point = {
-                        x: xaxis[p],
-                        y: yaxis[p]
                     }
 
-                    if (label_id >= 0)
-                        point['text'] = labelaxis[p];
-
-                    points.push(point);
-
+                }
+                dataset = {
+                    id: label,
+                    label: label,
+                    data: points,
+                    type: sg['series-type'].toLowerCase(),
                 }
 
+                if (unit !== undefined) {
+                    if (xaxis.length >= 1)
+                        ChartSeriesAxis(dataset, chart_scales, unit[xaxis.length - 1]);
+                } else if (sg['series-u'] !== "")
+                    ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
+
+                datasets.push(ChartSeriesFormat(dataset, formats));
+
+                console.log("DATASETS");
+                console.log(datasets.length);
             }
-            dataset = {
-                id: label,
-                label: label,
-                data: points,
-                type: sg['series-type'].toLowerCase(),
-            }
-
-            if (unit !== undefined) {
-                if (xaxis.length >= 1)
-                    ChartSeriesAxis(dataset, chart_scales, unit[xaxis.length - 1]);
-            } else if (sg['series-u'] !== "")
-                ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
-
-            datasets.push(ChartSeriesFormat(dataset, formats));
-
-            console.log("DATASETS");
-            console.log(datasets.length);
+            flash("Empty Chart");
         } else
             flash("Didn't find X and Y axis for chart in columns [" + data['cols'] + ']. X: ' + sg['series-x'] + '. Y: ' + sg['series-y']);
 
