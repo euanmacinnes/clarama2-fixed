@@ -406,7 +406,6 @@ function bChart(chart_id, chart_data) {
                 console.log("DATASETS");
                 console.log(datasets.length);
             }
-            flash("Empty Chart");
         } else
             flash("Didn't find X and Y axis for chart in columns [" + data['cols'] + ']. X: ' + sg['series-x'] + '. Y: ' + sg['series-y']);
 
