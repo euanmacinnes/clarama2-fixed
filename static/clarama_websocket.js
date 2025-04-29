@@ -98,9 +98,11 @@ function run_socket(embedded, reset_environment) {
                 let uuid = response['results']['uuid']
                 let topic = response['results']['topic']
 
-                if ($CLARAMA_WEBSOCKET_DYNAMIC === 'True')
+                if ($CLARAMA_WEBSOCKET_DYNAMIC === 'True') {
                     server = location.origin.replace(/^http/, 'ws') + 'ws/';
-                console.log("Using Dynamic Websocket address " + server);
+                    console.log("Using Dynamic Websocket address " + server);
+                } else
+                    console.log("Using Preconfigured Websocket address " + server);
 
                 let websocket_address = (server + uuid + '/');
                 let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
