@@ -181,7 +181,7 @@
     </tr>
 </table>
 <script type="text/javascript">
-    var key = "{{ key }}";
+    var key = "{{ get(field_config,'type','string') }}";
 
     $(".field").click(function () {
         $(".field").removeClass("clicked");
