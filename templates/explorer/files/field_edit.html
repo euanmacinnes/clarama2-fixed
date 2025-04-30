@@ -143,11 +143,18 @@
                              fieldtype="aceeditor"
                              style="min-height:{{ get(field_config,'min-height','64') }} ;height: 100%"
                                 {% include "explorer/files/field_tooltip.html" %}
-                        >{{ get(field_config,'data', 'source:\nparams:\noptions:\n') | yaml }}</div>
+                        >{{ get(field_config,'data', 'source:\naction:\nparams:\n  query:\n  path:\noptions:\n') | yaml }}</div>
                         <p>
-                            <b>source</b> is the task/source/yaml file to get the data from. Relative to where the field
+                            <b>source:</b> is the task/source/yaml file to get the data from. Relative to where the
+                            field
                             is<br/>
-                            <b>params</b> if the source in question needs additional parameters<br/>
+                            <b>params:</b> if the source in question needs additional parameters<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<b>query:</b> For SQL/CSV/Excel/Influx sources to run a query
+                            against them<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<b>path:</b> For Yaml sources to specify the /path/ in the yaml to
+                            get the
+                            dictionary
+                            from<br/>
                             <b>options</b> is for a manual list of options for a select/select-multiple<br/>
                         </p>
                     </td>

@@ -51,6 +51,48 @@ function get_field_values() {
     return result;
 }
 
+function check_fields_valid() {
+    var valid = true;
+    console.log("CLARAMA_FIELDS.js: Input Validity Check");
+    $('.clarama-field').each(
+        function (index) {
+            var input = $(this);
+            // var panel = $("#panel_" + input.attr('name'));
+
+            if (input.prop('type') !== 'checkbox') {
+                if (input.is(':required')) {
+                    var inputval = '';
+
+                    switch (input.attr('fieldtype')) {
+                        case 'html':
+                            inputval = input.val();
+                            break;
+
+                        case 'aceeditor':
+                            var editor = ace.edit(input.attr('id'));
+                            inputval = editor.getValue();
+                            break;
+
+                        case 'trumbowyg':
+                            inputval = input.trumbowyg('html');
+                            break;
+                    }
+                    console.log(inputval);
+                    if ((inputval === '') || (inputval === undefined) || (Array.isArray(inputval) && (inputval.length === 0))) {
+                        valid = false;
+                        input.tooltip('show');
+                    }
+                    console.log("Input Field " + input.attr("id") + ':' + inputval + ':' + valid);
+                } else {
+                    console.log("Input Field " + input.attr("id") + ': not required');
+                }
+            }
+        }
+    );
+
+    return valid;
+}
+
 
 /**
  * saveGrid is in the _grid_edit.html and is dynamically generated with the saved grid definition inside the HTML

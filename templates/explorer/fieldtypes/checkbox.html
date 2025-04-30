@@ -5,6 +5,8 @@
         <input class="form-check-input clarama-field clarama-now-field"
                fieldtype="html"
                type="checkbox"
+                {{ field_config | required }}
+                {{ field_config | readonly }}
                value="{{ field_value or get(field_config,'default','') }}"
                id="{{ field_id }}"
                name="{{ field_name }}"

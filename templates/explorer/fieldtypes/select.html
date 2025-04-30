@@ -6,7 +6,8 @@
                 fieldtype="html"
                 name="{{ field_name }}"
                 size="{{ field_config['size'] or '4' }}"
-                {{ required }}
+                {{ field_config | required }}
+                {{ field_config | readonly }}
                 class="form-control clarama-field-select2 clarama-field clarama-select-field tooltip"
                 {% include "explorer/files/field_tooltip.html" %}
                 {% if field_config.get('data',{}).get('source') %}
