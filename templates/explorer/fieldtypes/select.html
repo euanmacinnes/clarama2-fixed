@@ -19,7 +19,7 @@
                     </option>
                 {% endif %}
             {% endif %}
-            {%- for item in field_config['options'] -%}
+            {%- for item in field_config.get('data',{}).get('options',{}) -%}
                 {% if item is mapping %}
                     <option value="{{ item['id'] }}"
                             {% if item['id']== field_config["default"] or item['id']==field_value %}
