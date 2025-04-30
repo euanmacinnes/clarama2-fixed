@@ -9,7 +9,7 @@
                 {{ required }}
                 class="form-control clarama-field-select2 clarama-field clarama-select-field tooltip"
                 {% include "explorer/files/field_tooltip.html" %}
-                {% if field_config['data'] %}
+                {% if field_config.get('data',{}).get('source') %}
                 sourceurl="{{ field_config['data'] | datasource }}"
                 {% endif %}
         >
