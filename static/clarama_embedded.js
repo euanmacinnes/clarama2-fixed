@@ -97,6 +97,8 @@ function runScripts($container) {
 }
 
 function loadHTML(url, element) {
+    element.html('<p>Loading...</p>');
+
     fetch($CLARAMA_ROOT + url)
         .then((response) => response.text())
         .then((html) => {
@@ -126,6 +128,8 @@ $.fn.load_post = function (onfinished, args, json) {
     return this.each(function () {
         var embedded = $(this);
         console.log("POST loading " + embedded.attr("class") + " = " + embedded.attr("url") + JSON.stringify(args));
+        embedded.html('<p>Working...</p>');
+
 
         if (embedded.attr("clarama_loaded") != "true") {
             var url = embedded.attr("url");
@@ -246,6 +250,7 @@ $.fn.load = function (onfinished, args) {
 
     return this.each(function () {
         var embedded = $(this);
+        embedded.html('<p>Working...</p>');
         // console.log("GET loading " + embedded.attr("class") + " = " + embedded.attr("url") + ' with args ' + JSON.stringify(args));
 
 
