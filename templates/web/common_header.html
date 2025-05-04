@@ -102,7 +102,7 @@
     {%  if clarama %}
         $CLARAMA_WEBSOCKET_DYNAMIC = '{{ clarama['Services']['Websocket_Dynamic'] or False }}';
     {%  else %}
-        $CLARAMA_WEBSOCKET_DYNAMIC = 'False';
+        $CLARAMA_WEBSOCKET_DYNAMIC = 'True';
     {% endif %}
     $CLARAMA_WEBSOCKET_REGISTER = '{{ url_for('clarama_websockets.socket_subscribe', topic="") }}';
     $CLARAMA_ENVIRONMENTS_TASK_OPEN = '{{ url_for('clarama_webenvironments.task_open', task="") }}';
