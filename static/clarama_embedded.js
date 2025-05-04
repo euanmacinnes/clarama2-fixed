@@ -130,7 +130,7 @@ $.fn.load_post = function (onfinished, args, json) {
         //console.log("POST loading " + embedded.attr("class") + " = " + embedded.attr("url") + JSON.stringify(args));
 
         if (embedded.attr("clarama_loaded") !== "true") {
-            embedded.html('<div class="d-flex justify-content-center align-items-center"></div><div class="loading-spinner"></div></div>')
+            embedded.html('<div class="d-flex justify-content-center align-items-center"><div class="loading-spinner"></div></div>')
                 .promise()
                 .done(function () {
                     var url = embedded.attr("url");
@@ -255,7 +255,7 @@ $.fn.load = function (onfinished, args) {
         // console.log("GET loading " + embedded.attr("class") + " = " + embedded.attr("url") + ' with args ' + JSON.stringify(args));
 
         if ((embedded.attr("clarama_loaded") !== "true") && (embedded.attr("autorun") !== "False")) {
-            embedded.html('<div class="d-flex justify-content-center align-items-center"></div><div class="loading-spinner"></div></div>')
+            embedded.html('<div class="d-flex justify-content-center align-items-center"><div class="loading-spinner"></div></div>')
                 .promise()
                 .done(function () {
                     var url = embedded.attr("url");
