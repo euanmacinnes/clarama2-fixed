@@ -127,85 +127,87 @@ $.fn.load_post = function (onfinished, args, json) {
 
     return this.each(function () {
         var embedded = $(this);
-        console.log("POST loading " + embedded.attr("class") + " = " + embedded.attr("url") + JSON.stringify(args));
-        embedded.html('<p>Working...</p>');
+        //console.log("POST loading " + embedded.attr("class") + " = " + embedded.attr("url") + JSON.stringify(args));
 
+        if (embedded.attr("clarama_loaded") !== "true") {
+            embedded.html('<div class="d-flex justify-content-center align-items-center"></div><div class="loading-spinner"></div></div>')
+                .promise()
+                .done(function () {
+                    var url = embedded.attr("url");
+                    var json_div = embedded.attr("post_json");
+                    //console.log("Looking for " + json_div + " for " + url)
+                    var json_element = document.getElementById(json_div);
 
-        if (embedded.attr("clarama_loaded") != "true") {
-            var url = embedded.attr("url");
-            var json_div = embedded.attr("post_json");
-            //console.log("Looking for " + json_div + " for " + url)
-            var json_element = document.getElementById(json_div);
+                    var json_payload = json;
 
-            var json_payload = json;
-
-            if (json_element !== undefined) {
-                try {
-                    var je = $("<textarea/>").html(json_element.innerHTML).text(); // Hack to get json from a div element (which will be just text)
-                    json_payload = JSON.parse(je);
-                } catch {
-                    // Ignore, leave it as blank JSON to default the content (e.g. for new steps)
-                }
-            }
-
-            console.log("JSON Payload");
-            console.log(json_payload);
-            const final_url = merge_url_params(url, args);
-
-            fetch($CLARAMA_ROOT + final_url,
-                {
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    method: "post",
-                    body: JSON.stringify(json_payload)
-                })
-                .then((response) => {
-                    // 1. check response.ok
-                    if (response.ok) {
-                        return response.text();
+                    if (json_element !== undefined) {
+                        try {
+                            var je = $("<textarea/>").html(json_element.innerHTML).text(); // Hack to get json from a div element (which will be just text)
+                            json_payload = JSON.parse(je);
+                        } catch {
+                            // Ignore, leave it as blank JSON to default the content (e.g. for new steps)
+                        }
                     }
 
-                    throw new Error('HTTP error ' + response.status);
-                    //return Promise.reject(response); // 2. reject instead of throw
-                })
-                .then((html) => {
-                    //console.log('POST Embedded JQuery Loaded ' + $CLARAMA_ROOT + url)
-                    //console.log({ 'html': html })
-                    try {
-                        console.log(final_url)
+                    console.log("JSON Payload");
+                    console.log(json_payload);
+                    const final_url = merge_url_params(url, args);
 
-                        if (embedded.hasClass("clarama-replaceable")) {
-                            parent = embedded.parent();
-                            embedded.replaceWith(html);
-                            enable_interactions(parent);
-                        } else {
-                            embedded.html(html).promise()
-                                .done(function () {
-                                    enable_interactions(embedded);
-                                });
-                        }
-                        //console.log('POST onfinished:' + typeof(onfinished) + '-' + onfinished);
+                    fetch($CLARAMA_ROOT + final_url,
+                        {
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            method: "post",
+                            body: JSON.stringify(json_payload)
+                        })
+                        .then((response) => {
+                            // 1. check response.ok
+                            if (response.ok) {
+                                return response.text();
+                            }
 
-                        if (typeof onfinished === 'function') {
-                            //console.log("POST finished, calling onfinished")
-                            onfinished();
-                        }
-                    } catch (err) {
-                        embedded.html('<p>Clarama Embedded Error : ' + err.message + '</p>');
-                        console.error(err, err.stack);
-                    }
-                    //console.log('JQuery HTML POST embedded ' + $CLARAMA_ROOT + url)
-                    //runScripts(embedded.attr('id'))
-                })
-                .catch((error) => {
-                    embedded.html('<p>' + error + '</p><p>' + $CLARAMA_ROOT + final_url + '</p>');
-                    console.warn('JQuery Error loading ' + $CLARAMA_ROOT + final_url)
-                    console.warn(error);
+                            throw new Error('HTTP error ' + response.status);
+                            //return Promise.reject(response); // 2. reject instead of throw
+                        })
+                        .then((html) => {
+                            //console.log('POST Embedded JQuery Loaded ' + $CLARAMA_ROOT + url)
+                            //console.log({ 'html': html })
+                            try {
+                                console.log(final_url)
+
+                                if (embedded.hasClass("clarama-replaceable")) {
+                                    parent = embedded.parent();
+                                    embedded.replaceWith(html);
+                                    enable_interactions(parent);
+                                } else {
+                                    embedded.html(html).promise()
+                                        .done(function () {
+                                            enable_interactions(embedded);
+                                        });
+                                }
+                                //console.log('POST onfinished:' + typeof(onfinished) + '-' + onfinished);
+
+                                if (typeof onfinished === 'function') {
+                                    //console.log("POST finished, calling onfinished")
+                                    onfinished();
+                                }
+                            } catch (err) {
+                                embedded.html('<p>Clarama Embedded Error : ' + err.message + '</p>');
+                                console.error(err, err.stack);
+                            }
+                            //console.log('JQuery HTML POST embedded ' + $CLARAMA_ROOT + url)
+                            //runScripts(embedded.attr('id'))
+                        })
+                        .catch((error) => {
+                            embedded.html('<p>' + error + '</p><p>' + $CLARAMA_ROOT + final_url + '</p>');
+                            console.warn('JQuery Error loading ' + $CLARAMA_ROOT + final_url)
+                            console.warn(error);
+                        });
+
+                    embedded.attr("clarama_loaded", true)
                 });
-
-            embedded.attr("clarama_loaded", true)
         }
     });
 }
@@ -250,55 +252,57 @@ $.fn.load = function (onfinished, args) {
 
     return this.each(function () {
         var embedded = $(this);
-        embedded.html('<p>Working...</p>');
         // console.log("GET loading " + embedded.attr("class") + " = " + embedded.attr("url") + ' with args ' + JSON.stringify(args));
 
-
         if ((embedded.attr("clarama_loaded") !== "true") && (embedded.attr("autorun") !== "False")) {
-            var url = embedded.attr("url");
-            var url_data_id = embedded.attr("url_data_id");
+            embedded.html('<div class="d-flex justify-content-center align-items-center"></div><div class="loading-spinner"></div></div>')
+                .promise()
+                .done(function () {
+                    var url = embedded.attr("url");
+                    var url_data_id = embedded.attr("url_data_id");
 
-            if (url_data_id !== undefined) {
-                //console.log("Retrieving JSON for " + url_data_id);
+                    if (url_data_id !== undefined) {
+                        //console.log("Retrieving JSON for " + url_data_id);
 
-                var url_data = $("#" + embedded.attr("url_data_id"));
+                        var url_data = $("#" + embedded.attr("url_data_id"));
 
-                if (url_data !== undefined)
-                    url = url + 'json_data=' + encodeURI(url_data.html());
-            }
-
-            const final_url = merge_url_params(url, args);
-
-            //console.log($CLARAMA_ROOT + final_url);
-
-            //console.log('GET JQuery Loading ' + url + ' into div ' + embedded);
-
-            fetch($CLARAMA_ROOT + final_url)
-                .then((response) => response.text())
-                .then((html) => {
-                    //console.log('GET Embedded JQuery Loaded ' + $CLARAMA_ROOT + url)
-                    // console.log({ 'html': html })
-                    try {
-                        //console.log(final_url)
-                        embedded.html(html).promise()
-                            .done(function () {
-                                enable_interactions(embedded);
-                            });
-                    } catch (err) {
-                        embedded.html('<p>Clarama Embedded Error : ' + err.message + '</p>');
-                        console.error(err, err.stack);
+                        if (url_data !== undefined)
+                            url = url + 'json_data=' + encodeURI(url_data.html());
                     }
 
-                    if (typeof onfinished === 'function') {
-                        onfinished();
-                    }
-                })
-                .catch((error) => {
-                    console.warn('JQuery Error loading ' + $CLARAMA_ROOT + url)
-                    console.warn(error);
+                    const final_url = merge_url_params(url, args);
+
+                    //console.log($CLARAMA_ROOT + final_url);
+
+                    //console.log('GET JQuery Loading ' + url + ' into div ' + embedded);
+
+                    fetch($CLARAMA_ROOT + final_url)
+                        .then((response) => response.text())
+                        .then((html) => {
+                            //console.log('GET Embedded JQuery Loaded ' + $CLARAMA_ROOT + url)
+                            // console.log({ 'html': html })
+                            try {
+                                //console.log(final_url)
+                                embedded.html(html).promise()
+                                    .done(function () {
+                                        enable_interactions(embedded);
+                                    });
+                            } catch (err) {
+                                embedded.html('<p>Clarama Embedded Error : ' + err.message + '</p>');
+                                console.error(err, err.stack);
+                            }
+
+                            if (typeof onfinished === 'function') {
+                                onfinished();
+                            }
+                        })
+                        .catch((error) => {
+                            console.warn('JQuery Error loading ' + $CLARAMA_ROOT + url)
+                            console.warn(error);
+                        });
+
+                    embedded.attr("clarama_loaded", true)
                 });
-
-            embedded.attr("clarama_loaded", true)
         }
         // else
         // {
