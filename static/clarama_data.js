@@ -278,9 +278,23 @@ function bChart(chart_id, chart_data) {
             if (xaxis !== undefined && yaxis !== undefined) {
 
                 if (time) {
-                    for (p = 0; p < xaxis.length; p++) {
-                        ndt = new Date(xaxis[p] + 'Z');
-                        xaxis[p] = ndt;
+                    var needs_z=false;
+                    if (xaxis.length>1){
+                        needs_z = (xaxis_id[1].find("Z") < 0)
+                    }
+
+                    if (needs_z) {
+                        for (p = 0; p < xaxis.length; p++) {
+                            ndt = new Date(xaxis[p] + 'Z');
+                            xaxis[p] = ndt;
+                        }
+                    }
+                    else
+                    {
+                        for (p = 0; p < xaxis.length; p++) {
+                            ndt = new Date(xaxis[p]);
+                            xaxis[p] = ndt;
+                        }
                     }
 
                     console.log("Converted X Axis");
