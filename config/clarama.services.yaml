@@ -11,15 +11,15 @@ Clarama:
     Web: "http://127.0.0.1:5000/"  # the deployment config will update this with either HTTPS or HTTP and the public domain name
     Messenger_WS: "ws://127.0.0.1:5006/"  # For receiving notifications. the deployment config will update this with either HTTPS or HTTP and the public domain name
     # Internal, called by the Web service. Configure a zone of clarama.local with an A record for primary in the local DNS to reroute
-    Data: "http://127.0.0.1:5000/data/"
-    Explorer: "http://127.0.0.1:5000/explorer/"
-    Jobs: "http://127.0.0.1:5000/jobs/"
-    Gitinsights: "http://127.0.0.1:5000/version/git/"
-    Environments: "http://127.0.0.1:5000/environments/"
+    Data: "http://127.0.0.1:5001/data/"
+    Explorer: "http://127.0.0.1:5002/explorer/"
+    Jobs: "http://127.0.0.1:5003/jobs/"
+    Gitinsights: "http://127.0.0.1:5004/version/git/"
+    Environments: "http://127.0.0.1:5005/environments/"
     Messenger: "http://127.0.0.1:5006/"  # For registration and publishing
-    AccessControl: "http://127.0.0.1:5000/accesscontrol/"
+    AccessControl: "http://127.0.0.1:5008/accesscontrol/"
     Scheduler: "http://127.0.0.1:5007/scheduler/"
-    Runners: "http://127.0.0.1:5000/runners/"
+    Runners: "http://127.0.0.1:5009/runners/"
     Compiler: "http://127.0.0.1:5010/compiler/fetch/files/dynamic/content/"
     Config: "http://127.0.0.1:5010/compiler/config/files/dynamic/content/"
     Redis: "redis://c2.local:6379/1"
