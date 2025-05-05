@@ -542,15 +542,15 @@
                 console.log(url);
                 if (!url) return;
 
-                /*const formData = new FormData();
+                const formData = new FormData();
 
                 for (const file of dataRefs.files) {
-                    formData.append("files", file, file.name);
-                    console.log(file);
-                }*/
+                    formData.append("file", file, file.name);
+                    console.log(file.name);
+                }
 
-                const formData = new FormData();
-                formData.append("file", dataRefs.files[0]);
+                //const formData = new FormData();
+                //formData.append("file", dataRefs.files[0]);
 
                 fetch(url, {
                     method: 'POST',
