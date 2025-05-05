@@ -99,13 +99,10 @@
 
 <template id="{{ element_prefix }}task_step_result_bootstraptable" target_class="cell-results">
     <div class="tight" style="overflow: auto; height: 100%">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="text-align: center;">
+        <nav class="navbar navbar-expand-lg table-{style_content}-header">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#" id="navbarDropdown{table_id_content}"
-                       aria-expanded="false">
-                        {title_content}
-                    </a>
+                    {title_content}
                 </li>
                 <li class="nav-item">
                     <div class="nav-link buttons-toolbar-{table_id_content}">
@@ -119,7 +116,7 @@
                data-click-to-select="true"
                data-checkbox="{checkbox_content}"
                data-id-field="{id_content}"
-               data-show-footer="true"
+               data-show-footer="{footer_content}"
                data-show-columns-toggle-all="true"
                data-show-pagination-switch="false"
                data-show-export="{export_content}"
@@ -130,7 +127,7 @@
                data-sortable="{sortable_content}"
                data-search="{search_content}"
                data-export-options="{exportTypes: ['json', 'xml', 'csv', 'txt', 'sql', 'excel', 'pdf']}"
-               class="table table-hover"
+               class="table table-hover table-{style_content}"
         ></table>
     </div>
 </template>

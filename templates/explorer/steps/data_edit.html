@@ -88,9 +88,10 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center my-3">
-                    <table width="100%">
+                    <table width="100%" class="table-centered">
                         <thead>
                         <tr>
+                            <th>Format</th>
                             <th>Search</th>
                             <th>Export</th>
                             <th>Filter</th>
@@ -99,9 +100,21 @@
                             <th>Sortable</th>
                             <th>Pagination</th>
                             <th>Page Size</th>
+                            <th>Footer</th>
                         </tr>
                         </thead>
                         <tr>
+                            {% set style = table.get('style','default') %}
+
+                            <td>
+                                <select id="style" name="style" class="form-control table-style">
+                                    <option {{ selected("default",style) }} id="default">Default</option>
+                                    <option {{ selected("light",style) }} id="light">Light</option>
+                                    <option {{ selected("dark",style) }} id="dark">Dark</option>
+                                    <option {{ selected("centered",style) }} id="centered">Centered</option>
+                                    <option {{ selected("metric",style) }} id="metric">Metric</option>
+                                    <option {{ selected("worksheet",style) }} id="worksheet">Worksheet</option>
+                                </select></td>
                             <td><input class="form-check-input table-search" name="search"
                                        type="checkbox" {{ table['search'] | checked }}
                                        value="" id="search">
@@ -110,7 +123,7 @@
                                        type="checkbox" {{ table['export'] | checked }}
                                        name="export" id="export">
                             </td>
-                            <td><input class="form-check-input table_filter"
+                            <td><input class="form-check-input table-filter"
                                        type="checkbox" {{ table['filter'] | checked }}
                                        name="filter" id="filter">
                             </td>
@@ -132,6 +145,11 @@
                             </td>
                             <td><input class="form-control table-pagesize" type="number" value="{{ table['pagesize'] }}"
                                        name="pagesize" id="pagesize"></td>
+
+                            <td><input class="form-check-input table-footer"
+                                       type="checkbox" {{ table['footer'] | checked }}
+                                       name="footer" id="footer">
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -234,7 +252,7 @@
 </div>
 
 <script type="text/javascript">
-    $( document ).ready(() => {
+    $(document).ready(() => {
         chart_options_initialize('{{  loop_index }}')
         $('[data-toggle="tooltip"]').tooltip({html: true});
     });

@@ -24,6 +24,7 @@ function get_data_cell(cell) {
     var source = $("#" + source_id).val();
     var output = $("#" + output_id).val();
 
+    var table_style = cell.find('.table-style').find('option:selected').attr('id');
     var table_title = cell.find('.table-title').val();
     var table_search = cell.find('.table-search').prop('checked');
     var table_export = cell.find('.table-export').prop('checked');
@@ -33,6 +34,7 @@ function get_data_cell(cell) {
     var table_pagination = cell.find('.table-pagination').prop('checked');
     var table_sortable = cell.find('.table-sortable').prop('checked');
     var table_pagesize = cell.find('.table-pagesize').val();
+    var table_footer = cell.find('.table-footer').prop('checked');
 
     var chart_title = cell.find('.chart-title').val();
     var chart_subtitle = cell.find('.chart-subtitle').val();
@@ -70,6 +72,7 @@ function get_data_cell(cell) {
             'format-p': $(this).find('.format-p').is(':checked'),       // stepped
             'format-dt': $(this).find('.format-dt').is(':checked'),     // dotted
             'format-pr': $(this).find('.format-pr').val(),              // point size
+            'format-ps': $(this).find('.format-pointstyle').find('option:selected').attr('id'),              // point size
             'format-lw': $(this).find('.format-lw').val(),              // line width
             'format-col': $(this).find('.format-col').val(),            // colour
             'format-col-back': $(this).find('.format-col-back').val(),  // background colour
@@ -92,6 +95,8 @@ function get_data_cell(cell) {
         'title': table_title,
         'search': table_search,
         'export': table_export,
+        'style': table_style,
+        'footer': table_footer,
         'filter': table_filter,
         'checkbox': table_checkbox,
         'multiselect-row': table_multiselect_row,
@@ -99,6 +104,8 @@ function get_data_cell(cell) {
         'sortable': table_sortable,
         'pagesize': table_pagesize
     }
+
+    console.log(table);
 
     return {
         "type": "data",

@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>Clarama 2.0{{ page_title }}</title>
+<title>C2.0 {{ page_title }}</title>
 <!-- meta -->
 <meta name="description" content="">
 <meta name="author" content="">
@@ -25,6 +25,8 @@
 <link href="{{ url_for('static', filename='prism.css') }}" rel="stylesheet">
 <link href="{{ url_for('static', filename='search.css') }}" rel="stylesheet">
 <link href="{{ url_for('static', filename='art/clarama2_dragndrop.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='art/clarama2_markdown.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='art/clarama2_table.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
 <link href="{{ url_for('static', filename='npm/gridstack.min.css') }}" rel="stylesheet">
 <link href="{{ url_for('static', filename='npm/gridstack-extra.min.css') }}" rel="stylesheet">
@@ -96,6 +98,7 @@
     }
 
     $CLARAMA_ROOT = {{ request.script_root|tojson }};
+
     $CLARAMA_WEBSOCKET_DYNAMIC = '{{ clarama['Services']['Websocket_Dynamic'] or False }}';
     $CLARAMA_WEBSOCKET_REGISTER = '{{ url_for('clarama_websockets.socket_subscribe', topic="") }}';
     $CLARAMA_ENVIRONMENTS_TASK_OPEN = '{{ url_for('clarama_webenvironments.task_open', task="") }}';

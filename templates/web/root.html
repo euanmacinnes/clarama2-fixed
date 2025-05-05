@@ -147,7 +147,7 @@
     </div>
     <div class="w-100 py-2 text-center" style="background-color: #303030; color: #fff">
         <span class="text-white"
-              style="font-size: 11px;">&copy; 2023-2025 Euan Duncan MacInnes. All rights reserved.</span>
+              style="font-size: 11px;">Build {{ clarama.build }}. &copy; 2023-2025 Euan Duncan MacInnes. All Rights Reserved.</span>
     </div>
 </footer>
 </div>
@@ -349,25 +349,25 @@
     document.addEventListener('click', function (e) {
         const button = e.target.closest('.datasource');
         if (!button) return;
-        
+
         const link = button.closest('a');
         if (!link || !link.hasAttribute('href')) return;
-        
+
         e.preventDefault();
         e.stopPropagation();
-        
+
         // this is to make the relative url (eg, ./Data/Interactivity Fields/bad_countries.csv, ./../../../Data/Sources/SQL Server S2.source.yaml)
         // become absolute URL so that i can replace the /edit/ with /default/
         const rawHref = link.getAttribute('href');
         const tempAnchor = document.createElement('a');
-        tempAnchor.href = rawHref; 
+        tempAnchor.href = rawHref;
         const resolvedUrl = tempAnchor.href;
-        
+
         let modifiedUrl = resolvedUrl;
         if (resolvedUrl.includes('/edit/')) {
             modifiedUrl = resolvedUrl.replace('/edit/', '/default/');
         }
-        
+
         // handle absolute paths written by user in the field 
         // (eg, /Zones/Vaccines Primary/Tuas/Data/Sources/SQL Server S1.source.yaml)
         // need to handle this else will get Not Found err

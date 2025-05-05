@@ -6,10 +6,11 @@
                 fieldtype="html"
                 name="{{ field_name }}"
                 size="{{ field_config['size'] or '4' }}"
-                {{ required }}
+                {{ field_config | required }}
+                {{ field_config | readonly }}
                 class="form-control clarama-field-select2 clarama-field clarama-select-field tooltip"
                 {% include "explorer/files/field_tooltip.html" %}
-                {% if field_config['data'] %}
+                {% if field_config.get('data',{}).get('source') %}
                 sourceurl="{{ field_config['data'] | datasource }}"
                 {% endif %}
         >
@@ -19,7 +20,7 @@
                     </option>
                 {% endif %}
             {% endif %}
-            {%- for item in field_config['options'] -%}
+            {%- for item in field_config.get('data',{}).get('options',{}) -%}
                 {% if item is mapping %}
                     <option value="{{ item['id'] }}"
                             {% if item['id']== field_config["default"] or item['id']==field_value %}
