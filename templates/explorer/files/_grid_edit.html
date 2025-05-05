@@ -12,17 +12,14 @@
           </ol>
         </nav>
 
-        <select id="add_content_addfield"
-                name="add_content"
-                size="10"
-                class="form-control">
+        <select id="add_content_addfield" name="add_content" size="10" class="form-control">
 
         </select>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary"
-                              onclick="add_selected_content('/content/element/{{ file_url }}')">Add
+          onclick="add_selected_content('/content/element/{{ file_url }}')">Add
         </button>
       </div>
     </div>
@@ -42,17 +39,56 @@
           </ol>
         </nav>
 
-        <select id="add_content_browsefile"
-                name="add_file"
-                size="10"
-                class="form-control">
+        <select id="add_content_browsefile" name="add_file" size="10" class="form-control">
         </select>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary"
-                              onclick="add_selected_file()">Select
+        <button type="button" class="btn btn-primary" onclick="add_selected_file()">Select
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="interactionSettingsModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Interaction Settings</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="interaction-element">
+        <input type="hidden" id="interaction-target">
+ 
+        <div class="mb-3">
+          <label class="form-label d-block">Interaction Type</label>
+          <div class="btn-group" role="group" aria-label="Interaction Type">
+            <input type="radio" class="btn-check" name="interactionType" id="popupType" autocomplete="off" value="popup" checked>
+            <label class="btn btn-outline-primary" for="popupType">Popup</label>
+            
+            <input type="radio" class="btn-check" name="interactionType" id="modalType" autocomplete="off" value="modal">
+            <label class="btn btn-outline-primary" for="modalType">Modal</label>
+          </div>
+        </div>
+ 
+        <button type="button" class="btn btn-outline-secondary w-100" data-bs-toggle="modal" id="browseFileBtn"
+          data-bs-target="#browseFileModal"
+          inputId="grid-elem"
+          filters="*.field.yaml|*.task.yaml|*.md">
+          Browse File…
+        </button>
+
+        <input id="grid-elem" type="text"
+          class="form-control rounded-0 border border-end-0 border-light-subtle gridbrowsefile_input"
+          placeholder="Data Source Filename" aria-label="Data source relative filename"
+          value="{{ source }}">
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="add_selected_file()">Apply</button>
       </div>
     </div>
   </div>
@@ -65,6 +101,25 @@
 
   function isFolder(item) {
     return item.hasClass('bi bi-folder-fill');
+  }
+
+  function openInteractionSettings(button) {
+    // console.log("grid elements", {{ grid_id }}elements)
+    const element = button.getAttribute('data-element');
+    const target = button.getAttribute('data-target');
+    const type = button.getAttribute('data-type'); 
+    // console.log("Open interaction settings for:", element, "on", target);
+ 
+    document.getElementById('interaction-element').value = element;
+    document.getElementById('interaction-target').value = target;
+
+    if (type) {
+      $(`input[name="interactionType"][value="${type}"]`).prop('checked', true);
+    }
+
+    const browseBtn = document.getElementById('browseFileBtn');
+    browseBtn.setAttribute('fileTarget', element);
+    browseBtn.setAttribute('gridElem', target);
   }
 
   $( document ).ready(() => {
@@ -97,9 +152,11 @@
       filters = button.attr('filters'); 
       inputId = button.attr('inputId');
       fileTarget = button.attr('fileTarget');
+      gridElem = button.attr('gridElem');
 
       $(this).data('inputId', inputId);
       $(this).data('fileTarget', fileTarget);
+      $(this).data('gridElem', gridElem);
       path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
 
       navigateToPath(path, 'breadcrumb_browsefile', 'add_content_browsefile');
@@ -111,6 +168,7 @@
   });
 
   var {{ grid_id }}elements = {{ element_json | safe }};
+  console.log("{{ grid_id }}elements", {{ grid_id }}elements);
 
   let {{ grid_id }}subOptions = {
     cellHeight: 55, // should be 50 - top/bottom
@@ -275,19 +333,10 @@ function delete_element(element) {
   function add_selected_file() {
     const selected_val = "./" + $("#add_content_browsefile").val();
     console.log("adding " + selected_val);
-  
+
     if (selected_val == null) {
       flash("No file selected!");
       return;
-    }
-
-    inputId = $("#browseFileModal").data('inputId');
-    if (inputId == "grid-elem") {
-      fileTarget = $("#browseFileModal").data('fileTarget');
-      var element = {{ grid_id }}elements[fileTarget];
-      element['url'] = selected_val;
-      $("#browseFileModal").modal('hide');
-      return; 
     }
 
     const targetInput = document.getElementById(inputId);
@@ -299,7 +348,7 @@ function delete_element(element) {
       const browseLink = document.getElementById(btnId + "_link");
 
       if (browseLink) {
-        browseLink.href = newSource; 
+        browseLink.href = newSource;
         browseLink.style.display = "inline-block";
       }
 
@@ -309,6 +358,34 @@ function delete_element(element) {
     }
 
     $("#browseFileModal").modal('hide');
+
+    inputId = $("#browseFileModal").data('inputId');
+    if (inputId == "grid-elem") {
+      fileTarget = $("#browseFileModal").data('fileTarget');
+      gridElem = $("#browseFileModal").data('gridElem');
+      const interactionType = $('input[name="interactionType"]:checked').val();
+      var element = {{ grid_id }}elements[gridElem];
+
+      if (Array.isArray(element.links)) {
+        const links = element.links;
+        const index = links.findIndex(link => {
+          return typeof link === 'string' ? link === fileTarget : link.id === fileTarget;
+        });
+
+        if (index !== -1) {
+          const current = links[index];
+          if (typeof current === 'string') {
+            links[index] = { id: current, url: selected_val, type: interactionType };
+          } else if (typeof current === 'object') {
+            current.url = selected_val;
+            current.type = interactionType;
+          }
+        }
+      }
+
+      console.log("updated element", element)
+      $("#interactionSettingsModal").modal('hide');
+    }
   }
 
   function save(url) {
@@ -325,7 +402,7 @@ function delete_element(element) {
           console.log(data);
           flash("Saved!");
         } else {
-          console.log('Submission was successful.');
+          console.log('Submission was not successful.');
           console.log(data);
           flash("Couldn't save content: " + data['error']);
         }
@@ -358,14 +435,6 @@ function delete_element(element) {
         }
 
         flash("linking " + target + " to [" + element['links'] + "]");
-        save('/content/save/{{ file_url }}');
-        const modal = bootstrap.Modal.getInstance(document.getElementById('addInteractions'));
-        modal.hide();
-
-        const elemdropdown = document.getElementById("grid-elem-dropdown-" + target);
-        console.log("elemdropdown", elemdropdown)
-        elemdropdown.className = "clarama-replaceable"; 
-        elemdropdown.setAttribute("url", `/template/render/explorer/files/_grid_element_dropdown?target=${target}`);
       }
     }
   }
@@ -373,26 +442,30 @@ function delete_element(element) {
     const currentPath = "{{ file_url | path }}";
     var relativePath;
     function renderBreadcrumb(path, breadcrumbId, selectId) {
-      console.log(path)
       const targetPath = path.split('?')[0].split('/').slice(3).join('/');
       relativePath = getRelativePath(currentPath, targetPath);
 
       const breadcrumb = document.getElementById(breadcrumbId);
       breadcrumb.innerHTML = '';
 
-      console.log("path", path);
-      const trimmedPath = path.split('/').slice(3); 
-      console.log("trimmedPath", trimmedPath);
+      // console.log("path", path);
+      const trimmedPath = path.split('/').slice(3);
+      // console.log("trimmedPath", trimmedPath);
 
-      // const root = document.createElement('li');
-      // root.style.cursor = 'pointer';
-      // root.className = 'text-secondary';
-      // root.addEventListener('click', () => navigateToPath(path.split('/').slice(0, 3).join('/') + "?subfolders=True&extensions=" + filters, breadcrumbId, selectId));
-      // root.innerHTML = "Clarama&nbsp;>&nbsp;";
-      // breadcrumb.appendChild(root);
+      const root = document.createElement('li');
+      console.log("trimmedPath[0][0]", trimmedPath[0][0])
+      if (trimmedPath[0][0] != "?") {
+        root.style.cursor = 'pointer';
+        root.className = 'text-secondary';
+        root.innerHTML = "Clarama&nbsp;>&nbsp;";
+      } else {
+        root.innerHTML = "Clarama";
+      }
+      root.addEventListener('click', () => navigateToPath(path.split('/').slice(0, 3).join('/') + "/?subfolders=True&extensions=" + filters, breadcrumbId, selectId));
+      breadcrumb.appendChild(root);
 
       trimmedPath.forEach((part, index, array) => {
-        console.log(part)
+          // console.log(part)
           const li = document.createElement('li');
 
           if (index < array.length - 1) {
@@ -426,7 +499,7 @@ function delete_element(element) {
       if (!goUp && !goDown) {
         return ''
       }
-      
+
       return goUp ? `${goUp}/${goDown}` : goDown; // if no goUp means we r in the correct folder
     }
 
@@ -438,7 +511,7 @@ function delete_element(element) {
 
     function renderFilesNFolder(path, breadcrumbId, selectId) {
       const selectElement = document.getElementById(selectId);
-      console.log(`fetch path: ${path}`)
+      // console.log(`fetch path: ${path}`)
       fetch(path)
         .then((response) => response.json())
         .then((json_files) => {
@@ -446,11 +519,11 @@ function delete_element(element) {
           const allPaths = json_files['results']['files'];
           const foldersSet = new Set();
           const filesSet = new Set();
-          console.log(`json_files returned: ${allPaths}` );
+          // console.log(`json_files returned: ${allPaths}`);
 
           // Determine folders and files
           allPaths.forEach(filePath => {
-            console.log("File path:", filePath);
+            // console.log("File path:", filePath);
             const parts = filePath.split('/');
             if (parts.length > 1) {
               foldersSet.add(parts[0]); // Top-level folder
@@ -462,19 +535,23 @@ function delete_element(element) {
           const sortedFolders = naturalSort([...foldersSet]);
           const sortedFiles = naturalSort([...filesSet]);
 
+          console.log("path.split('?')[0]", path.split('?')[0])
           // Render folders
           sortedFolders.forEach(folder => {
             const option = document.createElement('option');
             option.value = folder;
             option.className = "bi bi-folder-fill";
             option.innerHTML = `&nbsp; ${folder}`;
-            option.addEventListener('dblclick', () => navigateToPath(`${path.split('?')[0]}/${folder}` + "?subfolders=True&extensions=" + filters, breadcrumbId, selectId));
+            if (path.split('?')[0] == "/content/json/") {
+              option.addEventListener('dblclick', () => navigateToPath(`/content/json/${folder}` + "?subfolders=True&extensions=" + filters, breadcrumbId, selectId));
+            } else {
+              option.addEventListener('dblclick', () => navigateToPath(`${path.split('?')[0]}/${folder}` + "?subfolders=True&extensions=" + filters, breadcrumbId, selectId));
+            }
             selectElement.appendChild(option);
           });
 
           // Render files with relative paths
           sortedFiles.forEach(filePath => {
-            console.log("filePath", filePath)
             if (!foldersSet.has(filePath.split('/')[0])) { // ensure it's not a folder
               const option = document.createElement('option');
 

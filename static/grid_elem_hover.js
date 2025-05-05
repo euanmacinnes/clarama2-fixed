@@ -1,18 +1,21 @@
 document.addEventListener('shown.bs.dropdown', function (event) {
     const dropdown = event.target.closest('.dropdown');
     if (!dropdown) return;
-    const triggerIcon = event.relatedTarget;
-    const elements = triggerIcon?.getAttribute('elems');
-    const target = triggerIcon?.getAttribute('target');
-    if (!elements || !target) return;
-    let data;
-    try {
-        const jsonStr = elements.replace(/'/g, '"');
-        data = JSON.parse(jsonStr);
-    } catch (err) {
-        console.error("Invalid JSON in 'elems':", err);
+
+    const gridStackItem = dropdown.closest('.grid-stack-item');
+    if (!gridStackItem) {
+        console.log('Grid Stack Item not found');
         return;
-    }
+    } 
+
+    // console.log("found grid-stack-item", gridStackItem)
+
+    const triggerIcon = event.relatedTarget;
+    // console.log(triggerIcon)
+    const elems = triggerIcon?.getAttribute('elems');
+    const data = window[elems + "elements"];
+    const target = triggerIcon?.getAttribute('target');
+    if (!data || !target) return;
     
     const selectElement = dropdown.querySelector('#add_content_interactions-' + target);
 
@@ -32,7 +35,7 @@ document.addEventListener('shown.bs.dropdown', function (event) {
             if (elem === target) continue;
             if (targetLinks.includes(elem)) continue;
             const option = document.createElement('option');
-            option.className = "slate-elem-dropdown-item";
+            // option.className = "slate-elem-dropdown-item";
             option.value = elem;
             option.setAttribute('elem-id', target);
             option.innerHTML = value['url'];
@@ -41,7 +44,6 @@ document.addEventListener('shown.bs.dropdown', function (event) {
             hasOptions = true;
         }
 
-        console.log("hasOptions", hasOptions)
         document.getElementById("grid-menu-select-"+target).style.display = hasOptions ? 'flex' : 'none';
     }
     
@@ -62,19 +64,6 @@ document.addEventListener('shown.bs.dropdown', function (event) {
     });
 });
 
-// $('.bi-plus-circle').on('click', function () {
-//     const select = $(this).siblings('select').get(0); // Get the sibling <select> element
-//     const selectedValue = select.value;
-//     const target = $(this).closest('.dropdown-item').attr('id').split('-')[2]; // Get the target from the parent div id
-//     console.log("target aaa", target)
-//     if (selectedValue && selectedValue !== 'Add') {
-//         console.log("target", target);
-//         console.log("selectedValue", selectedValue);
-//         link_elements(target, selectedValue);
-//         select.selectedIndex = 0; // Reset the select element
-//     }
-//  });
-
 $(document).on('click', '.grid-interaction-add', function (e) {
     e.stopPropagation();
 
@@ -85,32 +74,28 @@ $(document).on('click', '.grid-interaction-add', function (e) {
     }
 
     const selectedValue = select.value;
-    const target = $(this).closest('.dropdown-item').attr('target');
-    if (!target) {
+    const gelem_target = $(this).closest('.dropdown-item').attr('target');
+    if (!gelem_target) {
         console.log('No target found');
         return;
     }
 
     if (selectedValue && selectedValue !== 'Add') {
-        link_elements(target, selectedValue);
-        // let grid_element_target = $(this).closest('div').parent().siblings('#grid_element_target-'+target);
-        // console.log("grid_element_target", grid_element_target[0])
-        // grid_element_target[0].appendChild(addGridInteraction());
-        // enable_interactions($("#grid_element_target-"+target)); // This loads the URL defined in the DIV
+        link_elements(gelem_target, selectedValue);
+        let grid_element_target = $(this).closest('div').parent().siblings('#grid_element_target-'+gelem_target);
+        grid_element_target[0].appendChild(addGridInteraction(gelem_target, selectedValue));
+        enable_interactions($("#grid_element_target-" + gelem_target));
         select.selectedIndex = 0; 
     }
 });
 
-function addGridInteraction() {
-    const newSG = document.createElement("div");
-    newSG.className = "clarama-replaceable"; // clarama-replaceable means that the div itself gets replaced.
-    newSG.setAttribute("url", `/template/render/explorer/steps/grid_edit_interaction`);
-    return newSG;
-}
-
-document.querySelectorAll('.slate-elem-dropdown-item').forEach(item => {
-    item.addEventListener('dragstart', function(e) {
-        e.dataTransfer.setData('text/plain', this.getAttribute('elem-id'));
-        e.dropEffect = 'move';
-    });
+$(document).on('click', '.delete-grid-interaction', function () {
+    $(this).closest('li').remove();
 });
+
+function addGridInteraction(gelem_target, selectedValue) {
+    const newGI = document.createElement("div");
+    newGI.className = "clarama-post-embedded clarama-replaceable";
+    newGI.setAttribute("url", `/template/render/explorer/steps/grid_edit_interaction?element=${selectedValue}&target=${gelem_target}`);
+    return newGI;
+}
