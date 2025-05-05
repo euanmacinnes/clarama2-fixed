@@ -20,7 +20,7 @@
             Regex</label>
         <input type="string" class="form-control format-nrx" id="x{{ loop_index }}" name="x"
                value="{{ sformat['format-nrx'] }}" data-toggle="tooltip"
-               title="Either the entire series name, or a RegEx. <br/><br/>RegEx examples include: <br/><b>/Wash/</b> which will search for all series containing Wash.<br/><b>/^Wash/</b> - all series starting with Wash. ">
+               title="Either the entire series name, or a RegEx. <br/><br/>RegEx examples include: <br/><b>Wash</b> which will search for all series containing Wash.<br/><b>^Wash</b> - all series starting with Wash. <br/><b>Wash$</b> - all series ending with Wash.">
         <label for="title{{ loop_index }}" class="form-label">Display Name</label>
         <input type="string" class="form-control format-title" id="title{{ loop_index }}" name="title"
                value="{{ sformat['format-title'] }}" data-toggle="tooltip"
@@ -38,6 +38,19 @@
         <input type="number" step="1" min="0" max="100" class="form-control format-pr"
                id="pr{{ loop_index }}" name="pr" value="{{ sformat['format-pr'] }}" data-toggle="tooltip"
                title="Set to 0 to disable points">
+        <label for="ps{{ loop_index }}" class="form-label">Point Style</label>
+        <select id="ps{{ loop_index }}" class="form-control format-pointstyle">
+            <option {{ selected("circle",sformat['format-ps']) }} id="circle">Circle (o)</option>
+            <option {{ selected("cross",sformat['format-ps']) }} id="cross">Plus (+)</option>
+            <option {{ selected("crossRot",sformat['format-ps']) }} id="crossRot">Cross (x)</option>
+            <option {{ selected("dash",sformat['format-ps']) }} id="dash">Dash (-)</option>
+            <option {{ selected("line",sformat['format-ps']) }} id="line">Line (__)</option>
+            <option {{ selected("rect",sformat['format-ps']) }} id="rect">Box</option>
+            <option {{ selected("rectRounded",sformat['format-ps']) }} id="rectRounded">Rounded Box</option>
+            <option {{ selected("rectRot",sformat['format-ps']) }} id="rectRot">Diamond</option>
+            <option {{ selected("star",sformat['format-ps']) }} id="star">Star (*)</option>
+            <option {{ selected("triangle",sformat['format-ps']) }} id="triangle">Triangle</option>
+        </select>
         <label for="lw{{ loop_index }}" class="form-label">Line Width</label>
         <input type="number" step="1" min="0" max="100" class="form-control format-lw"
                id="lw{{ loop_index }}" name="lw" value="{{ sformat['format-lw'] }}" data-toggle="tooltip"

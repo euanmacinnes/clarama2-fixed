@@ -72,6 +72,7 @@ function get_data_cell(cell) {
             'format-p': $(this).find('.format-p').is(':checked'),       // stepped
             'format-dt': $(this).find('.format-dt').is(':checked'),     // dotted
             'format-pr': $(this).find('.format-pr').val(),              // point size
+            'format-ps': $(this).find('.format-pointstyle').find('option:selected').attr('id'),              // point size
             'format-lw': $(this).find('.format-lw').val(),              // line width
             'format-col': $(this).find('.format-col').val(),            // colour
             'format-col-back': $(this).find('.format-col-back').val(),  // background colour

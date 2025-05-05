@@ -80,10 +80,14 @@ function ChartSeriesFormat(dataset, formats) {
             if (format['format-pr'] === undefined || format['format-pr'] === '')
                 format['format-pr'] = 4;
 
+            if (format['format-ps'] === undefined || format['format-ps'] === '')
+                format['format-ps'] = 'circle';
+
 
             dataset['fill'] = format['format-f'];
             dataset['stepped'] = format['format-p'];
             dataset['pointRadius'] = format['format-pr'];
+            dataset['pointStyle'] = format['format-ps'];
             dataset['borderWidth'] = format['format-lw'];
 
             if (format['format-miny'] !== undefined) {
@@ -278,8 +282,8 @@ function bChart(chart_id, chart_data) {
             if (xaxis !== undefined && yaxis !== undefined) {
 
                 if (time) {
-                    var needs_z=false;
-                    if (xaxis.length>1){
+                    var needs_z = false;
+                    if (xaxis.length > 1) {
                         needs_z = (xaxis_id[1].find("Z") < 0)
                     }
 
@@ -288,9 +292,7 @@ function bChart(chart_id, chart_data) {
                             ndt = new Date(xaxis[p] + 'Z');
                             xaxis[p] = ndt;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         for (p = 0; p < xaxis.length; p++) {
                             ndt = new Date(xaxis[p]);
                             xaxis[p] = ndt;
@@ -515,6 +517,7 @@ function bChart(chart_id, chart_data) {
                 legend: {
                     display: legend_display,
                     position: config['legend'].toLowerCase(),
+                    usePointStyle: true,
                 },
                 tooltip: {
                     callbacks: {
