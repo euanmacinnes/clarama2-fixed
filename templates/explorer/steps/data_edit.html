@@ -197,7 +197,13 @@
                         {% endif %}
                         <select id="xaxis{{ loop_index }}" class="form-control chart-xaxis-type">
                             <option value="category" {{ selected("category",xaxis) }}>Category (X will convert to
-                                string)
+                                string. Series will be contiguous)
+                            </option>
+                            <option value="category_grouped" {{ selected("category_grouped",xaxis) }}>Category Grouped
+                                (ordered but repeated series names if not sorted)
+                            </option>
+                            <option value="category_bulk" {{ selected("category_bulk",xaxis) }}>Category Bulk (gaps in
+                                data will be skipped)
                             </option>
                             <option value="linear" {{ selected("linear",xaxis) }}>Linear (X must be numeric)
                             </option>
