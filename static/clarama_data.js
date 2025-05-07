@@ -143,7 +143,7 @@ Array.prototype.insert = function (index, ...items) {
 
 function push_dataset(name, datasets, dataset, grouping) {
     if (datasets.length === 0) {
-        console.log("PUSH adding dataset " + name + " " + datasets.length);
+        console.log("PUSH adding dataset " + name + "(" + dataset['data'].length + ") " + datasets.length);
         datasets.push(dataset);
         return;
     }
@@ -161,7 +161,7 @@ function push_dataset(name, datasets, dataset, grouping) {
         }
     }
 
-    console.log("PUSH adding dataset " + name + " " + datasets.length);
+    console.log("PUSH adding dataset " + name + "(" + dataset['data'].length + ") " + datasets.length);
     datasets.push(dataset);
 }
 
@@ -449,8 +449,11 @@ function bChart(chart_id, chart_data) {
                 }
 
                 if (series_id >= 0 && category_bulk) {
+                    console.log("CATEGORY BULK");
                     var series_axis = data['rows'][series_id];
-                    var unique_series = [...new Set(series_axis)]
+                    var unique_series = [...new Set(series_axis)];
+                    if (unit_id > 0) unitaxis = data['rows'][unit_id];
+                    unit = '';
 
                     for (s = 0; s < unique_series.length; s++) {
                         var b_points = [];
@@ -458,8 +461,11 @@ function bChart(chart_id, chart_data) {
 
                         for (p = 0; p < xaxis.length; p++) {
                             var yval = null;
-                            if (series_axis[p] === curr_series)
+                            if (series_axis[p] === curr_series) {
                                 yval = yaxis[p]
+                                unit = unitaxis[p];
+                            }
+
                             point = {
                                 x: xaxis[p],
                                 y: yval
@@ -467,7 +473,11 @@ function bChart(chart_id, chart_data) {
 
                             b_points.push(point);
 
+
                         }
+
+                        if (unit === '')
+                            unit = undefined;
 
                         label = curr_series;
                         dataset = {
@@ -478,14 +488,13 @@ function bChart(chart_id, chart_data) {
                         }
 
                         if (unit !== undefined) {
-                            if (xaxis.length >= 1)
-                                ChartSeriesAxis(dataset, chart_scales, unit[xaxis.length - 1]);
+                            ChartSeriesAxis(dataset, chart_scales, unit);
                         } else if (sg['series-u'] !== "")
                             ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
 
 
                         // The label is a bit pointless here, this is a single dataset situation anyway
-                        push_dataset(label, datasets, ChartSeriesFormat(dataset, formats), category_grouped);
+                        push_dataset(label, datasets, ChartSeriesFormat(dataset, formats), false);
 
 
                     }
@@ -563,7 +572,7 @@ function bChart(chart_id, chart_data) {
         datasets: datasets
     }
 
-    if (category) {
+    if (category || category_grouped || category_bulk) {
         const unique_labels = [...new Set(labels)] // Get unique list of labels for the x axis
         console.log("FINAL LABELS: " + unique_labels.length);
         console.log(unique_labels);
