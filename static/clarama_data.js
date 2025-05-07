@@ -228,6 +228,7 @@ function deepMerge(obj1, obj2) {
 const axis_type_map = {
     'linear': 'linear',
     'logarithmic': 'logarithmic',
+    'time': 'time',
     'timeseries': 'timeseries',
     'category': 'category',
     'category_grouped': 'category',
