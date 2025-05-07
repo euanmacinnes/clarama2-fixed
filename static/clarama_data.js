@@ -141,19 +141,27 @@ Array.prototype.insert = function (index, ...items) {
     this.splice(index, 0, ...items);
 };
 
-function push_dataset(name, datasets, dataset, insert = false) {
-    if (datasets.length === 0)
+function push_dataset(name, datasets, dataset, grouping) {
+    if (datasets.length === 0) {
+        console.log("PUSH adding dataset " + name + " " + datasets.length);
         datasets.push(dataset);
+        return;
+    }
 
     for (ds = 0; ds < datasets.length; ds++) {
         if (datasets[ds]['id'] === name) {
-            if (insert)
+            if (!grouping) {
+                console.log("PUSH inserting dataset " + name + " at " + ds);
                 datasets.insert(ds, dataset);
-            else
+            } else {
+                console.log("PUSH grouping dataset " + name + "(" + dataset['data'].length + ") at " + ds);
                 datasets[ds]['data'] = datasets[ds]['data'].concat(dataset['data']);  /// This adds the data into the existing dataset
+            }
             return;
         }
     }
+
+    console.log("PUSH adding dataset " + name + " " + datasets.length);
     datasets.push(dataset);
 }
 
