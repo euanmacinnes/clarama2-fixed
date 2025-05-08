@@ -338,6 +338,8 @@ function bChart(chart_id, chart_data) {
                                 if (xaxis[xz].indexOf("Z") >= 0) {
                                     needs_z = false;
                                     found = true;
+                                } else {
+                                    found = true;
                                 }
 
                             xz++;
