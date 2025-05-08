@@ -534,6 +534,25 @@ function bChart(chart_id, chart_data) {
                 console.log("DATASETS");
                 console.log(datasets.length);
             }
+        } else if (xaxis_id > 0) {
+            var dataset_label = 'data'
+
+            if (sg['series-s'] !== "") dataset_label = sg['series-s'];
+
+            dataset = {
+                id: "dataset" + i,
+                label: dataset_label,
+                data: data['rows'][xaxis_id],
+                type: sg['series-type'].toLowerCase(),
+            }
+
+            if (sg['series-u'] !== "") ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
+            push_dataset(label, datasets, ChartSeriesFormat(dataset, formats), category_grouped);
+
+            if (label_id >= 0)
+                labels = data['rows'][label_id]
+            else
+                labels = data['rows'][xaxis_id];
         } else
             flash("Didn't find X and Y axis for chart in columns [" + data['cols'] + ']. X: ' + sg['series-x'] + '. Y: ' + sg['series-y']);
 
@@ -648,9 +667,10 @@ function bChart(chart_id, chart_data) {
                             if (label) {
                                 label += ': ';
                             }
-                            if (context.raw.y !== null) {
+                            if (context.raw.y !== undefined) {
                                 label += context.raw.y;
-                            }
+                            } else
+                                label += context.raw;
 
 
                             return label;
