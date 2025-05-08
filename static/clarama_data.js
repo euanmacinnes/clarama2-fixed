@@ -445,7 +445,6 @@ function bChart(chart_id, chart_data) {
 
                         }
                     }
-
                 }
 
                 if (series_id >= 0 && category_bulk) {
@@ -459,21 +458,36 @@ function bChart(chart_id, chart_data) {
                         var b_points = [];
                         var curr_series = unique_series[s];
 
-                        for (p = 0; p < xaxis.length; p++) {
-                            var yval = null;
-                            if (series_axis[p] === curr_series) {
-                                yval = yaxis[p]
-                                unit = unitaxis[p];
+                        if (unit_id > 0) {
+                            for (p = 0; p < xaxis.length; p++) {
+                                var yval = null;
+                                if (series_axis[p] === curr_series) {
+                                    yval = yaxis[p]
+                                    unit = unitaxis[p];
+                                }
+
+                                point = {
+                                    x: xaxis[p],
+                                    y: yval
+                                }
+
+                                b_points.push(point);
+
+
                             }
+                        } else {
 
-                            point = {
-                                x: xaxis[p],
-                                y: yval
+                            for (p = 0; p < xaxis.length; p++) {
+                                var yval = null;
+                                if (series_axis[p] === curr_series) yval = yaxis[p];
+
+                                point = {
+                                    x: xaxis[p],
+                                    y: yval
+                                }
+
+                                b_points.push(point);
                             }
-
-                            b_points.push(point);
-
-
                         }
 
                         if (unit === '')
