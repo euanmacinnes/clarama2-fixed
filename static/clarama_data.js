@@ -662,11 +662,11 @@ function bChart(chart_id, chart_data) {
                     usePointStyle: true,
                 },
                 tooltip: {
-                    filter: function (tooltipItem, data) {
-                        if (data > 0) return false;
-                        // Filter logic here
-                        return true; // or false
-                    },
+                    // filter: function (tooltipItem, data) {
+                    //     if (data > 0) return false;
+                    //     // Filter logic here
+                    //     return true; // or false
+                    // },
                     callbacks: {
                         label: function (context) {
                             console.log('LABEL CALLBACK:');
