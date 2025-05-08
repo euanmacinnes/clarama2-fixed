@@ -513,9 +513,14 @@ function bChart(chart_id, chart_data) {
 
                     }
                 } else {
+                    var dataset_label = label;
+
+                    if (series_id < 0 && sg['series-s'] !== "")
+                        dataset_label = sg['series-s'];
+
                     dataset = {
-                        id: label,
-                        label: label,
+                        id: dataset_label,
+                        label: dataset_label,
                         data: points,
                         type: sg['series-type'].toLowerCase(),
                     }
@@ -657,8 +662,17 @@ function bChart(chart_id, chart_data) {
                     usePointStyle: true,
                 },
                 tooltip: {
+                    filter: function (tooltipItem, data) {
+                        console.log('FILTER CALLBACK:');
+                        console.log(tooltipItem);
+                        console.log(data);
+                        // Filter logic here
+                        return true; // or false
+                    },
                     callbacks: {
                         label: function (context) {
+                            console.log('LABEL CALLBACK:');
+                            console.log(context.dataset);
                             let label = context.dataset.label || '';
 
                             if (context.raw.text)
