@@ -241,6 +241,9 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
     if ('class' in dict) {
         //console.log("Processing Socket Message " + dict['class']);
         try {
+            if (dict['class'] === "ping") {
+                console.log("ping");
+            }
 
             if (dict['class'] === "template") {
                 let resulter = "#" + dict['step_id'];
