@@ -286,6 +286,17 @@ const axis_type_map = {
     'category_bulk': 'category',
 }
 
+const chart_type_map = {
+    'Line': 'line',
+    'Bar': 'bar',
+    'Radar': 'radar',
+    'Polar Area': 'polarArea',
+    'Doughnut': 'doughnut',
+    'Bubble': 'bubble',
+    'Pie': 'pie',
+    'Scatter': 'scatter',
+}
+
 function bChart(chart_id, chart_data) {
     var data = chart_data['data'];
     var config = chart_data['chart'];
@@ -466,7 +477,7 @@ function bChart(chart_id, chart_data) {
                                     id: label,
                                     label: label,
                                     data: points,
-                                    type: sg['series-type'].toLowerCase()
+                                    type: chart_type_map[sg['series-type']]
                                 }
 
                                 if (unit !== undefined) {
@@ -569,7 +580,7 @@ function bChart(chart_id, chart_data) {
                             id: label,
                             label: label,
                             data: b_points,
-                            type: sg['series-type'].toLowerCase(),
+                            type: chart_type_map[sg['series-type']],
                         }
 
                         if (unit !== undefined) {
@@ -596,7 +607,7 @@ function bChart(chart_id, chart_data) {
                         id: dataset_label,
                         label: dataset_label,
                         data: points,
-                        type: sg['series-type'].toLowerCase(),
+                        type: chart_type_map[sg['series-type']],
                     }
 
                     if (unit !== undefined) {
@@ -625,12 +636,12 @@ function bChart(chart_id, chart_data) {
                 id: "dataset" + i,
                 label: dataset_label,
                 data: data['rows'][xaxis_id],
-                type: sg['series-type'].toLowerCase(),
+                type: chart_type_map[sg['series-type']],
             }
 
             if (sg['series-u'] !== "") ChartSeriesAxis(dataset, chart_scales, sg['series-u'], formats)
             else ChartSeriesAxis(dataset, chart_scales, undefined, formats);
-            
+
             push_dataset(label, datasets, ChartSeriesFormat(dataset, formats), category_grouped);
 
             if (label_id >= 0)
