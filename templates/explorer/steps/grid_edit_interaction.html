@@ -1,12 +1,14 @@
-<li class="dropdown-item slate-elem-dropdown-item" elem-id="{{ element }}" target-id="{{ target }}" draggable="true">
+<li class="dropdown-item slate-elem-dropdown-item" elem-id="{{ current_element }}" target-id="{{ target }}" draggable="true">
     <div class="list-group-item d-flex align-items-center">
         <i class="bi bi-grip-vertical draggable-heading p-0" draggable="true"></i>
-        <div class="mx-2 flex-grow-1 w-100 align-middle">{{ element }}</div>
+        <div class="mx-2 flex-grow-1 w-100 align-middle">{{ current_element }}</div>
+
         <i class="bi bi-gear mx-1 mx-2" data-bs-toggle="modal"
             data-bs-target="#interactionSettingsModal"
-            data-element="{{ element }}"
+            data-element="{{ current_element }}"
             data-target="{{ target }}"
+            data-url="{{ current_element_url }}"
             onclick="openInteractionSettings(this)" ></i>
-        <i class="bi bi-trash p-0 delete-grid-interaction" onClick="link_elements('{{ target }}','{{ element }}', false);"></i>
+        <i class="bi bi-trash p-0 delete-grid-interaction" onClick="link_elements('{{ target }}','{{ current_element }}', false);"></i>
     </div>
 </li>

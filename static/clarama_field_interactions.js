@@ -43,28 +43,38 @@ function perform_interact(field, args = {}) {
             //console.log(links);
             //flash(element + ' links to ' + links);
             for (const link of links) {
-                linked_element = grid.find('#' + link);
-                linked_type = linked_element.attr("element-type");
-                //console.log("Linking " + link + '->' + linked_type);
-                switch (linked_type) {
-                    case ".task":
-                        field_values['clarama_var_run'] = 'True'
-                        reload(linked_element, field_values);
-                        break;
+                if (typeof link === 'string' || (typeof link === 'object' && link.element !== "popup" && link.element !== "modal")) {
+                    linked_element = grid.find('#' + link);
+                    linked_type = linked_element.attr("element-type");
+                    // console.log("Linking " + link + '->' + linked_type);
+                    switch (linked_type) {
+                        case ".task":
+                            field_values['clarama_var_run'] = 'True'
+                            reload(linked_element, field_values);
+                            break;
 
-                    case ".field":
-                        var form_field = linked_element.find(".clarama-field");
+                        case ".field":
+                            var form_field = linked_element.find(".clarama-field");
 
-                        if (form_field.hasClass('clarama-delay-field')) {
-                            //console.log("Reloading " + linked_element)
-                            reload(linked_element, field_values)
-                        } else {
-                            //console.log("Refreshing " + linked_element)
-                            form_field.empty().trigger('change')
-                        }
-                        break;
-                    default:
-                        flash("Don't know how to interact " + linked_type + " - " + link);
+                            if (form_field.hasClass('clarama-delay-field')) {
+                                console.log("Reloading " + linked_element)
+                                reload(linked_element, field_values)
+                            } else {
+                                console.log("Refreshing " + linked_element)
+                                form_field.empty().trigger('change')
+                            }
+                            break;
+                        default:
+                            flash("Don't know how to interact " + linked_type + " - " + link);
+                    }
+                } else if (typeof link === 'object') {
+                    const { element, url } = link;
+                    $('.select2-container').blur();;
+                    if (element === 'popup') {
+                        showPopupNearMouse(url);
+                    } else if (element === 'modal') {
+                        showModalWithContent(url);
+                    }
                 }
             }
         }

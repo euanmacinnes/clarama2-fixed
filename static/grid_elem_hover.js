@@ -38,6 +38,7 @@ document.addEventListener('shown.bs.dropdown', function (event) {
             // option.className = "slate-elem-dropdown-item";
             option.value = elem;
             option.setAttribute('elem-id', target);
+            option.setAttribute('elem-url', value['url']);
             option.innerHTML = value['url'];
             option.addEventListener('click', () => link_elements(target, elem));
             selectElement.appendChild(option);
@@ -74,6 +75,8 @@ $(document).on('click', '.grid-interaction-add', function (e) {
     }
 
     const selectedValue = select.value;
+    const selectedOption = select.options[select.selectedIndex];
+    const selectedValueUrl = selectedOption.getAttribute('elem-url');
     const gelem_target = $(this).closest('.dropdown-item').attr('target');
     if (!gelem_target) {
         console.log('No target found');
@@ -83,7 +86,7 @@ $(document).on('click', '.grid-interaction-add', function (e) {
     if (selectedValue && selectedValue !== 'Add') {
         link_elements(gelem_target, selectedValue);
         let grid_element_target = $(this).closest('div').parent().siblings('#grid_element_target-'+gelem_target);
-        grid_element_target[0].appendChild(addGridInteraction(gelem_target, selectedValue));
+        grid_element_target[0].appendChild(addGridInteraction(gelem_target, selectedValue, selectedValueUrl));
         enable_interactions($("#grid_element_target-" + gelem_target));
         select.selectedIndex = 0; 
     }
@@ -93,9 +96,9 @@ $(document).on('click', '.delete-grid-interaction', function () {
     $(this).closest('li').remove();
 });
 
-function addGridInteraction(gelem_target, selectedValue) {
+function addGridInteraction(gelem_target, selectedValue, selectedValueUrl) {
     const newGI = document.createElement("div");
     newGI.className = "clarama-post-embedded clarama-replaceable";
-    newGI.setAttribute("url", `/template/render/explorer/steps/grid_edit_interaction?element=${selectedValue}&target=${gelem_target}`);
+    newGI.setAttribute("url", `/template/render/explorer/steps/grid_edit_interaction?current_element=${selectedValue}&target=${gelem_target}&current_element_url=${selectedValueUrl}`);
     return newGI;
 }

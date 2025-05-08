@@ -65,13 +65,18 @@
         <div class="mb-3">
           <label class="form-label d-block">Interaction Type</label>
           <div class="btn-group" role="group" aria-label="Interaction Type">
-            <input type="radio" class="btn-check" name="interactionType" id="popupType" autocomplete="off" value="popup" checked>
+            <input type="checkbox" class="btn-check" name="interactionType" id="popupType" autocomplete="off" value="popup">
             <label class="btn btn-outline-primary" for="popupType">Popup</label>
-            
-            <input type="radio" class="btn-check" name="interactionType" id="modalType" autocomplete="off" value="modal">
+             
+            <input type="checkbox" class="btn-check" name="interactionType" id="modalType" autocomplete="off" value="modal">
             <label class="btn btn-outline-primary" for="modalType">Modal</label>
+             
+            <input type="checkbox" class="btn-check" name="interactionType" id="modalType" autocomplete="off" value="pause">
+            <label class="btn btn-outline-primary" for="modalType">Pause</label>
           </div>
         </div>
+
+        <!-- TO DO: add tags string field -->
  
         <button type="button" class="btn btn-outline-secondary w-100" data-bs-toggle="modal" id="browseFileBtn"
           data-bs-target="#browseFileModal"
@@ -94,7 +99,94 @@
   </div>
 </div>
 
+<div class="modal fade" id="interactionModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Interaction</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="interactionModalBody">
+        <!-- <div id="interactionModalBodyContent" class="col clarama-element clarama-post-embedded clarama-edit-element slate-panel-target tight" url="" autorun="true">
+        </div> -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="interactionPopup">
+  <!-- <div id="interactionPopupContent" class="col clarama-element clarama-post-embedded clarama-edit-element slate-panel-target tight" url="" autorun="true">
+  </div> -->
+</div>
+
 <script type="text/javascript">
+  let lastMouseEvent = null;
+
+  // Track mouse for popup positioning
+  document.addEventListener('mousemove', function (e) {
+    lastMouseEvent = e;
+  });
+
+  function showModalWithContent(url) {
+    $('#interactionModal').modal('show');
+    const iModal = document.getElementById("interactionModalBody");
+    iModal.innerHTML = '';
+    iModal.append(showInteractionContent(url));
+    // showInteractionContent(url, 'interactionModalBodyContent');
+    enable_interactions($("#interactionModalBody"));
+  }
+
+  function showPopupNearMouse(url) {
+    const ipopup = document.getElementById('interactionPopup');
+    console.log("ipopup", ipopup)
+    
+    if (lastMouseEvent) {
+      ipopup.style.left = (lastMouseEvent.pageX) + 'px';
+      ipopup.style.top = (lastMouseEvent.pageY -150) + 'px';
+    }
+    ipopup.style.display = 'block';
+
+    ipopup.innerHTML = '';
+    ipopup.append(showInteractionContent(url));
+    // showInteractionContent(url, 'interactionPopupContent');
+    enable_interactions($("#interactionPopup"));
+
+    document.addEventListener('click', function hideOnClick(e) {
+      if (!ipopup.contains(e.target)) {
+        ipopup.style.display = 'none';
+        document.removeEventListener('click', hideOnClick);
+      }
+    });
+  }
+
+  function showInteractionContent(relativeP) {
+    console.log("inside showinteractioncontent fn");
+    
+    let currentP = ($CLARAMA_ROOT + '/content/run/{{ file_url | path }}');
+
+    let currentSegments = currentP.split('/');
+    let relativeSegments = relativeP.split('/');
+    for (let segment of relativeSegments) {
+      if (segment === '..') {
+        currentSegments.pop(); // Move up one directory
+      } else if (segment !== '.' && segment !== '') {
+        currentSegments.push(segment); // Move into subdirectory
+      }
+    }
+
+    let ICurl = $CLARAMA_ROOT + currentSegments.join('/'); 
+    console.log("ICurl", ICurl)
+    // document.getElementById(displayContentID).setAttribute("url", ICurl);
+
+    const newIC = document.createElement("div");
+    newIC.className = "clarama-embedded";
+    newIC.setAttribute("url", `${ICurl}`);
+    return newIC;
+  }
+
   function isDict(v) {
     return typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
   }
@@ -102,25 +194,55 @@
   function isFolder(item) {
     return item.hasClass('bi bi-folder-fill');
   }
+  
+  var {{ grid_id }}elements = {{ element_json | safe }};
+  console.log("{{ grid_id }}elements", {{ grid_id }}elements);
 
   function openInteractionSettings(button) {
-    // console.log("grid elements", {{ grid_id }}elements)
     const element = button.getAttribute('data-element');
     const target = button.getAttribute('data-target');
-    const type = button.getAttribute('data-type'); 
-    // console.log("Open interaction settings for:", element, "on", target);
+    const url = button.getAttribute('data-url');
+    const index = button.getAttribute('data-index');
+    let type = null;
  
+    if ({{ grid_id }}elements[target] && Array.isArray({{ grid_id }}elements[target].links)) {
+      for (let link of {{ grid_id }}elements[target].links) {
+        if (typeof link === 'object' && link !== null) {
+          type = link.element;
+          break;
+        }
+      }
+    }
+
+    console.log("type", type);
+  
     document.getElementById('interaction-element').value = element;
     document.getElementById('interaction-target').value = target;
 
+    var inputId_field = document.getElementById('grid-elem');
+    if (!inputId_field.value) {
+      inputId_field.value = url;
+    }
+  
+    // First, uncheck all interactionType checkboxes
+    $('input[name="interactionType"]').prop('checked', false);
+  
+    // Then check the one that matches 'type', if provided
     if (type) {
       $(`input[name="interactionType"][value="${type}"]`).prop('checked', true);
     }
-
+  
     const browseBtn = document.getElementById('browseFileBtn');
     browseBtn.setAttribute('fileTarget', element);
     browseBtn.setAttribute('gridElem', target);
   }
+
+  $('input[name="interactionType"]').on('change', function () {
+    // if this is being checked, uncheck others
+    if (this.checked) {
+      $('input[name="interactionType"]').not(this).prop('checked', false);
+    }
+  });
 
   $( document ).ready(() => {
     // double-click on a file in the modal
@@ -167,9 +289,6 @@
     //console.log({{ grid_json | safe }});
   });
 
-  var {{ grid_id }}elements = {{ element_json | safe }};
-  console.log("{{ grid_id }}elements", {{ grid_id }}elements);
-
   let {{ grid_id }}subOptions = {
     cellHeight: 55, // should be 50 - top/bottom
     acceptWidgets: true, // will accept .grid-stack-item by default
@@ -210,6 +329,9 @@
   }
 
   function addContent(element, data, html) {
+    console.log("element", element)
+    console.log("data", data)
+    console.log("html", html)
     if (isDict({{ grid_id }}elements)) {
       {{ grid_id }}elements[element] = data;
     } else {
@@ -266,8 +388,12 @@ function delete_element(element) {
     return serializedData;
   }
 
-  function add_selected_content(element_render_url) {
-    selected_val = "./" + $("#add_content_addfield").val();
+  function add_selected_content(element_render_url, selected_v = "") {
+    if (selected_v !== "") {
+      selected_val = selected_v;
+    } else {
+      selected_val = "./" + $("#add_content_addfield").val();
+    }
     console.log("adding " + selected_val);
 
     if (selected_val == null) {
@@ -360,36 +486,42 @@ function delete_element(element) {
     $("#browseFileModal").modal('hide');
 
     inputId = $("#browseFileModal").data('inputId');
-    if (inputId == "grid-elem") {
+    if (inputId === "grid-elem") {
       fileTarget = $("#browseFileModal").data('fileTarget');
       gridElem = $("#browseFileModal").data('gridElem');
-      const interactionType = $('input[name="interactionType"]:checked').val();
+      
+      const checkedType = $('input[name="interactionType"]:checked').val(); // undefined if none selected
+      console.log("checkedType", checkedType);
+      
       var element = {{ grid_id }}elements[gridElem];
-
+    
       if (Array.isArray(element.links)) {
         const links = element.links;
         const index = links.findIndex(link => {
-          return typeof link === 'string' ? link === fileTarget : link.id === fileTarget;
+          return typeof link === 'string' ? link === fileTarget : link.element === fileTarget;
         });
 
+        console.log("index", index)
+    
         if (index !== -1) {
           const current = links[index];
+          console.log("current", current)
           if (typeof current === 'string') {
-            links[index] = { id: current, url: selected_val, type: interactionType };
+            links[index] = { element: checkedType ? checkedType : current, url: selected_val };
           } else if (typeof current === 'object') {
             current.url = selected_val;
-            current.type = interactionType;
+            current.element = checkedType ? checkedType : current.element;
           }
         }
       }
-
-      console.log("updated element", element)
-      $("#interactionSettingsModal").modal('hide');
+    
+      console.log("updated element", element);
     }
   }
 
   function save(url) {
     slate_data = saveGrid();
+    console.log("slate_data", slate_data)
     $.ajax({
       type: 'POST',
       url: url,
@@ -453,7 +585,6 @@ function delete_element(element) {
       // console.log("trimmedPath", trimmedPath);
 
       const root = document.createElement('li');
-      console.log("trimmedPath[0][0]", trimmedPath[0][0])
       if (trimmedPath[0][0] != "?") {
         root.style.cursor = 'pointer';
         root.className = 'text-secondary';
@@ -535,7 +666,6 @@ function delete_element(element) {
           const sortedFolders = naturalSort([...foldersSet]);
           const sortedFiles = naturalSort([...filesSet]);
 
-          console.log("path.split('?')[0]", path.split('?')[0])
           // Render folders
           sortedFolders.forEach(folder => {
             const option = document.createElement('option');

@@ -43,14 +43,15 @@
             </li>
             {% endif %}
             <div id="grid_element_target-{{ target }}">
-                {% for element, value in elements.items() %}
-                    {% if 'links' in elements[target] %}
-                        {% for link in elements[target]['links'] %}
-                            {% if link == element or (link.id is defined and link.id == element) %}
-                                {% include "explorer/steps/grid_edit_interaction.html" %}
-                            {% endif %}
-                        {% endfor %}
+                {% for link in elements[target]['links'] %}
+                    {% if link.element is defined %}
+                        {% set current_element = link.element %}
+                        {% set current_element_url = link.url %}
+                    {% else %}
+                        {% set current_element = link %}
+                        {% set current_element_url = elements[link]['url'] %}
                     {% endif %}
+                    {% include "explorer/steps/grid_edit_interaction.html" %}
                 {% endfor %}
             </div>
         </ul>
