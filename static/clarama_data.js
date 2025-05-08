@@ -663,7 +663,7 @@ function bChart(chart_id, chart_data) {
                 },
                 tooltip: {
                     filter: function (tooltipItem, data) {
-                        if (data > 0) return False;
+                        if (data > 0) return false;
                         // Filter logic here
                         return true; // or false
                     },
