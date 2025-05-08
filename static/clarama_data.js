@@ -327,7 +327,7 @@ function bChart(chart_id, chart_data) {
             if (xaxis !== undefined && yaxis !== undefined) {
 
                 if (time) {
-                    var needs_z = true;
+                    var needs_z = "yes";
                     if (xaxis.length > 1) {
                         var xz = 0
                         var found = false;
@@ -336,9 +336,13 @@ function bChart(chart_id, chart_data) {
 
                             if (xaxis[xz] !== undefined)
                                 if (xaxis[xz].indexOf("Z") >= 0) {
-                                    needs_z = false;
+                                    needs_z = "no";
                                     found = true;
                                 } else {
+                                    if (xaxis[xz].indexOf("+00:00") >= 0)
+                                        needs_z = "00";
+                                    else
+                                        needs_z = "yes";
                                     found = true;
                                 }
 
@@ -349,10 +353,15 @@ function bChart(chart_id, chart_data) {
                         }
                     }
 
-                    if (needs_z) {
+                    if (needs_z === "yes") {
                         for (p = 0; p < xaxis.length; p++) {
                             ndt = new Date(xaxis[p] + 'Z');
                             xaxis[p] = ndt;
+                        }
+                    } else if (needs_z === "00") {
+                        for (p = 0; p < xaxis.length; p++) {
+                            var val = xaxis[p];
+                            ndt = new Date(val.substring(0, val.length - 6) + 'Z');
                         }
                     } else {
                         for (p = 0; p < xaxis.length; p++) {
