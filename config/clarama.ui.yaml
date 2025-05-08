@@ -6,7 +6,7 @@ Clarama:
     Config: "{rootdir}/files/dynamic/config"
     Content: "{rootdir}/files/dynamic/content"
     Users: "{rootdir}/files/dynamic/content/Users"
-    Cells: "{rootdir}/files/fixed/templates/web/steps"
+    Cells: "{rootdir}/files/fixed/templates/explorer/steps"
     Templates: "{rootdir}/files/fixed/templates"
     StaticFiles: "{rootdir}/files/fixed/static"
     Orchestrators: "{claramadir}/services/environments/orchestrators"

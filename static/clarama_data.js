@@ -66,7 +66,7 @@ function ChartSeriesFormat(dataset, formats) {
                 try {
                     var re = new RegExp(format['format-nrx']);
                     match = re.test(dataset['id']);
-                    console.log("RexEx test result: " + dataset['id'] + " vs " + format['format-nrx'] + '=' + match)
+                    //console.log("RexEx test result: " + dataset['id'] + " vs " + format['format-nrx'] + '=' + match)
                 } catch (e) {
                     alert("RegEx " + format['format-nrx'] + " caused " + e);
                 }
@@ -102,7 +102,7 @@ function ChartSeriesFormat(dataset, formats) {
                 dataset['label'] = format['format-title'];
 
             if (format['format-col'] !== undefined) {
-                console.log("SERIES colour of " + dataset['id'] + " set to '" + format['format-col']);
+                //console.log("SERIES colour of " + dataset['id'] + " set to '" + format['format-col']);
 
                 if (chartColors[format['format-col']] !== undefined)
                     dataset['borderColor'] = chartColors[format['format-col']]
@@ -111,7 +111,7 @@ function ChartSeriesFormat(dataset, formats) {
             }
 
             if (format['format-col-back'] !== undefined) {
-                console.log("SERIES colour of " + dataset['id'] + " set to '" + format['format-col-back']);
+                //console.log("SERIES colour of " + dataset['id'] + " set to '" + format['format-col-back']);
 
                 if (chartColors[format['format-col-back']] !== undefined)
                     dataset['backgroundColor'] = chartColors[format['format-col-back']]
@@ -135,6 +135,34 @@ function ChartSeriesFormat(dataset, formats) {
 
 function isEven(n) {
     return n % 2 === 0;
+}
+
+Array.prototype.insert = function (index, ...items) {
+    this.splice(index, 0, ...items);
+};
+
+function push_dataset(name, datasets, dataset, grouping) {
+    if (datasets.length === 0) {
+        console.log("PUSH adding dataset " + name + "(" + dataset['data'].length + ") " + datasets.length);
+        datasets.push(dataset);
+        return;
+    }
+
+    for (ds = 0; ds < datasets.length; ds++) {
+        if (datasets[ds]['id'] === name) {
+            if (!grouping) {
+                console.log("PUSH inserting dataset " + name + " at " + ds);
+                datasets.insert(ds, dataset);
+            } else {
+                console.log("PUSH grouping dataset " + name + "(" + dataset['data'].length + ") at " + ds);
+                datasets[ds]['data'] = datasets[ds]['data'].concat(dataset['data']);  /// This adds the data into the existing dataset
+            }
+            return;
+        }
+    }
+
+    console.log("PUSH adding dataset " + name + "(" + dataset['data'].length + ") " + datasets.length);
+    datasets.push(dataset);
 }
 
 /**
@@ -205,6 +233,15 @@ function deepMerge(obj1, obj2) {
     return obj1;
 }
 
+const axis_type_map = {
+    'linear': 'linear',
+    'logarithmic': 'logarithmic',
+    'time': 'time',
+    'timeseries': 'timeseries',
+    'category': 'category',
+    'category_grouped': 'category',
+    'category_bulk': 'category',
+}
 
 function bChart(chart_id, chart_data) {
     var data = chart_data['data'];
@@ -225,12 +262,20 @@ function bChart(chart_id, chart_data) {
     console.log('CHART aspect ' + aspect_ratio + ' with maintain ' + maintain);
     console.log(config);
 
-    var time = (config['xaxis-type'] || 'category') === 'time';
+    var x_axis_type = config['xaxis-type'] || 'category';
+
+    var time = x_axis_type === 'time';
+    var category = x_axis_type === 'category';
+
+    var category_grouped = x_axis_type === 'category_grouped';
+    var category_bulk = x_axis_type === 'category_bulk';
+
+    var x_axis_final_type = axis_type_map[x_axis_type];
 
     var chart_scales = {};
     var xaxis_scale = {
         display: true,
-        type: config['xaxis-type'] || 'category',
+        type: x_axis_final_type,
         title: {
             display: true,
             text: config['xaxis-title'] || 'X Axis'
@@ -326,14 +371,11 @@ function bChart(chart_id, chart_data) {
                     console.log("Fark");
                 }
 
-
-                console.log("X-AXIS");
-                //console.log(xaxis);
-
+                //
 
                 var points = [];
 
-                if (series_id >= 0) {
+                if (series_id >= 0 && !category_bulk) {
                     series = data['rows'][series_id];
 
                     if (unit_id > 0)
@@ -366,7 +408,7 @@ function bChart(chart_id, chart_data) {
                                     ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
                                 }
 
-                                datasets.push(ChartSeriesFormat(dataset, formats));
+                                push_dataset(curr, datasets, ChartSeriesFormat(dataset, formats), category_grouped);
 
                                 label = series[p];
                                 points = [];
@@ -389,39 +431,133 @@ function bChart(chart_id, chart_data) {
                     }
 
                 } else {
+                    if (!category_bulk) {
+                        for (p = 0; p < xaxis.length; p++) {
+                            point = {
+                                x: xaxis[p],
+                                y: yaxis[p]
+                            }
 
-                    for (p = 0; p < xaxis.length; p++) {
-                        point = {
-                            x: xaxis[p],
-                            y: yaxis[p]
+                            if (label_id >= 0)
+                                point['text'] = labelaxis[p];
+
+                            points.push(point);
+
+                        }
+                    }
+                }
+
+                if (series_id >= 0 && category_bulk) {
+                    console.log("CATEGORY BULK");
+                    var series_axis = data['rows'][series_id];
+                    var unique_series = [...new Set(series_axis)];
+                    if (unit_id > 0) unitaxis = data['rows'][unit_id];
+                    unit = '';
+
+                    for (s = 0; s < unique_series.length; s++) {
+                        var b_points = [];
+                        var curr_series = unique_series[s];
+
+                        if (unit_id > 0) {
+                            for (p = 0; p < xaxis.length; p++) {
+                                var yval = null;
+                                if (series_axis[p] === curr_series) {
+                                    yval = yaxis[p]
+                                    unit = unitaxis[p];
+                                }
+
+                                point = {
+                                    x: xaxis[p],
+                                    y: yval
+                                }
+
+                                b_points.push(point);
+
+
+                            }
+                        } else {
+
+                            for (p = 0; p < xaxis.length; p++) {
+                                var yval = null;
+                                if (series_axis[p] === curr_series) yval = yaxis[p];
+
+                                point = {
+                                    x: xaxis[p],
+                                    y: yval
+                                }
+
+                                b_points.push(point);
+                            }
                         }
 
-                        if (label_id >= 0)
-                            point['text'] = labelaxis[p];
+                        if (unit === '')
+                            unit = undefined;
 
-                        points.push(point);
+                        label = curr_series;
+                        dataset = {
+                            id: label,
+                            label: label,
+                            data: b_points,
+                            type: sg['series-type'].toLowerCase(),
+                        }
+
+                        if (unit !== undefined) {
+                            ChartSeriesAxis(dataset, chart_scales, unit);
+                        } else if (sg['series-u'] !== "")
+                            ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
+
+
+                        // The label is a bit pointless here, this is a single dataset situation anyway
+                        push_dataset(label, datasets, ChartSeriesFormat(dataset, formats), false);
+
 
                     }
+                } else {
+                    var dataset_label = label;
 
+                    if (series_id < 0 && sg['series-s'] !== "")
+                        dataset_label = sg['series-s'];
+
+                    dataset = {
+                        id: dataset_label,
+                        label: dataset_label,
+                        data: points,
+                        type: sg['series-type'].toLowerCase(),
+                    }
+
+                    if (unit !== undefined) {
+                        if (xaxis.length >= 1)
+                            ChartSeriesAxis(dataset, chart_scales, unit[xaxis.length - 1]);
+                    } else if (sg['series-u'] !== "")
+                        ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
+
+
+                    // The label is a bit pointless here, this is a single dataset situation anyway
+                    push_dataset(label, datasets, ChartSeriesFormat(dataset, formats), category_grouped);
                 }
-                dataset = {
-                    id: label,
-                    label: label,
-                    data: points,
-                    type: sg['series-type'].toLowerCase(),
-                }
-
-                if (unit !== undefined) {
-                    if (xaxis.length >= 1)
-                        ChartSeriesAxis(dataset, chart_scales, unit[xaxis.length - 1]);
-                } else if (sg['series-u'] !== "")
-                    ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
-
-                datasets.push(ChartSeriesFormat(dataset, formats));
 
                 console.log("DATASETS");
                 console.log(datasets.length);
             }
+        } else if (xaxis_id > 0) {
+            var dataset_label = 'data'
+
+            if (sg['series-s'] !== "") dataset_label = sg['series-s'];
+
+            dataset = {
+                id: "dataset" + i,
+                label: dataset_label,
+                data: data['rows'][xaxis_id],
+                type: sg['series-type'].toLowerCase(),
+            }
+
+            if (sg['series-u'] !== "") ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
+            push_dataset(label, datasets, ChartSeriesFormat(dataset, formats), category_grouped);
+
+            if (label_id >= 0)
+                labels = data['rows'][label_id]
+            else
+                labels = data['rows'][xaxis_id];
         } else
             flash("Didn't find X and Y axis for chart in columns [" + data['cols'] + ']. X: ' + sg['series-x'] + '. Y: ' + sg['series-y']);
 
@@ -462,22 +598,28 @@ function bChart(chart_id, chart_data) {
         }
     }
 
-    const unique_labels = [...new Set(labels)] // Get unique list of labels for the x axis
 
     console.log("FINAL DATASETS: " + datasets.length);
     console.log(datasets);
     console.log("FINAL SCALES: " + Object.keys(chart_scales).length);
     console.log(chart_scales);
-    console.log("FINAL LABELS: " + unique_labels.length);
-    console.log(unique_labels);
     console.log("FINAL FORMATS: " + Object.keys(formats).length);
     console.log(formats);
 
+    var data = {
+        datasets: datasets
+    }
+
+    if (category || category_grouped || category_bulk) {
+        const unique_labels = [...new Set(labels)] // Get unique list of labels for the x axis
+        console.log("FINAL LABELS: " + unique_labels.length);
+        console.log(unique_labels);
+        data['labels'] = unique_labels;
+    }
+
+
     var config = {
-        data: {
-            labels: unique_labels,
-            datasets: datasets
-        },
+        data: data,
         stacked: false,
         options: {
             responsive: true,
@@ -520,8 +662,15 @@ function bChart(chart_id, chart_data) {
                     usePointStyle: true,
                 },
                 tooltip: {
+                    // filter: function (tooltipItem, data) {
+                    //     if (data > 0) return false;
+                    //     // Filter logic here
+                    //     return true; // or false
+                    // },
                     callbacks: {
                         label: function (context) {
+                            console.log('LABEL CALLBACK:');
+                            console.log(context.dataset);
                             let label = context.dataset.label || '';
 
                             if (context.raw.text)
@@ -530,9 +679,10 @@ function bChart(chart_id, chart_data) {
                             if (label) {
                                 label += ': ';
                             }
-                            if (context.raw.y !== null) {
+                            if (context.raw.y !== undefined) {
                                 label += context.raw.y;
-                            }
+                            } else
+                                label += context.raw;
 
 
                             return label;
