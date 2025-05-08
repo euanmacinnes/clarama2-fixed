@@ -327,9 +327,24 @@ function bChart(chart_id, chart_data) {
             if (xaxis !== undefined && yaxis !== undefined) {
 
                 if (time) {
-                    var needs_z = false;
+                    var needs_z = true;
                     if (xaxis.length > 1) {
-                        needs_z = (xaxis_id[1].find("Z") < 0)
+                        var xz = 0
+                        var found = false;
+
+                        while (xz < xaxis.length && !found) {
+
+                            if (xaxis[xz] !== undefined)
+                                if (xaxis[xz].indexOf("Z") >= 0) {
+                                    needs_z = false;
+                                    found = true;
+                                }
+
+                            xz++;
+
+                            if (xz > 10)
+                                found = true;
+                        }
                     }
 
                     if (needs_z) {
