@@ -663,9 +663,7 @@ function bChart(chart_id, chart_data) {
                 },
                 tooltip: {
                     filter: function (tooltipItem, data) {
-                        console.log('FILTER CALLBACK:');
-                        console.log(tooltipItem);
-                        console.log(data);
+                        if (data > 0) return False;
                         // Filter logic here
                         return true; // or false
                     },
