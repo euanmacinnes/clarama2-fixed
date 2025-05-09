@@ -81,7 +81,7 @@
         <button type="button" class="btn btn-outline-secondary w-100" data-bs-toggle="modal" id="browseFileBtn"
           data-bs-target="#browseFileModal"
           inputId="grid-elem"
-          filters="*.field.yaml|*.task.yaml|*.md">
+          filters="*.task.yaml">
           Browse File…
         </button>
 
@@ -93,7 +93,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="add_selected_file()">Apply</button>
+        <button type="button" class="btn btn-primary" onclick="handle_interaction_settings()">Apply</button>
       </div>
     </div>
   </div>
@@ -165,7 +165,7 @@
   function showInteractionContent(relativeP) {
     console.log("inside showinteractioncontent fn");
     
-    let currentP = ($CLARAMA_ROOT + '/content/run/{{ file_url | path }}');
+    let currentP = ($CLARAMA_ROOT + '/render/popup/{{ file_url | path }}');
 
     let currentSegments = currentP.split('/');
     let relativeSegments = relativeP.split('/');
@@ -199,6 +199,7 @@
   console.log("{{ grid_id }}elements", {{ grid_id }}elements);
 
   function openInteractionSettings(button) {
+    document.getElementById('interactionSettingsModal').classList.add('modal-open');
     const element = button.getAttribute('data-element');
     const target = button.getAttribute('data-target');
     const url = button.getAttribute('data-url');
@@ -245,6 +246,7 @@
   });
 
   $( document ).ready(() => {
+    let interactionSettingsWasOpen = false;
     // double-click on a file in the modal
     $('#add_content_addfield').on('dblclick', 'option', function () {
       const selectedItem = $(this); 
@@ -270,6 +272,8 @@
     });
 
     $('#browseFileModal').on('shown.bs.modal', function (event) {
+      interactionSettingsWasOpen = $('#interactionSettingsModal').hasClass('modal-open');
+      
       button = $(event.relatedTarget);
       filters = button.attr('filters'); 
       inputId = button.attr('inputId');
@@ -282,6 +286,13 @@
       path = ($CLARAMA_ROOT + '/content/json/{{ file_url | path }}?subfolders=True&extensions=' + filters);
 
       navigateToPath(path, 'breadcrumb_browsefile', 'add_content_browsefile');
+    });
+
+    $('#browseFileModal').on('hidden.bs.modal', function () {
+      console.log("interactionSettingsWasOpen", interactionSettingsWasOpen)
+      if (interactionSettingsWasOpen) {
+        $('#interactionSettingsModal').modal('show');
+      }
     });
 
     //console.log("GRID");
@@ -459,64 +470,69 @@ function delete_element(element) {
   function add_selected_file() {
     const selected_val = "./" + $("#add_content_browsefile").val();
     console.log("adding " + selected_val);
-
     if (selected_val == null) {
       flash("No file selected!");
       return;
     }
 
+    const inputId = $("#browseFileModal").data('inputId');
     const targetInput = document.getElementById(inputId);
     if (targetInput) {
       const newSource = $CLARAMA_ROOT + selected_val;
       targetInput.value = newSource;
 
-      const btnId = inputId.replace("_source", "_browse");
-      const browseLink = document.getElementById(btnId + "_link");
-
-      if (browseLink) {
-        browseLink.href = newSource;
-        browseLink.style.display = "inline-block";
+      if (inputId !== "grid-elem") {
+        const btnId = inputId.replace("_source", "_browse");
+        const browseLink = document.getElementById(btnId + "_link");
+        if (browseLink) {
+          browseLink.href = newSource;
+          browseLink.style.display = "inline-block";
+        }
       }
-
       flash("File path stored successfully! " + newSource);
     } else {
       flash("Target input field not found!", "danger");
     }
 
     $("#browseFileModal").modal('hide');
+  }
 
-    inputId = $("#browseFileModal").data('inputId');
-    if (inputId === "grid-elem") {
-      fileTarget = $("#browseFileModal").data('fileTarget');
-      gridElem = $("#browseFileModal").data('gridElem');
-      
-      const checkedType = $('input[name="interactionType"]:checked').val(); // undefined if none selected
-      console.log("checkedType", checkedType);
-      
-      var element = {{ grid_id }}elements[gridElem];
+  function handle_interaction_settings() {
+    const file_url = document.getElementById("grid-elem").value;
+    const fileTarget = document.getElementById("interaction-element").value;
+    const gridElem = document.getElementById("interaction-target").value;
+    const checkedType = $('input[name="interactionType"]:checked').val(); // undefined if none selected
+    console.log("file_url", file_url);
+    console.log("fileTarget", fileTarget);
+    console.log("gridElem", gridElem);
+    console.log("checkedType", checkedType);
     
-      if (Array.isArray(element.links)) {
-        const links = element.links;
-        const index = links.findIndex(link => {
-          return typeof link === 'string' ? link === fileTarget : link.element === fileTarget;
-        });
+    var element = {{ grid_id }}elements[gridElem];
+  
+    if (Array.isArray(element.links)) {
+      const links = element.links;
+      const index = links.findIndex(link => {
+        return typeof link === 'string' ? link === fileTarget : link.element === fileTarget;
+      });
 
-        console.log("index", index)
-    
-        if (index !== -1) {
-          const current = links[index];
-          console.log("current", current)
-          if (typeof current === 'string') {
-            links[index] = { element: checkedType ? checkedType : current, url: selected_val };
-          } else if (typeof current === 'object') {
-            current.url = selected_val;
-            current.element = checkedType ? checkedType : current.element;
-          }
+      console.log("index", index)
+  
+      if (index !== -1) {
+        const current = links[index];
+        console.log("current", current)
+        if (typeof current === 'string') {
+          links[index] = { element: checkedType ? checkedType : current, url: file_url };
+        } else if (typeof current === 'object') {
+          current.url = file_url;
+          current.element = checkedType ? checkedType : current.element;
         }
       }
     
       console.log("updated element", element);
     }
+
+    document.getElementById('interactionSettingsModal').classList.remove('modal-open');
+    $("#interactionSettingsModal").modal('hide');
   }
 
   function save(url) {
