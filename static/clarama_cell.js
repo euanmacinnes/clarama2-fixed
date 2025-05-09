@@ -68,6 +68,7 @@ function get_data_cell(cell) {
         console.log(this);
         srs = {
             'format-nrx': $(this).find('.format-nrx').val(),            // name regex
+            'format-ua': $(this).find('.format-ua').val(),              // unit axis
             'format-f': $(this).find('.format-f').is(':checked'),       // filled
             'format-p': $(this).find('.format-p').is(':checked'),       // stepped
             'format-dt': $(this).find('.format-dt').is(':checked'),     // dotted

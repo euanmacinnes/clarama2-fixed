@@ -47,6 +47,7 @@ function bTable(table_id, table_data) {
 }
 
 function ChartSeriesFormat(dataset, formats) {
+    console.log('CSF ' + dataset['id']);
     if (formats === undefined) {
         dataset['fill'] = false;
         dataset['stepped'] = false;
@@ -61,11 +62,14 @@ function ChartSeriesFormat(dataset, formats) {
 
         if (format['format-nrx'] == dataset['id']) {
             match = true;
+            console.log("CSF MATCHED SERIES " + dataset['id'] + " to format " + format['format-nrx']);
         } else {
             if (format['format-nrx'] != '') {
                 try {
                     var re = new RegExp(format['format-nrx']);
                     match = re.test(dataset['id']);
+
+                    console.log("CSF RegEx MATCHED SERIES " + dataset['id'] + " to format " + format['format-nrx']);
                     //console.log("RexEx test result: " + dataset['id'] + " vs " + format['format-nrx'] + '=' + match)
                 } catch (e) {
                     alert("RegEx " + format['format-nrx'] + " caused " + e);
@@ -89,6 +93,7 @@ function ChartSeriesFormat(dataset, formats) {
             dataset['pointRadius'] = format['format-pr'];
             dataset['pointStyle'] = format['format-ps'];
             dataset['borderWidth'] = format['format-lw'];
+            dataset['unitAxis'] = format['format-ua'];
 
             if (format['format-miny'] !== undefined) {
 
@@ -170,8 +175,46 @@ function push_dataset(name, datasets, dataset, grouping) {
  * @param {*|{}} dataset
  * @param {*|{}} scales
  * @param {string} axis
+ * @param formats
  */
-function ChartSeriesAxis(dataset, scales, axis) {
+function ChartSeriesAxis(dataset, scales, axis, formats) {
+    console.log('CSA ' + dataset['id']);
+    // First, we're going to loop through the formats to see if there's a specific format override for the current dataset
+    if (formats !== undefined) {
+
+        for (f = 0; f < formats.length; f++) {
+            var format = formats[f];
+            var match = true;
+
+            if (format['format-nrx'] == dataset['id']) {
+                match = true;
+                console.log("CSA MATCHED SERIES " + dataset['id'] + " to format " + format['format-nrx']);
+            } else {
+                if (format['format-nrx'] != '') {
+                    try {
+                        var re = new RegExp(format['format-nrx']);
+                        match = re.test(dataset['id']);
+
+                        console.log("CSA RegEx MATCHED SERIES " + dataset['id'] + " to format " + format['format-nrx']);
+
+                        //console.log("RexEx test result: " + dataset['id'] + " vs " + format['format-nrx'] + '=' + match)
+                    } catch (e) {
+                        alert("RegEx " + format['format-nrx'] + " caused " + e);
+                    }
+                }
+            }
+
+            if (match) {
+                if (format['format-ua'] !== undefined && format['format-ua'] !== '')
+                    axis = format['format-ua'];
+            }
+        }
+    }
+
+    if (axis === undefined) {
+        console.log("CSA got bored");
+        return;
+    }
 
     const keys = Object.keys(scales);
     console.log("UNIT AXIS: " + axis + ' ' + keys.length);
@@ -241,6 +284,17 @@ const axis_type_map = {
     'category': 'category',
     'category_grouped': 'category',
     'category_bulk': 'category',
+}
+
+const chart_type_map = {
+    'Line': 'line',
+    'Bar': 'bar',
+    'Radar': 'radar',
+    'Polar Area': 'polarArea',
+    'Doughnut': 'doughnut',
+    'Bubble': 'bubble',
+    'Pie': 'pie',
+    'Scatter': 'scatter',
 }
 
 function bChart(chart_id, chart_data) {
@@ -327,15 +381,41 @@ function bChart(chart_id, chart_data) {
             if (xaxis !== undefined && yaxis !== undefined) {
 
                 if (time) {
-                    var needs_z = false;
+                    var needs_z = "yes";
                     if (xaxis.length > 1) {
-                        needs_z = (xaxis_id[1].find("Z") < 0)
+                        var xz = 0
+                        var found = false;
+
+                        while (xz < xaxis.length && !found) {
+
+                            if (xaxis[xz] !== undefined)
+                                if (xaxis[xz].indexOf("Z") >= 0) {
+                                    needs_z = "no";
+                                    found = true;
+                                } else {
+                                    if (xaxis[xz].indexOf("+00:00") >= 0)
+                                        needs_z = "00";
+                                    else
+                                        needs_z = "yes";
+                                    found = true;
+                                }
+
+                            xz++;
+
+                            if (xz > 10)
+                                found = true;
+                        }
                     }
 
-                    if (needs_z) {
+                    if (needs_z === "yes") {
                         for (p = 0; p < xaxis.length; p++) {
                             ndt = new Date(xaxis[p] + 'Z');
                             xaxis[p] = ndt;
+                        }
+                    } else if (needs_z === "00") {
+                        for (p = 0; p < xaxis.length; p++) {
+                            var val = xaxis[p];
+                            ndt = new Date(val.substring(0, val.length - 6) + 'Z');
                         }
                     } else {
                         for (p = 0; p < xaxis.length; p++) {
@@ -397,15 +477,17 @@ function bChart(chart_id, chart_data) {
                                     id: label,
                                     label: label,
                                     data: points,
-                                    type: sg['series-type'].toLowerCase()
+                                    type: chart_type_map[sg['series-type']]
                                 }
 
                                 if (unit !== undefined) {
                                     console.log("Data Unit Axis");
-                                    ChartSeriesAxis(dataset, chart_scales, unit[p - 1]);
+                                    ChartSeriesAxis(dataset, chart_scales, unit[p - 1], formats);
                                 } else if (sg['series-u'] !== "") {
                                     console.log("Labelled Unit Axis");
-                                    ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
+                                    ChartSeriesAxis(dataset, chart_scales, sg['series-u'], formats);
+                                } else {
+                                    ChartSeriesAxis(dataset, chart_scales, undefined, formats);
                                 }
 
                                 push_dataset(curr, datasets, ChartSeriesFormat(dataset, formats), category_grouped);
@@ -498,13 +580,16 @@ function bChart(chart_id, chart_data) {
                             id: label,
                             label: label,
                             data: b_points,
-                            type: sg['series-type'].toLowerCase(),
+                            type: chart_type_map[sg['series-type']],
                         }
 
                         if (unit !== undefined) {
-                            ChartSeriesAxis(dataset, chart_scales, unit);
+                            ChartSeriesAxis(dataset, chart_scales, unit, formats);
                         } else if (sg['series-u'] !== "")
-                            ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
+                            ChartSeriesAxis(dataset, chart_scales, sg['series-u'], formats)
+                        else {
+                            ChartSeriesAxis(dataset, chart_scales, undefined, formats);
+                        }
 
 
                         // The label is a bit pointless here, this is a single dataset situation anyway
@@ -522,14 +607,17 @@ function bChart(chart_id, chart_data) {
                         id: dataset_label,
                         label: dataset_label,
                         data: points,
-                        type: sg['series-type'].toLowerCase(),
+                        type: chart_type_map[sg['series-type']],
                     }
 
                     if (unit !== undefined) {
                         if (xaxis.length >= 1)
-                            ChartSeriesAxis(dataset, chart_scales, unit[xaxis.length - 1]);
+                            ChartSeriesAxis(dataset, chart_scales, unit[xaxis.length - 1], formats);
                     } else if (sg['series-u'] !== "")
-                        ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
+                        ChartSeriesAxis(dataset, chart_scales, sg['series-u'], formats)
+                    else {
+                        ChartSeriesAxis(dataset, chart_scales, undefined, formats);
+                    }
 
 
                     // The label is a bit pointless here, this is a single dataset situation anyway
@@ -548,10 +636,12 @@ function bChart(chart_id, chart_data) {
                 id: "dataset" + i,
                 label: dataset_label,
                 data: data['rows'][xaxis_id],
-                type: sg['series-type'].toLowerCase(),
+                type: chart_type_map[sg['series-type']],
             }
 
-            if (sg['series-u'] !== "") ChartSeriesAxis(dataset, chart_scales, sg['series-u']);
+            if (sg['series-u'] !== "") ChartSeriesAxis(dataset, chart_scales, sg['series-u'], formats)
+            else ChartSeriesAxis(dataset, chart_scales, undefined, formats);
+
             push_dataset(label, datasets, ChartSeriesFormat(dataset, formats), category_grouped);
 
             if (label_id >= 0)
@@ -669,8 +759,6 @@ function bChart(chart_id, chart_data) {
                     // },
                     callbacks: {
                         label: function (context) {
-                            console.log('LABEL CALLBACK:');
-                            console.log(context.dataset);
                             let label = context.dataset.label || '';
 
                             if (context.raw.text)

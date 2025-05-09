@@ -25,6 +25,10 @@
         <input type="string" class="form-control format-title" id="title{{ loop_index }}" name="title"
                value="{{ sformat['format-title'] }}" data-toggle="tooltip"
                title="Name displayed on the chart legend">
+        <label for="ua{{ loop_index }}" class="form-label">Unit Axis</label>
+        <input type="string" class="form-control format-ua" id="ua{{ loop_index }}" name="ua"
+               value="{{ sformat['format-ua'] }}" data-toggle="tooltip"
+               title="Named unit axis. All series with this value will be grouped on the same Y axis">
         <label for="f{{ loop_index }}" class="form-label">Filled</label>
         <input type="checkbox" class="form-check-input format-f" id="f{{ loop_index }}" name="f" {% if
         sformat['format-f'] %}checked{% endif %}>

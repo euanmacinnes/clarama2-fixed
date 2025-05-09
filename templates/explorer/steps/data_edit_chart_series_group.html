@@ -10,6 +10,9 @@
             <option {{ selected("Bubble",sgroup['series-type']) }}>Bubble</option>
             <option {{ selected("Bar",sgroup['series-type']) }}>Bar</option>
             <option {{ selected("Doughnut",sgroup['series-type']) }}>Doughnut</option>
+            <option {{ selected("Pie",sgroup['series-type']) }}>Pie</option>
+            <option {{ selected("Polar Area",sgroup['series-type']) }}>Polar Area</option>
+            <option {{ selected("Radar",sgroup['series-type']) }}>Radar</option>
         </select>
         <label for="x{{ loop_index }}" class="form-label">X Axis</label>
         <input type="string" class="form-control series-x" id="x{{ loop_index }}" name="x"

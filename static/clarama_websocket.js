@@ -66,6 +66,8 @@ function run_socket(embedded, reset_environment) {
     let env_url = '';
     let environment = embedded.attr("environment");
 
+    embedded.attr("socket_time", Date.now());
+
     if (environment !== undefined) {
         env_url = '&environment=' + environment;
         refresh = true;
@@ -239,6 +241,9 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
     if ('class' in dict) {
         //console.log("Processing Socket Message " + dict['class']);
         try {
+            if (dict['class'] === "ping") {
+                console.log("ping");
+            }
 
             if (dict['class'] === "template") {
                 let resulter = "#" + dict['step_id'];
@@ -320,7 +325,7 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
 }
 
 function onOpen(event, socket_url, webSocket, task_results, socket_id) {
-    console.log('CLARAMA_WEBSOCKET.js: WebSocket Connection established ' + socket_url);
+    console.log('CLARAMA_WEBSOCKET.js: WebSocket Connection established ' + Date.now() + ' on ' + socket_url);
     let kernel_status = $('#kernel_status');
     kernel_status.add("bi-check-circle")
     kernel_status.add("text-success")
@@ -334,7 +339,7 @@ function onOpen(event, socket_url, webSocket, task_results, socket_id) {
 }
 
 function onClose(event, socket_url, webSocket, task_results) {
-    console.log('CLARAMA_WEBSOCKET.js: WebSocket Connection CLOSED ' + socket_url + " on socket " + webSocket + " with result " + task_results);
+    console.log('CLARAMA_WEBSOCKET.js: WebSocket Connection CLOSED ' + Date.now() + ' on ' + socket_url + " on socket " + webSocket + " with result " + task_results);
     flash("SOCKET lost", "danger");
 }
 
