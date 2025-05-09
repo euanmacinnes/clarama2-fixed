@@ -178,6 +178,16 @@ Array.prototype.insert = function (index, ...items) {
     this.splice(index, 0, ...items);
 };
 
+/**
+ * Adds or merges a dataset into a collection of datasets
+ * @param {string} name - The name/identifier of the dataset
+ * @param {Array} datasets - The collection of datasets to add to
+ * @param {Object} dataset - The dataset to add
+ * @param {boolean} grouping - Whether to merge with existing datasets of the same name
+ * @description If grouping is true and a dataset with the same name exists, 
+ * the data will be concatenated. Otherwise, the dataset will be inserted at the 
+ * appropriate position or added to the end.
+ */
 function push_dataset(name, datasets, dataset, grouping) {
     if (datasets.length === 0) {
         console.log("PUSH adding dataset " + name + "(" + dataset['data'].length + ") " + datasets.length);
@@ -203,11 +213,14 @@ function push_dataset(name, datasets, dataset, grouping) {
 }
 
 /**
- * ChartSeriesAxis looks at the specified series and tries to assign an axis to it (this function will be called assuming a unit axis is specified).
- * @param {*|{}} dataset
- * @param {*|{}} scales
- * @param {string} axis
- * @param formats
+ * Assigns an axis to a chart series based on format specifications
+ * @param {Object} dataset - The chart dataset to assign an axis to
+ * @param {Object} scales - The scales configuration object for the chart
+ * @param {string} axis - The default axis to use
+ * @param {Array} formats - Array of format specifications
+ * @description Examines the dataset and format specifications to determine
+ * the appropriate axis for the dataset, with format specifications taking precedence.
+ * This function will be called assuming a unit axis is specified.
  */
 function ChartSeriesAxis(dataset, scales, axis, formats) {
     console.log('CSA ' + dataset['id']);
@@ -294,7 +307,14 @@ function ChartSeriesAxis(dataset, scales, axis, formats) {
     }
 }
 
-// from https://medium.com/@abbas.ashraf19/8-best-methods-for-merging-nested-objects-in-javascript-ff3c813016d9
+/**
+ * Recursively merges two objects, including nested objects
+ * @param {Object} obj1 - The target object to merge into
+ * @param {Object} obj2 - The source object to merge from
+ * @returns {Object} The merged object (obj1 modified in place)
+ * @description Performs a deep merge of obj2 into obj1, recursively handling nested objects.
+ * Source: https://medium.com/@abbas.ashraf19/8-best-methods-for-merging-nested-objects-in-javascript-ff3c813016d9
+ */
 function deepMerge(obj1, obj2) {
     for (let key in obj2) {
         if (obj2.hasOwnProperty(key)) {
@@ -308,6 +328,12 @@ function deepMerge(obj1, obj2) {
     return obj1;
 }
 
+/**
+ * Mapping of axis type names to Chart.js axis types
+ * @type {Object.<string, string>}
+ * @description Maps user-friendly or application-specific axis type names
+ * to the corresponding Chart.js axis type values
+ */
 const axis_type_map = {
     'linear': 'linear',
     'logarithmic': 'logarithmic',
@@ -318,6 +344,12 @@ const axis_type_map = {
     'category_bulk': 'category',
 }
 
+/**
+ * Mapping of chart type names to Chart.js chart types
+ * @type {Object.<string, string>}
+ * @description Maps user-friendly or application-specific chart type names
+ * to the corresponding Chart.js chart type values
+ */
 const chart_type_map = {
     'Line': 'line',
     'Bar': 'bar',
@@ -329,6 +361,15 @@ const chart_type_map = {
     'Scatter': 'scatter',
 }
 
+/**
+ * Creates a Chart.js chart with the provided data and configuration
+ * @param {string} chart_id - ID of the HTML element where the chart will be rendered
+ * @param {Object} chart_data - Object containing chart data and configuration
+ * @param {Object} chart_data.data - The data to be visualized
+ * @param {Object} chart_data.chart - Configuration options for the chart
+ * @description Processes the provided data and configuration to create a Chart.js
+ * visualization with appropriate scales, datasets, and formatting
+ */
 function bChart(chart_id, chart_data) {
     var data = chart_data['data'];
     var config = chart_data['chart'];

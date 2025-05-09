@@ -1,3 +1,16 @@
+/**
+ * Clarama Enable Interactions JS - Central initialization for interactive elements
+ * @fileoverview This file provides the central function for initializing all
+ * interactive elements within a container, including editors, dropdowns, fields,
+ * and embedded content.
+ */
+
+/**
+ * Initializes all interactive elements within a container
+ * @param {jQuery} parent - jQuery object representing the container element
+ * @description Sets up event handlers and behaviors for various types of elements
+ * including dropdowns, editors, fields, task controls, and embedded content
+ */
 function enable_interactions(parent) {
     // console.log('initialising interactions on ' + parent.attr('id') + ':' + parent.attr("class") );
 
