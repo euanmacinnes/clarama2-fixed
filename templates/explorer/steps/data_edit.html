@@ -189,30 +189,45 @@
                             <option {{ selected("Bottom",legend) }}>Bottom</option>
                         </select>
                     </div>
-                    <label for="xaxis{{ loop_index }}" class="form-label">X-Axis</label>
-                    <div class="col">
-                        {% set xaxis = 'category' %}
-                        {% if chart is defined %}
-                            {% set xaxis = chart['xaxis-type'] %}
-                        {% endif %}
-                        <select id="xaxis{{ loop_index }}" class="form-control chart-xaxis-type">
-                            <option value="category" {{ selected("category",xaxis) }}>Category (X will convert to
-                                string. Series will be contiguous)
-                            </option>
-                            <option value="category_grouped" {{ selected("category_grouped",xaxis) }}>Category Grouped
-                                (ordered but repeated series names if not sorted)
-                            </option>
-                            <option value="category_bulk" {{ selected("category_bulk",xaxis) }}>Category Bulk (gaps in
-                                data will be skipped)
-                            </option>
-                            <option value="linear" {{ selected("linear",xaxis) }}>Linear (X must be numeric)
-                            </option>
-                            <option value="time" {{ selected("time",xaxis) }}>Time (X must be datetime)</option>
-                            <option value="logarithmic" {{ selected("logarithmic",xaxis) }}>Logarithmic (X must be
-                                numeric)
-                            </option>
-                        </select>
-                    </div>
+
+                    <button type="button" class="btn btn-primary ms-3" data-bs-toggle="collapse" href="#chartYamlEditor" role="button" aria-expanded="false" aria-controls="chartYamlEditor">Advance</button>
+                </div>
+            </div>
+
+            <div class="container-fluid mb-2 collapse" id="chartYamlEditor">
+                <div id="content_query_{{ loop_index }}"
+                    name="task_step_field_{{ loop_index }}"
+                    editor="yaml"
+                    class="source-editor form-control clarama-field-editor"
+                    celltype="code"
+                    style="min-height: 100px">{{ content }}
+                </div>
+            </div>
+            
+            <div class="container-fluid">
+                <label for="xaxis{{ loop_index }}" class="form-label p-0 mb-2">X-Axis</label>
+                <div class="col">
+                    {% set xaxis = 'category' %}
+                    {% if chart is defined %}
+                        {% set xaxis = chart['xaxis-type'] %}
+                    {% endif %}
+                    <select id="xaxis{{ loop_index }}" class="form-control chart-xaxis-type">
+                        <option value="category" {{ selected("category",xaxis) }}>Category (X will convert to
+                            string. Series will be contiguous)
+                        </option>
+                        <option value="category_grouped" {{ selected("category_grouped",xaxis) }}>Category Grouped
+                            (ordered but repeated series names if not sorted)
+                        </option>
+                        <option value="category_bulk" {{ selected("category_bulk",xaxis) }}>Category Bulk (gaps in
+                            data will be skipped)
+                        </option>
+                        <option value="linear" {{ selected("linear",xaxis) }}>Linear (X must be numeric)
+                        </option>
+                        <option value="time" {{ selected("time",xaxis) }}>Time (X must be datetime)</option>
+                        <option value="logarithmic" {{ selected("logarithmic",xaxis) }}>Logarithmic (X must be
+                            numeric)
+                        </option>
+                    </select>
                 </div>
             </div>
 
@@ -226,7 +241,7 @@
                     {% set seriesformats = [{}] %}
                     {% set seriesannotations = [{}] %}
                 {% endif %}
-                <label for="sg{{ loop_index }}" class="form-label mb-2">
+                <label for="sg{{ loop_index }}" class="form-label mb-2"><br/>
                     Series Groups
                     <i id="addSG{{ loop_index }}" class="bi bi-plus-circle ms-1 data-cell-icon-hover add"></i>
                 </label>
