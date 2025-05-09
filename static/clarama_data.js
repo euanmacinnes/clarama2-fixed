@@ -59,6 +59,14 @@ function bTable(table_id, table_data) {
     });
 }
 
+/**
+ * Applies formatting to a chart dataset based on provided format specifications
+ * @param {Object} dataset - The chart dataset to format
+ * @param {Array} formats - Array of format specifications
+ * @returns {Object} The formatted dataset
+ * @description Applies visual formatting (colors, line styles, point styles, etc.)
+ * to a chart dataset based on matching format specifications
+ */
 function ChartSeriesFormat(dataset, formats) {
     console.log('CSF ' + dataset['id']);
     if (formats === undefined) {
@@ -151,10 +159,21 @@ function ChartSeriesFormat(dataset, formats) {
     return dataset;
 }
 
+/**
+ * Checks if a number is even
+ * @param {number} n - The number to check
+ * @returns {boolean} True if the number is even, false otherwise
+ */
 function isEven(n) {
     return n % 2 === 0;
 }
 
+/**
+ * Extends Array prototype to add an insert method
+ * @param {number} index - The index at which to insert items
+ * @param {...*} items - The items to insert
+ * @description Inserts items at the specified index without removing any elements
+ */
 Array.prototype.insert = function (index, ...items) {
     this.splice(index, 0, ...items);
 };
