@@ -13,6 +13,7 @@ Clarama:
     # Internal, called by the Web service. Configure a zone of clarama.local with an A record for primary in the local DNS to reroute
     Data: "http://c2.local:5001/data/"
     Explorer: "http://c2.local:5002/explorer/"
+    Mount: "http://c2.local:5002/" # The default (root) mount for all the file content, without the api path, just the domain. /api/mount will be added automatically
     Jobs: "http://c2.local:5003/jobs/"
     Gitinsights: "http://c2.local:5004/version/git/"
     Environments: "http://c2.local:5005/environments/"
