@@ -44,6 +44,7 @@
             {% endif %}
             <div id="grid_element_target-{{ target }}">
                 {% for link in elements[target]['links'] %}
+                    {% set loop_index = loop.index-1 %}
                     {% if link.element is defined %}
                         {% set current_element = link.element %}
                         {% set current_element_url = link.url %}

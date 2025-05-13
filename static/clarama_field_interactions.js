@@ -44,7 +44,11 @@ function perform_interact(field, args = {}) {
             //flash(element + ' links to ' + links);
             for (const link of links) {
                 if (typeof link === 'string' || (typeof link === 'object' && link.element !== "popup" && link.element !== "modal")) {
-                    linked_element = grid.find('#' + link);
+                    if (typeof link === 'object') 
+                        linked_element = grid.find('#' + link.element)
+                    else 
+                        linked_element = grid.find('#' + link)
+
                     linked_type = linked_element.attr("element-type");
                     // console.log("Linking " + link + '->' + linked_type);
                     switch (linked_type) {
