@@ -2,42 +2,56 @@
     {% set sgroup = {"series-type" : "Line"} %}
 {% endif %}
 <li class="chart-series-groups">
-    <div class="list-group-item d-flex align-items-center">
-        <i class="bi bi-grip-vertical draggable-heading pe-3" draggable="true"></i>
-        <select id="sg{{ loop_index }}" class="form-control series-type">
-            <option {{ selected("Line",sgroup['series-type']) }}>Line</option>
-            <option {{ selected("Scatter",sgroup['series-type']) }}>Scatter</option>
-            <option {{ selected("Bubble",sgroup['series-type']) }}>Bubble</option>
-            <option {{ selected("Bar",sgroup['series-type']) }}>Bar</option>
-            <option {{ selected("Doughnut",sgroup['series-type']) }}>Doughnut</option>
-            <option {{ selected("Pie",sgroup['series-type']) }}>Pie</option>
-            <option {{ selected("Polar Area",sgroup['series-type']) }}>Polar Area</option>
-            <option {{ selected("Radar",sgroup['series-type']) }}>Radar</option>
-        </select>
-        <label for="x{{ loop_index }}" class="form-label">X Axis</label>
-        <input type="string" class="form-control series-x" id="x{{ loop_index }}" name="x"
-               value="{{ sgroup['series-x'] }}">
-        <label for="y{{ loop_index }}" class="form-label">Y Axis</label>
-        <input type="string" class="form-control series-y" id="y{{ loop_index }}" name="y"
-               value="{{ sgroup['series-y'] }}">
-        <label for="z{{ loop_index }}" class="form-label">Z Axis</label>
-        <input type="string" class="form-control series-z" id="z{{ loop_index }}" name="z"
-               value="{{ sgroup['series-z'] }}">
-        <label for="ymin{{ loop_index }}" class="form-label">Y Min Axis</label>
-        <input type="string" class="form-control series-ymin" id="ymin{{ loop_index }}" name="ymin"
-               value="{{ sgroup['series-ymin'] }}">
-        <label for="ymax{{ loop_index }}" class="form-label">Y Max Axis</label>
-        <input type="string" class="form-control series-ymax" id="ymax{{ loop_index }}" name="ymax"
-               value="{{ sgroup['series-ymax'] }}">
-        <label for="s{{ loop_index }}" class="form-label">Series Axis</label>
-        <input type="string" class="form-control series-s" id="s{{ loop_index }}" name="s"
-               value="{{ sgroup['series-s'] }}">
-        <label for="u{{ loop_index }}" class="form-label">Unit Axis</label>
-        <input type="string" class="form-control series-u" id="u{{ loop_index }}" name="u"
-               value="{{ sgroup['series-u'] }}">
-        <label for="l{{ loop_index }}" class="form-label">Label Axis</label>
-        <input type="string" class="form-control series-l" id="l{{ loop_index }}" name="l"
-               value="{{ sgroup['series-l'] }}">
-        <i class="bi bi-trash ps-3 cell-delete-series-group data-cell-icon-hover remove"></i>
+    <div class="list-group-item d-flex flex-row flex-wrap justify-content-evenly">
+        <div class="p-0">
+            <i class="bi bi-grip-vertical draggable-heading pe-3" draggable="true"></i>
+        </div>
+        <div class="p-0">
+            <select id="sg{{ loop_index }}" class="form-control series-type">
+                <option {{ selected("Line",sgroup['series-type']) }}>Line</option>
+                <option {{ selected("Scatter",sgroup['series-type']) }}>Scatter</option>
+                <option {{ selected("Bubble",sgroup['series-type']) }}>Bubble</option>
+                <option {{ selected("Bar",sgroup['series-type']) }}>Bar</option>
+                <option {{ selected("Doughnut",sgroup['series-type']) }}>Doughnut</option>
+                <option {{ selected("Pie",sgroup['series-type']) }}>Pie</option>
+                <option {{ selected("Polar Area",sgroup['series-type']) }}>Polar Area</option>
+                <option {{ selected("Radar",sgroup['series-type']) }}>Radar</option>
+            </select>
+        </div>
+        <div class="p-0">
+            <input type="string" class="form-control series-x" id="x{{ loop_index }}" name="x"
+                   value="{{ sgroup['series-x'] }}">
+        </div>
+        <div class="p-0">
+            <input type="string" class="form-control series-y" id="y{{ loop_index }}" name="y"
+                   value="{{ sgroup['series-y'] }}">
+        </div>
+        <div class="p-0">
+            <input type="string" class="form-control series-z" id="z{{ loop_index }}" name="z"
+                   value="{{ sgroup['series-z'] }}">
+        </div>
+        <div class="p-0">
+            <input type="string" class="form-control series-ymin" id="ymin{{ loop_index }}" name="ymin"
+                   value="{{ sgroup['series-ymin'] }}">
+        </div>
+        <div class="p-0">
+            <input type="string" class="form-control series-ymax" id="ymax{{ loop_index }}" name="ymax"
+                   value="{{ sgroup['series-ymax'] }}">
+        </div>
+        <div class="p-0">
+            <input type="string" class="form-control series-s" id="s{{ loop_index }}" name="s"
+                   value="{{ sgroup['series-s'] }}">
+        </div>
+        <div class="p-0">
+            <input type="string" class="form-control series-u" id="u{{ loop_index }}" name="u"
+                   value="{{ sgroup['series-u'] }}">
+        </div>
+        <div class="p-0">
+            <input type="string" class="form-control series-l" id="l{{ loop_index }}" name="l"
+                   value="{{ sgroup['series-l'] }}">
+        </div>
+        <div class="p-0">
+            <i class="bi bi-trash ps-3 cell-delete-series-group data-cell-icon-hover remove"></i>
+        </div>
     </div>
 </li>

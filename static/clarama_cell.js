@@ -1,5 +1,16 @@
 //  Copyright (c) 2024. Euan Duncan Macinnes, euan.d.macinnes@gmail.com, S7479622B - All Rights Reserved
 
+/**
+ * Clarama Cell JS - Functions for handling different types of cells in the Clarama interface
+ * @fileoverview This file provides functions to extract and process data from various
+ * cell types (code, data, text, notification, source, URL, shell).
+ */
+
+/**
+ * Extracts data from a code cell
+ * @param {jQuery} cell - jQuery object representing the code cell
+ * @returns {Object} Object containing the cell type and code content
+ */
 function get_code_cell(cell) {
     var id = cell.attr('id')
     var editor = ace.edit(id);
@@ -10,6 +21,11 @@ function get_code_cell(cell) {
     return {"type": "code", "content": code};
 }
 
+/**
+ * Extracts data from a data cell including table and chart configurations
+ * @param {jQuery} cell - jQuery object representing the data cell
+ * @returns {Object} Object containing the cell type, source, output, table and chart configurations, and code content
+ */
 function get_data_cell(cell) {
     var dataid = cell.attr('dataid');
 
@@ -118,12 +134,22 @@ function get_data_cell(cell) {
     };
 }
 
+/**
+ * Extracts data from a text/markdown cell
+ * @param {jQuery} cell - jQuery object representing the text cell
+ * @returns {Object} Object containing the cell type and markdown content
+ */
 function get_text_cell(cell) {
     var myContent = cell.trumbowyg('html');
     console.log("Getting text " + myContent);
     return {"type": "markdown", "content": myContent};
 }
 
+/**
+ * Extracts data from a notification cell
+ * @param {jQuery} cell - jQuery object representing the notification cell
+ * @returns {Object} Object containing the cell type, message content, and targets
+ */
 function get_notification_cell(cell) {
     var dataid = cell.attr('dataid');
 
@@ -151,6 +177,11 @@ function get_notification_cell(cell) {
     };
 }
 
+/**
+ * Extracts data from a source cell
+ * @param {jQuery} cell - jQuery object representing the source cell
+ * @returns {Object} Object containing the cell type and source information
+ */
 function get_source_cell(cell) {
     var dataid = cell.attr('dataid');
 
@@ -167,6 +198,11 @@ function get_source_cell(cell) {
     };
 }
 
+/**
+ * Extracts data from a URL cell
+ * @param {jQuery} cell - jQuery object representing the URL cell
+ * @returns {Object} Object containing the cell type, mode, URL, and parameters
+ */
 function get_url_cell(cell) {
     var dataid = cell.attr('dataid');
 
@@ -185,6 +221,11 @@ function get_url_cell(cell) {
     };
 }
 
+/**
+ * Extracts data from a shell cell
+ * @param {jQuery} cell - jQuery object representing the shell cell
+ * @returns {Object} Object containing the cell type and shell command content
+ */
 function get_shell_cell(cell) {
     var id = cell.attr('id')
     var editor = ace.edit(id);
@@ -197,7 +238,10 @@ function get_shell_cell(cell) {
 
 
 /**
- * Call the specific get_<cell step>_cell function that will extract the entire cell information
+ * Calls the specific get_<cell_type>_cell function to extract the entire cell information
+ * @param {jQuery} cell - jQuery object representing the cell
+ * @returns {Object} Object containing all cell data based on its type
+ * @description Dynamically calls the appropriate getter function based on the cell's type attribute
  */
 function get_cell_values(cell) {
     var cell_type = cell.attr("celltype");
@@ -208,6 +252,14 @@ function get_cell_values(cell) {
     return cell_data;
 }
 
+/**
+ * Extracts data from all cells within a container
+ * @param {jQuery} cell_owner - jQuery object representing the container of cells
+ * @param {string} topic - Topic/step identifier to associate with the cells
+ * @returns {Array} Array of objects containing data from all cells in the container
+ * @description Iterates through all cells in the container, extracts their values,
+ * and adds common properties like loop-iterable and topic/step.
+ */
 function get_cell(cell_owner, topic) {
     var owner_cells = [];
 

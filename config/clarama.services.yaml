@@ -8,20 +8,21 @@ Clarama:
     Websocket_Dynamic: False # Auto-generate the websocket address from the inbound address.
     Instance: demo
     # External
-    Web: "http://c2.local:5000/"  # the deployment config will update this with either HTTPS or HTTP and the public domain name
-    Messenger_WS: "ws://c2.local:5006/ws/"  # For receiving notifications. the deployment config will update this with either HTTPS or HTTP and the public domain name
+    Web: "http://127.0.0.1:5000/"  # the deployment config will update this with either HTTPS or HTTP and the public domain name
+    Messenger_WS: "ws://127.0.0.1:5006/ws/"  # For receiving notifications. the deployment config will update this with either HTTPS or HTTP and the public domain name
     # Internal, called by the Web service. Configure a zone of clarama.local with an A record for primary in the local DNS to reroute
-    Data: "http://c2.local:5001/data/"
-    Explorer: "http://c2.local:5002/explorer/"
-    Jobs: "http://c2.local:5003/jobs/"
-    Gitinsights: "http://c2.local:5004/version/git/"
-    Environments: "http://c2.local:5005/environments/"
-    Messenger: "http://c2.local:5006/"  # For registration and publishing
-    AccessControl: "http://c2.local:5008/accesscontrol/"
-    Scheduler: "http://c2.local:5007/scheduler/"
-    Runners: "http://c2.local:5009/runners/"
-    Compiler: "http://c2.local:5010/compiler/fetch/files/dynamic/content/"
-    Config: "http://c2.local:5010/compiler/config/files/dynamic/content/"
+    Data: "http://127.0.0.1:5001/data/"
+    Explorer: "http://127.0.0.1:5000/explorer/"
+    Mount: "http://127.0.0.1:5000/" # The default (root) mount for all the file content, without the api path, just the domain. /api/mount will be added automatically
+    Jobs: "http://127.0.0.1:5000/jobs/"
+    Gitinsights: "http://127.0.0.1:5000/version/git/"
+    Environments: "http://127.0.0.1:5000/environments/"
+    Messenger: "http://127.0.0.1:5000/"  # For registration and publishing
+    AccessControl: "http://127.0.0.1:5000/accesscontrol/"
+    Scheduler: "http://127.0.0.1:5007/scheduler/"
+    Runners: "http://127.0.0.1:5000/runners/"
+    Compiler: "http://127.0.0.1:5010/compiler/fetch/files/dynamic/content/"
+    Config: "http://127.0.0.1:5010/compiler/config/files/dynamic/content/"
     Redis: "redis://c2.local:6379/1"
     Postgres: "c2.local:5432/"        # Default database for Jobs, Notifications. Can be replaced with other SQL databases.
     InfluxDB: "http://c2.local:8080" # Demo database. Feel free to add your own, replace this. Core Clarama will run without it.

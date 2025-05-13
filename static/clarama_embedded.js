@@ -1,7 +1,21 @@
 //  Copyright (c) 2024. Euan Duncan Macinnes, euan.d.macinnes@gmail.com, S7479622B - All Rights Reserved
 
+/**
+ * Clarama Embedded JS - Functions for dynamic content loading and script execution
+ * @fileoverview This file provides functions for loading HTML content dynamically,
+ * executing scripts within embedded content, and managing AJAX requests for both
+ * GET and POST operations.
+ */
+
 // Running scripting in innerHTML from https://ghinda.net/article/script-tags/
-// runs an array of async functions in sequential order
+/**
+ * Runs an array of async functions in sequential order
+ * @param {Array<Function>} arr - Array of functions to execute sequentially
+ * @param {Function} callback - Callback function to execute after all functions complete
+ * @param {number} [index=0] - Current index in the array (used for recursion)
+ * @description Executes each function in the array, waiting for its callback before
+ * proceeding to the next function. Source: https://ghinda.net/article/script-tags/
+ */
 function seq(arr, callback, index) {
     // first call, without an index
     if (typeof index === 'undefined') {
@@ -22,13 +36,24 @@ function seq(arr, callback, index) {
     }
 }
 
-// trigger DOMContentLoaded
+/**
+ * Triggers a DOMContentLoaded event
+ * @description Creates and dispatches a synthetic DOMContentLoaded event
+ * to notify the document that all scripts have been loaded and executed
+ */
 function scriptsDone() {
     var DOMContentLoadedEvent = document.createEvent('Event')
     DOMContentLoadedEvent.initEvent('DOMContentLoaded', true, true)
     document.dispatchEvent(DOMContentLoadedEvent)
 }
 
+/**
+ * Inserts a script element into the document
+ * @param {HTMLScriptElement} $script - The original script element to process
+ * @param {Function} callback - Function to call after script is loaded or executed
+ * @description Creates a new script element based on the original, either loading
+ * an external script or executing inline script content, then removes the original
+ */
 function insertScript($script, callback) {
     let s = document.createElement('script');
     s.type = 'text/javascript'
@@ -72,6 +97,13 @@ var runScriptTypes = [
     'text/x-javascript'
 ]
 
+/**
+ * Finds and executes all script tags within a container
+ * @param {HTMLElement} $container - The container element to search for scripts
+ * @description Identifies all script tags within the container that have a valid
+ * JavaScript MIME type (or no type attribute), and executes them sequentially
+ * to preserve execution order
+ */
 function runScripts($container) {
     // get scripts tags from a node
     var $scripts = $container.querySelectorAll('script')
@@ -96,6 +128,13 @@ function runScripts($container) {
     seq(runList, scriptsDone)
 }
 
+/**
+ * Loads HTML content from a URL into a specified element
+ * @param {string} url - The URL to fetch HTML content from
+ * @param {jQuery} element - jQuery object representing the element to load content into
+ * @description Fetches HTML content from the specified URL, displays it in the
+ * target element, and executes any scripts contained within the loaded content
+ */
 function loadHTML(url, element) {
     element.html('<p>Loading...</p>');
 
@@ -212,6 +251,14 @@ $.fn.load_post = function (onfinished, args, json) {
     });
 }
 
+/**
+ * Merges URL parameters with additional arguments
+ * @param {string} url - The base URL, possibly containing query parameters
+ * @param {Object} args - Object containing additional parameters to add to the URL
+ * @returns {string} The merged URL with all parameters
+ * @description Parses the URL, adds or updates query parameters from the args object,
+ * and returns the complete URL with the updated query string
+ */
 function merge_url_params(url, args) {
     const url_split = url.split('?');
     const params = new URLSearchParams(url_split[1]);
@@ -225,6 +272,14 @@ function merge_url_params(url, args) {
     return `${url_split[0]}?${params}`;
 }
 
+/**
+ * Merges two dictionaries/objects
+ * @param {Object} a - Source object with properties to copy
+ * @param {Object} b - Target object to copy properties into
+ * @returns {Object} The modified target object (b)
+ * @description Copies all properties from object a into object b,
+ * overwriting any existing properties with the same name
+ */
 function merge_dicts(a, b) {
     for (let arg in a)
         b[arg] = a[arg];
@@ -232,6 +287,13 @@ function merge_dicts(a, b) {
     return b;
 }
 
+/**
+ * Reloads content in an embedded element
+ * @param {jQuery} embedded - jQuery object representing the embedded element to reload
+ * @param {Object} args - Arguments to pass to the reload request
+ * @description Resets the loading state of the element and triggers a reload
+ * using either GET or POST depending on the element's class
+ */
 function reload(embedded, args) {
     console.log("Reloading " + embedded.attr('url') + " with args " + JSON.stringify(args))
     embedded.attr("clarama_loaded", 'false');
@@ -311,6 +373,13 @@ $.fn.load = function (onfinished, args) {
     });
 }
 
+/**
+ * Fetches HTML content from a URL and processes it with a callback
+ * @param {string} clarama_url - The URL to fetch HTML content from (without root)
+ * @param {Function} loaded_event - Callback function to process the loaded HTML
+ * @description Fetches HTML content from the specified URL and passes it to the
+ * provided callback function for processing
+ */
 function get_html(clarama_url, loaded_event) {
     var fetch_url = $CLARAMA_ROOT + clarama_url;
 
@@ -338,6 +407,13 @@ function get_html(clarama_url, loaded_event) {
 
 }
 
+/**
+ * Fetches JSON data from a URL and processes it with a callback
+ * @param {string} clarama_url - The URL to fetch JSON data from (without root)
+ * @param {Function} result - Callback function to process the loaded JSON data
+ * @description Fetches JSON data from the specified URL and passes it to the
+ * provided callback function for processing
+ */
 function get_json(clarama_url, result) {
     var fetch_url = $CLARAMA_ROOT + clarama_url;
 
@@ -363,6 +439,13 @@ function get_json(clarama_url, result) {
         });
 }
 
+/**
+ * Executes a JSON URL and handles the response
+ * @param {string} clarama_url - The URL to fetch JSON data from (without root)
+ * @param {boolean} [reload=false] - Whether to reload the page after execution
+ * @description Fetches JSON data from the specified URL, optionally reloads the page,
+ * and displays a flash message based on the response status
+ */
 function execute_json_url(clarama_url, reload = false) {
     get_json(clarama_url, function (json) {
         console.log("Executed " + clarama_url)
@@ -378,10 +461,22 @@ function execute_json_url(clarama_url, reload = false) {
     })
 }
 
+/**
+ * Event handler for executing a function from an element
+ * @returns {Function} Function that executes the URL from the clicked element
+ * @description Creates a handler function that extracts the URL from the clicked
+ * element and passes it to execute_function
+ */
 function execute_this() {
     execute_function($(this).attr("url"));
 }
 
+/**
+ * jQuery plugin to attach execute_this handler to elements
+ * @returns {jQuery} The jQuery object for chaining
+ * @description Attaches a click event handler to each element in the jQuery collection
+ * that will execute the URL specified in the element's url attribute
+ */
 $.fn.execute = function () {
     return this.each(function () {
             $(this).click(execute_this())

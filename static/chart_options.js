@@ -1,4 +1,16 @@
-/// Tried to do $(this) directly in here, $(this) didn't survive the function call, so it's passed as a parameter instead.
+/**
+ * Chart Options JS - Handles chart color selection and formatting options
+ * @fileoverview This file contains functions for managing chart color selection, 
+ * series groups, and series formatting options.
+ */
+
+/**
+ * Handles custom color selection for chart elements
+ * @param {jQuery} jqthis - jQuery object representing the element
+ * @param {string} variant - Variant suffix for targeting related elements ('-back' or '')
+ * @description Updates the color of the select field based on the selected value.
+ * If 'custom' is selected, triggers the color picker.
+ */
 function chart_colour_select_custom(jqthis, variant) {
     if (jqthis.val() === "custom") {
         // trigger the ellipsis, which triggers color picker
@@ -10,6 +22,13 @@ function chart_colour_select_custom(jqthis, variant) {
     }
 }
 
+/**
+ * Updates the color of the select field during color picking
+ * @param {jQuery} jqthis - jQuery object representing the color picker element
+ * @param {string} variant - Variant suffix for targeting related elements ('-back' or '')
+ * @description Updates the background and text color of the select field in real-time
+ * as the user is picking a color.
+ */
 function pick_colour(jqthis, variant) {
     const color = jqthis.val();
     const selectField = jqthis.siblings(".format-col" + variant);
@@ -17,6 +36,13 @@ function pick_colour(jqthis, variant) {
     selectField.css("color", isDarkColor(color) ? "white" : "black");
 }
 
+/**
+ * Updates the select field with the chosen color and adds it as a new option
+ * @param {jQuery} jqthis - jQuery object representing the color picker element
+ * @param {string} variant - Variant suffix for targeting related elements ('-back' or '')
+ * @description Updates the background and text color of the select field and adds
+ * the selected color as a new option in the dropdown.
+ */
 function update_colour(jqthis, variant) {
     const color = jqthis.val();
     const selectField = jqthis.siblings(".format-col" + variant);
@@ -28,7 +54,12 @@ function update_colour(jqthis, variant) {
     selectField.find("option[value='custom']").before(newOption);
 }
 
-// MAIN INITIALIZE
+/**
+ * Main initialization function for chart options
+ * @param {number} loop_index - Index used to identify specific chart elements
+ * @description Sets up event listeners for color selection, drag and drop functionality,
+ * and buttons for adding series groups and formats.
+ */
 function chart_options_initialize(loop_index) {
     const addSGBtn = document.getElementById("addSG" + loop_index);
     const seriesGrp = document.getElementById("seriesGrp" + loop_index);
@@ -105,15 +136,24 @@ function chart_options_initialize(loop_index) {
     });
 }
 
-// using jquery ui's sortable method to make list items draggable
+/**
+ * Enables drag and drop functionality for series groups
+ * @param {number} loop_index - Index used to identify specific chart elements
+ * @description Uses jQuery UI's sortable method to make series group items draggable
+ * with the draggable-heading as the handle.
+ */
 function dragAndDrop(loop_index) {
     $(`#seriesGrp${loop_index}`).sortable({
         handle: '.draggable-heading' // specifies that entire list item (.draggable-heading) can be used to drag item
     });
 }
 
-// ==== SERIES GROUP ====
-// fn to add a new series group row with a remove btn
+/**
+ * Creates a new series group element
+ * @returns {HTMLElement} A new div element configured for series group
+ * @description Creates a new div element with appropriate classes and URL attribute
+ * for loading a series group template via AJAX.
+ */
 function addSeriesGrp() {
     const newIndex = $(".chart-series-groups").length;
     const newSG = document.createElement("div");
@@ -122,8 +162,12 @@ function addSeriesGrp() {
     return newSG;
 }
 
-// ==== SERIES FORMAT ====
-// fn to add a new series format row with a remove btn
+/**
+ * Creates a new series format element
+ * @returns {HTMLElement} A new div element configured for series format
+ * @description Creates a new div element with appropriate classes and URL attribute
+ * for loading a series format template via AJAX.
+ */
 function addSeriesFormat() {
     const newIndex = $(".chart-series-formats").length;
 
@@ -133,7 +177,13 @@ function addSeriesFormat() {
     return newSF;
 }
 
-// ==== COLOR PICKER ====
+/**
+ * Determines if a color is dark based on its luminance
+ * @param {string} color - Hexadecimal color code (e.g., "#FFFFFF")
+ * @returns {boolean} True if the color is dark, false if it's light
+ * @description Converts hex color to RGB, calculates luminance, and determines
+ * if the color is dark (luminance < 128) or light.
+ */
 function isDarkColor(color) {
     // convert hex color to RGB
     const r = parseInt(color.substr(1, 2), 16);

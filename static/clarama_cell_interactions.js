@@ -1,5 +1,21 @@
+/**
+ * Clarama Cell Interactions JS - Functions for handling user interactions with cells
+ * @fileoverview This file provides functions to handle various interactions with cells
+ * in the Clarama interface, including running cells, inserting and deleting steps,
+ * setting output types, and navigating between cells.
+ */
+
+/** 
+ * Starting ID for new steps
+ * @type {number}
+ */
 var new_step_id = 100000000;
 
+/**
+ * Sets up click handlers for running cells
+ * @param {jQuery} parent - jQuery object representing the parent container
+ * @description Attaches click event handlers to run buttons within cells
+ */
 function cell_edit_run(parent) {
     //console.log("cell-edit-run for " +parent.attr('id') + ':' + parent.attr('class'));
     //console.log(parent.find(".celleditrun"));
@@ -11,6 +27,12 @@ function cell_edit_run(parent) {
     });
 }
 
+/**
+ * Sets up handlers for inserting new steps
+ * @param {jQuery} parent - jQuery object representing the parent container
+ * @description Attaches click event handlers to insert step buttons, handling both
+ * new cell creation and insertion of steps before or after existing cells
+ */
 function cell_insert_step(parent) {
     var cell_button = $(this).closest('.clarama-cell-item');
 
@@ -85,6 +107,12 @@ function cell_insert_step(parent) {
     });
 }
 
+/**
+ * Sets up handlers for deleting steps
+ * @param {jQuery} parent - jQuery object representing the parent container
+ * @description Attaches click event handlers to delete step buttons and
+ * updates the step ordering after deletion
+ */
 function cell_delete_step(parent) {
     parent.find(".delete_step").off('click');
     parent.find(".delete_step").on("click", function () {
@@ -99,6 +127,13 @@ function cell_delete_step(parent) {
     });
 }
 
+/**
+ * Sets the output type for a data cell
+ * @param {string} id_template - Base ID for the data cell elements
+ * @param {string} value - Output type ('table', 'chart', or 'code')
+ * @param {string} Options - ID suffix for the options accordion
+ * @description Updates button states and visibility of options based on the selected output type
+ */
 function datacell_setOutput(id_template, value, Options) {
     $('#' + id_template + '_output').attr('value', value);
 
@@ -150,6 +185,12 @@ function datacell_setOutput(id_template, value, Options) {
     }
 }
 
+/**
+ * Moves focus to the next cell in sequence
+ * @param {jQuery} currentButton - jQuery object representing the current cell's button
+ * @description Finds the next cell based on step number and focuses its editor
+ * at the end of the content
+ */
 function moveToNextCell(currentButton) {
     var currentStep = parseInt(currentButton.attr("step"));
 
