@@ -216,14 +216,14 @@ function process_template(template_id, substitutions, target_div, element_prefix
             });
 
             let target_id = target_div.attr("id") + '.' + target_class
-            //console.log('FINAL TARGET for Template: ' + target_div.attr("id") + '.' + target_class);
+            console.log('FINAL TARGET for Template: ' + target_div.attr("id") + '.' + target_class);
             let target = target_div.find('.' + target_class).first();
 
-            if (target === null)
-                console.log("Error, could not find object #" + target_id + " for template " + full_template_id);
+            if (target === undefined)
+                console.log("Error, could not find class " + target_class + " on object #" + target_div.attr("id") + " for template " + full_template_id);
             else {
                 let final_template = template.replace("<!--", "").replace("-->", "");
-                //console.log("FINAL TEMPLATE " + final_template + " sending to " + target.attributes);
+                console.log("FINAL TEMPLATE " + final_template + " sending to " + target);
                 let $elements = $(final_template);
                 target.append($elements);
                 enable_interactions($elements);
@@ -243,6 +243,34 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
         try {
             if (dict['class'] === "ping") {
                 console.log("ping");
+            }
+
+            if (dict['class'] === "layout") {
+                var cols = dict['values']['width'];
+                var rows = dict['values']['height'];
+                let resulter = "#" + dict['step_id'];
+
+                // Generate table HTML
+                let tableHtml = '<table class="table table-bordered">';
+
+                // Create rows and columns
+                for (let r = 0; r < rows; r++) {
+                    tableHtml += '<tr>';
+                    for (let c = 0; c < cols; c++) {
+                        var cell_class = dict['step_id'] + "_" + c + "_" + r;
+                        tableHtml += '<td width="' + 1 / cols + '" id="' + cell_class + '"><span class="cell-results"></span></td>';
+                    }
+                    tableHtml += '</tr>';
+                }
+                tableHtml += '</table>';
+
+                // Add the table to the resulter
+                let target = $(resulter).find('.cell-results').first();
+                let $elements = $(tableHtml);
+                target.append($elements);
+                //$(resulter).html(tableHtml);
+
+                console.log("CLARAMA_WEBSOCKET.js: Generated layout table with " + cols + " columns and " + rows + " rows");
             }
 
             if (dict['class'] === "template") {
@@ -275,7 +303,8 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
 
             if (dict['class'] === "template_chart") {
                 let resulter = "#" + dict['step_id'];
-                console.log("CLARAMA_WEBSOCKET.js: WEBSOCKET CHART MESSAGE:" + webSocket.url);
+                console.log("CLARAMA_WEBSOCKET.js: WEBSOCKET CHART MESSAGE:" + webSocket.url + " " + dict['step_id']);
+                console.log($(resulter));
                 process_template(dict['type'], dict['values'], $(resulter), element_prefix);
                 // Draw the table ID first, then let's put in the data
                 bChart(dict['values']['chart_id'], dict['results']);

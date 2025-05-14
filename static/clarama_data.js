@@ -184,8 +184,8 @@ Array.prototype.insert = function (index, ...items) {
  * @param {Array} datasets - The collection of datasets to add to
  * @param {Object} dataset - The dataset to add
  * @param {boolean} grouping - Whether to merge with existing datasets of the same name
- * @description If grouping is true and a dataset with the same name exists, 
- * the data will be concatenated. Otherwise, the dataset will be inserted at the 
+ * @description If grouping is true and a dataset with the same name exists,
+ * the data will be concatenated. Otherwise, the dataset will be inserted at the
  * appropriate position or added to the end.
  */
 function push_dataset(name, datasets, dataset, grouping) {
@@ -902,7 +902,7 @@ function bChart(chart_id, chart_data) {
     console.log("FINAL CHART");
     console.log(config);
 
-    var chart_id = "chart_" + chart_id;
+    var chart_id = "c_" + chart_id;
     let chartStatus = Chart.getChart(chart_id); // <canvas> id
     if (chartStatus !== undefined) {
         console.log("Destroying existing chart " + chart_id);
