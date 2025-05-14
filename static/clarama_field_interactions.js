@@ -44,12 +44,18 @@ function perform_interact(field, args = {}) {
             //flash(element + ' links to ' + links);
             for (const link of links) {
                 if (typeof link === 'string' || (typeof link === 'object' && link.element !== "popup" && link.element !== "modal")) {
-                    if (typeof link === 'object') 
-                        linked_element = grid.find('#' + link.element)
-                    else 
-                        linked_element = grid.find('#' + link)
+                    if (typeof link === 'object') {
+                        linked_element = grid.find('#' + link.element);
+                        if (element_array[link.element]['url'] !== link.url) {
+                            linked_type = "changed";
+                        } else {
+                            linked_type = linked_element.attr("element-type");
+                        }
+                    } else {
+                        linked_element = grid.find('#' + link);
+                        linked_type = linked_element.attr("element-type");
+                    }
 
-                    linked_type = linked_element.attr("element-type");
                     // console.log("Linking " + link + '->' + linked_type);
                     switch (linked_type) {
                         case ".task":
@@ -68,6 +74,13 @@ function perform_interact(field, args = {}) {
                                 form_field.empty().trigger('change')
                             }
                             break;
+
+                        case "changed":
+                            linked_element[0].innerHTML = "";
+                            linked_element[0].append(showInteractionContent(link.url));
+                            enable_interactions($(`#${link.element}`));
+                            break;
+
                         default:
                             flash("Don't know how to interact " + linked_type + " - " + link);
                     }
@@ -78,7 +91,14 @@ function perform_interact(field, args = {}) {
                         showPopupNearMouse(url);
                     } else if (element === 'modal') {
                         showModalWithContent(url);
-                    }
+                    } 
+                    // else {
+                    //     const toOverride = document.getElementById(element);
+                    //     console.log("toOverride", toOverride)
+                    //     toOverride.innerHTML = "";
+                    //     toOverride.append(showInteractionContent(url));
+                    //     enable_interactions($(`#${element}`));
+                    // }
                 }
             }
         }

@@ -653,7 +653,7 @@ function delete_element(element) {
     })
   }
 
-  function link_elements(target, linked, should_link = true) {
+  function link_elements(target, linked) {
     if (linked in {{ grid_id }}elements) {
       if (target in {{ grid_id }}elements) {
         var element = {{ grid_id }}elements[target];
@@ -661,19 +661,21 @@ function delete_element(element) {
           element['links'] = [];
         }
 
-        if (should_link) {
-          if (!element['links'].includes(linked)) {
-            element['links'].push(linked);
-          }
-        } else {
-          var index = element['links'].indexOf(linked);
-          if (index !== -1) {
-            element['links'].splice(index, 1);
-          }
+        if (!element['links'].includes(linked)) {
+          element['links'].push({ element: linked, url: {{ grid_id }}elements[linked]['url'] });
         }
 
         flash("linking " + target + " to [" + element['links'] + "]");
       }
+    }
+  }
+
+  function unlink_elements(target, linked, link_index) {
+    if (target in {{ grid_id }}elements) {
+      var element = {{ grid_id }}elements[target];
+      element['links'].splice(link_index, 1);
+
+      flash("unlinking " + target + " to [" + element['links'] + "]");
     }
   }
     // Extract the current directory depth

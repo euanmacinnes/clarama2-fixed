@@ -10,6 +10,6 @@
             data-target="{{ target }}"
             data-url="{{ current_element_url }}"
             onclick="openInteractionSettings(this)" ></i>
-        <i class="bi bi-trash p-0 delete-grid-interaction" onClick="link_elements('{{ target }}','{{ current_element }}', false);"></i>
+        <i class="bi bi-trash p-0 delete-grid-interaction" onClick="unlink_elements('{{ target }}','{{ current_element }}', '{{ loop_index }}');"></i>
     </div>
 </li>
