@@ -90,7 +90,8 @@ function ChartSeriesFormat(dataset, formats) {
                     var re = new RegExp(format['format-nrx']);
                     match = re.test(dataset['id']);
 
-                    console.log("CSF RegEx MATCHED SERIES " + dataset['id'] + " to format " + format['format-nrx']);
+                    if (match)
+                        console.log("CSF RegEx MATCHED SERIES " + dataset['id'] + " to format " + format['format-nrx']);
                     //console.log("RexEx test result: " + dataset['id'] + " vs " + format['format-nrx'] + '=' + match)
                 } catch (e) {
                     alert("RegEx " + format['format-nrx'] + " caused " + e);
@@ -240,7 +241,8 @@ function ChartSeriesAxis(dataset, scales, axis, formats) {
                         var re = new RegExp(format['format-nrx']);
                         match = re.test(dataset['id']);
 
-                        console.log("CSA RegEx MATCHED SERIES " + dataset['id'] + " to format " + format['format-nrx']);
+                        if (match)
+                            console.log("CSA RegEx MATCHED SERIES " + dataset['id'] + " to format " + format['format-nrx']);
 
                         //console.log("RexEx test result: " + dataset['id'] + " vs " + format['format-nrx'] + '=' + match)
                     } catch (e) {
