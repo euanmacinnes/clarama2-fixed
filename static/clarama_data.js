@@ -628,9 +628,10 @@ function bChart(chart_id, chart_data) {
                                     y: yval
                                 }
 
+                                if (label_id >= 0)
+                                    point['text'] = labelaxis[p];
+
                                 b_points.push(point);
-
-
                             }
                         } else {
 
@@ -642,6 +643,9 @@ function bChart(chart_id, chart_data) {
                                     x: xaxis[p],
                                     y: yval
                                 }
+
+                                if (label_id >= 0)
+                                    point['text'] = labelaxis[p];
 
                                 b_points.push(point);
                             }
