@@ -271,14 +271,9 @@
     document.getElementById('interaction-index').value = index;
 
     var inputId_field = document.getElementById('grid-elem');
-    if (!inputId_field.value) {
-      inputId_field.value = url;
-    }
+    inputId_field.value = url;
   
-    // First, uncheck all interactionType checkboxes
     $('input[name="interactionType"]').prop('checked', false);
-  
-    // Then check the one that matches 'type', if provided
     if (type) {
       $(`input[name="interactionType"][value="${type}"]`).prop('checked', true);
     }
