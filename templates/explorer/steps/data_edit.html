@@ -189,22 +189,21 @@
                             <option {{ selected("Bottom",legend) }}>Bottom</option>
                         </select>
                     </div>
-
                     <button type="button" class="btn btn-primary ms-3" data-bs-toggle="collapse" href="#chartYamlEditor" role="button" aria-expanded="false" aria-controls="chartYamlEditor">Advance</button>
                 </div>
             </div>
 
             <div class="container-fluid mb-2 collapse" id="chartYamlEditor">
-                <div id="content_query_{{ loop_index }}"
-                    name="task_step_field_{{ loop_index }}"
+                <div id="content_query_yaml_{{ loop_index }}"
+                    name="task_step_field_yaml_{{ loop_index }}"
                     editor="yaml"
                     class="source-editor form-control clarama-field-editor"
                     celltype="code"
-                    style="min-height: 100px">{{ content }}
+                    style="min-height: 100px">
                 </div>
             </div>
-            
-            <div class="container-fluid">
+
+            <div class="container-fluid my-3">
                 <label for="xaxis{{ loop_index }}" class="form-label p-0 mb-2">X-Axis</label>
                 <div class="col">
                     {% set xaxis = 'category' %}
@@ -241,7 +240,7 @@
                     {% set seriesformats = [{}] %}
                     {% set seriesannotations = [{}] %}
                 {% endif %}
-                <label for="sg{{ loop_index }}" class="form-label mb-2"><br/>
+                <label for="sg{{ loop_index }}" class="form-label mb-2">
                     Series Groups
                     <i id="addSG{{ loop_index }}" class="bi bi-plus-circle ms-1 data-cell-icon-hover add"></i>
                 </label>
@@ -264,7 +263,6 @@
                     {% endwith %}
                 {% endfor %}
             </ul>
-
             <ul id="seriesFormat{{ loop_index }}" class="list-group">
                 <label for="sg{{ loop_index }}" class="form-label mb-2"><br/>
                     Series Formats
