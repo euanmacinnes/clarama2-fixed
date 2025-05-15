@@ -299,5 +299,43 @@
     $(document).ready(() => {
         chart_options_initialize('{{  loop_index }}')
         $('[data-toggle="tooltip"]').tooltip({html: true});
+
+        function updateSeriesFields($selectElem) {
+            const seriesType = $selectElem.val();
+            const fields = ['series-x','series-y','series-z','series-ymin','series-ymax','series-s','series-u','series-l'];
+            
+            // fields to disable based on series type
+            const disableRules = {
+                "Bubble": ['series-ymin', 'series-ymax'],
+                "Line": ['series-z'],
+                "Bar": ['series-z', 'series-y', 'series-ymin', 'series-ymax'],
+                "Scatter": ['series-z'],
+                "Pie": ['series-y', 'series-z', 'series-ymin', 'series-ymax', 'series-s'],
+                "Doughnut": ['series-y', 'series-z', 'series-ymin', 'series-ymax'],
+                "Polar Area": ['series-y', 'series-z', 'series-ymin', 'series-ymax', 'series-s'],
+                "Radar": ['series-y', 'series-z', 'series-ymin', 'series-ymax']
+            };
+    
+            const group = $selectElem.closest('.chart-series-groups');
+    
+            // enable all fields first
+            fields.forEach(function(field) {
+                group.find('input.' + field).prop('disabled', false);
+            });
+    
+            // thn disable fields per rules
+            const toDisable = disableRules[seriesType] || [];
+            toDisable.forEach(function(field) {
+                group.find('input.' + field).prop('disabled', true);
+            });
+        }
+    
+        $('.series-type').each(function () {
+            updateSeriesFields($(this));
+        });
+    
+        $(document).on('change', '.series-type', function () {
+            updateSeriesFields($(this));
+        });
     });
 </script>
