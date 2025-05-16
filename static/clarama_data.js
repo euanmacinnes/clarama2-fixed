@@ -90,7 +90,8 @@ function ChartSeriesFormat(dataset, formats) {
                     var re = new RegExp(format['format-nrx']);
                     match = re.test(dataset['id']);
 
-                    console.log("CSF RegEx MATCHED SERIES " + dataset['id'] + " to format " + format['format-nrx']);
+                    if (match)
+                        console.log("CSF RegEx MATCHED SERIES " + dataset['id'] + " to format " + format['format-nrx']);
                     //console.log("RexEx test result: " + dataset['id'] + " vs " + format['format-nrx'] + '=' + match)
                 } catch (e) {
                     alert("RegEx " + format['format-nrx'] + " caused " + e);
@@ -184,8 +185,8 @@ Array.prototype.insert = function (index, ...items) {
  * @param {Array} datasets - The collection of datasets to add to
  * @param {Object} dataset - The dataset to add
  * @param {boolean} grouping - Whether to merge with existing datasets of the same name
- * @description If grouping is true and a dataset with the same name exists, 
- * the data will be concatenated. Otherwise, the dataset will be inserted at the 
+ * @description If grouping is true and a dataset with the same name exists,
+ * the data will be concatenated. Otherwise, the dataset will be inserted at the
  * appropriate position or added to the end.
  */
 function push_dataset(name, datasets, dataset, grouping) {
@@ -240,7 +241,8 @@ function ChartSeriesAxis(dataset, scales, axis, formats) {
                         var re = new RegExp(format['format-nrx']);
                         match = re.test(dataset['id']);
 
-                        console.log("CSA RegEx MATCHED SERIES " + dataset['id'] + " to format " + format['format-nrx']);
+                        if (match)
+                            console.log("CSA RegEx MATCHED SERIES " + dataset['id'] + " to format " + format['format-nrx']);
 
                         //console.log("RexEx test result: " + dataset['id'] + " vs " + format['format-nrx'] + '=' + match)
                     } catch (e) {
@@ -626,9 +628,10 @@ function bChart(chart_id, chart_data) {
                                     y: yval
                                 }
 
+                                if (label_id >= 0)
+                                    point['text'] = labelaxis[p];
+
                                 b_points.push(point);
-
-
                             }
                         } else {
 
@@ -640,6 +643,9 @@ function bChart(chart_id, chart_data) {
                                     x: xaxis[p],
                                     y: yval
                                 }
+
+                                if (label_id >= 0)
+                                    point['text'] = labelaxis[p];
 
                                 b_points.push(point);
                             }
@@ -902,7 +908,7 @@ function bChart(chart_id, chart_data) {
     console.log("FINAL CHART");
     console.log(config);
 
-    var chart_id = "chart_" + chart_id;
+    var chart_id = "c_" + chart_id;
     let chartStatus = Chart.getChart(chart_id); // <canvas> id
     if (chartStatus !== undefined) {
         console.log("Destroying existing chart " + chart_id);
