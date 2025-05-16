@@ -68,7 +68,7 @@ Clarama:
       .access.yaml: [ 'raw','versioning', 'issues' ]
       .html: [ 'explore','raw','versioning', 'issues' ]
       .json: [ 'raw','versioning', 'issues' ]
-      .md: [ 'explore','raw','versioning', 'issues' ]
+      .md: [ 'explore','edit','raw','versioning', 'issues' ]
       .csv: [ 'explore','raw','versioning', 'issues' ]
       .tsv: [ 'explore','raw','versioning', 'issues' ]
       .task: [ 'raw','versioning', 'issues' ]
