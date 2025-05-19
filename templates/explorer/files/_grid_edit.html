@@ -11,6 +11,8 @@
           </ol>
         </nav>
 
+        <!-- <button type="button" class="btn btn-primary" onclick="add_selected_content('')">Add Empty Grid</button> -->
+
         <div class="d-flex align-items-center w-100">
           <p class="mb-1 pe-2">New: </p>
           <button id="new_1" type="button" class="btn toggle_show hoverover"
@@ -159,95 +161,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="interactionModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Interaction</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="interactionModalBody">
-        <!-- <div id="interactionModalBodyContent" class="col clarama-element clarama-post-embedded clarama-edit-element slate-panel-target tight" url="" autorun="true">
-        </div> -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="interactionPopup">
-  <!-- <div id="interactionPopupContent" class="col clarama-element clarama-post-embedded clarama-edit-element slate-panel-target tight" url="" autorun="true">
-  </div> -->
-</div>
-
 <script type="text/javascript">
-  let lastMouseEvent = null;
-  var currentModalAddContentPath = "";
-
-  // Track mouse for popup positioning
-  document.addEventListener('mousemove', function (e) {
-    lastMouseEvent = e;
-  });
-
-  function showModalWithContent(url) {
-    $('#interactionModal').modal('show');
-    const iModal = document.getElementById("interactionModalBody");
-    iModal.innerHTML = '';
-    iModal.append(showInteractionContent(url));
-    // showInteractionContent(url, 'interactionModalBodyContent');
-    enable_interactions($("#interactionModalBody"));
-  }
-
-  function showPopupNearMouse(url) {
-    const ipopup = document.getElementById('interactionPopup');
-    console.log("ipopup", ipopup)
-    
-    if (lastMouseEvent) {
-      ipopup.style.left = (lastMouseEvent.pageX) + 'px';
-      ipopup.style.top = (lastMouseEvent.pageY -150) + 'px';
-    }
-    ipopup.style.display = 'block';
-
-    ipopup.innerHTML = '';
-    ipopup.append(showInteractionContent(url));
-    // showInteractionContent(url, 'interactionPopupContent');
-    enable_interactions($("#interactionPopup"));
-
-    document.addEventListener('click', function hideOnClick(e) {
-      if (!ipopup.contains(e.target)) {
-        ipopup.style.display = 'none';
-        document.removeEventListener('click', hideOnClick);
-      }
-    });
-  }
-
-  function showInteractionContent(relativeP) {
-    console.log("inside showinteractioncontent fn");
-    
-    let currentP = ($CLARAMA_ROOT + '/render/popup/{{ file_url | path }}');
-
-    let currentSegments = currentP.split('/');
-    let relativeSegments = relativeP.split('/');
-    for (let segment of relativeSegments) {
-      if (segment === '..') {
-        currentSegments.pop(); // Move up one directory
-      } else if (segment !== '.' && segment !== '') {
-        currentSegments.push(segment); // Move into subdirectory
-      }
-    }
-
-    let ICurl = $CLARAMA_ROOT + currentSegments.join('/'); 
-    console.log("ICurl", ICurl)
-    // document.getElementById(displayContentID).setAttribute("url", ICurl);
-
-    const newIC = document.createElement("div");
-    newIC.className = "clarama-embedded";
-    newIC.setAttribute("url", `${ICurl}`);
-    return newIC;
-  }
-
   function isDict(v) {
     return typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
   }
@@ -460,22 +374,39 @@
     $('.clarama-post-embedded').load();
   }
 
-function delete_element(element) {
-      delete {{ grid_id }}elements[element];
+  // function add_blank_content(element) {
+  //   {{ grid_id }}grid.addWidget({
+  //     x: 0,
+  //     y: 0,
+  //     w: 4,
+  //     h: 1,
+  //     id: element,
+  //     content: '',
+  //     cellHeight: 65,
+  //     margin: 5,
+  //     minRow: 1, // don't collapse when empty
+  //     acceptWidgets: true,
+  //     removable: '.trash'
+  //   })
 
-      gs_element = $('.grid-stack-item');
-      console.log(gs_element);
-      let remove = undefined;
+  //   $('.clarama-post-embedded').load();
+  // }
+
+  function delete_element(element) {
+    delete {{ grid_id }}elements[element];
+
+    gs_element = $('.grid-stack-item');
+    console.log(gs_element);
+    let remove = undefined;
 
     gs_element.each(function() {
-        if ($(this).attr("gs-id") === element)
-           remove = $(this);
+      if ($(this).attr("gs-id") === element)
+        remove = $(this);
     })
 
-      console.log(remove);
+    console.log(remove);
     remove.remove();
-}
-
+  }
 
   function saveGrid() {
     savedgrid = {{ grid_id }}grid.save(false, true);
@@ -530,27 +461,31 @@ function delete_element(element) {
 
       console.log(slate_data)
 
-      $.ajax({
-        type: 'POST',
-        url: element_render_url + "?element=" + element,
-        datatype: "html",
-        contentType: 'application/json',
-        data: JSON.stringify(slate_data),
-        success: function (data) {
-          if (data['data'] == 'ok') {
-            addContent(element, new_element_data, data['results']);
-          } else {
-            console.log('Submission was successful.');
+      // if (element_render_url === '') {
+      //   add_blank_content(element);
+      // } else {
+        $.ajax({
+          type: 'POST',
+          url: element_render_url + "?element=" + element,
+          datatype: "html",
+          contentType: 'application/json',
+          data: JSON.stringify(slate_data),
+          success: function (data) {
+            if (data['data'] == 'ok') {
+              addContent(element, new_element_data, data['results']);
+            } else {
+              console.log('Submission was not successful.');
+              console.log(data);
+              flash("Couldn't save content: " + data['error']);
+            }
+          },
+          error: function (data) {
+            console.log('An error occurred.');
             console.log(data);
-            flash("Couldn't save content: " + data['error']);
+            flash("Couldn't render element content, access denied", "danger");
           }
-        },
-        error: function (data) {
-          console.log('An error occurred.');
-          console.log(data);
-          flash("Couldn't render element content, access denied", "danger");
-        }
-      })
+        })
+      // }
       
       // $("#addfieldModal").modal('hide');
     }

@@ -14,7 +14,7 @@
                                     <div class="container-fluid">
                                         <div id="results_{{ loop.index }}" class="cell-results">
                                             <ul class="row" style="list-style-type: none; padding: 0px;">
-                                                {% include "explorer/files/_fields_readonly_task.html" %}
+                                                {% include "explorer/files/_fields_popup_task.html" %}
                                             </ul>
                                         </div>
                                     </div>
@@ -79,7 +79,8 @@
     }
 </script>
 
-{% include "explorer/files/_grid_explore.html" %}
+{% include "explorer/files/_grid_popup.html" %}
+{% include "explorer/files/_grid_interaction.html" %}
 {% include "explorer/files/task_response_templates.html" %}
 
 {% include "web/file_footer.html" %}
