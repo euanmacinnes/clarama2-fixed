@@ -521,6 +521,16 @@
     $("#browseFileModal").modal('hide');
   }
 
+  function getElementKeyByUrl(obj, currentFileUrl) {
+    for (const [key, value] of Object.entries(obj)) {
+      if (value.url === currentFileUrl) {
+        return key;
+      }
+    }
+    
+    return Object.keys(obj)[0];
+  }
+
   function handle_interaction_settings() {
     const file_url = document.getElementById("grid-elem").value;
     const fileTarget = document.getElementById("interaction-element").value;
@@ -533,11 +543,12 @@
     console.log("elemIndex", elemIndex)
     console.log("checkedType", checkedType);
     
+    console.log({{ grid_id }}elements)
     var element = {{ grid_id }}elements[gridElem];
   
     if (Array.isArray(element.links)) {
       const links = element.links;
-      const current = links[elemIndex];
+      const current = getElementKeyByUrl({{ grid_id }}elements, file_url);
       console.log("current", current)
       if (typeof current === 'string') {
         links[elemIndex] = { element: checkedType ? checkedType : current, url: file_url };

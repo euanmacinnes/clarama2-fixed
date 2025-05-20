@@ -247,3 +247,7 @@
         transform: rotate(360deg);
     }
 }
+
+.select2-container--open .select2-dropdown {
+    z-index: 100000 !important;
+}
