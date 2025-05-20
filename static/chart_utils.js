@@ -1,15 +1,5 @@
 'use strict';
 
-/**
- * Chart Utils JS - Utility functions for chart generation and manipulation
- * @fileoverview This file provides utility functions for generating chart data,
- * handling colors, and creating sample datasets for charts.
- */
-
-/**
- * Global chart color palette
- * @type {Object.<string, string>}
- */
 window.chartColors = {
     red: 'rgb(255, 99, 132)',
     orange: 'rgb(255, 159, 64)',
@@ -46,33 +36,14 @@ window.chartColors = {
         '#58595b',
         '#8549ba'
     ];
-    /**
-     * Samples namespace for chart utilities
-     * @namespace
-     */
     var Samples = global.Samples || (global.Samples = {});
     var Color = global.Color;
-
-    /**
-     * Utility functions for chart generation
-     * @type {Object}
-     */
     Samples.utils = {
-        /**
-         * Sets the random seed for deterministic random number generation
-         * @param {number} seed - The seed value
-         * @description Adapted from http://indiegamr.com/generate-repeatable-random-numbers-in-js/
-         */
+        // Adapted from http://indiegamr.com/generate-repeatable-random-numbers-in-js/
         srand: function(seed) {
             this._seed = seed;
         },
 
-        /**
-         * Generates a random number within a specified range
-         * @param {number} [min=0] - The minimum value (inclusive)
-         * @param {number} [max=1] - The maximum value (exclusive)
-         * @returns {number} A random number between min and max
-         */
         rand: function(min, max) {
             var seed = this._seed;
             min = min === undefined ? 0 : min;
@@ -80,17 +51,6 @@ window.chartColors = {
             this._seed = (seed * 9301 + 49297) % 233280;
             return min + (this._seed / 233280) * (max - min);
         },
-        /**
-         * Generates an array of random numbers based on configuration
-         * @param {Object} [config] - Configuration options
-         * @param {number} [config.min=0] - Minimum value for random numbers
-         * @param {number} [config.max=1] - Maximum value for random numbers
-         * @param {Array} [config.from=[]] - Base values to add randomness to
-         * @param {number} [config.count=8] - Number of values to generate
-         * @param {number} [config.decimals=8] - Number of decimal places
-         * @param {number} [config.continuity=1] - Probability of generating a value (vs null)
-         * @returns {Array} Array of random numbers
-         */
         numbers: function(config) {
             var cfg = config || {};
             var min = cfg.min || 0;
@@ -114,16 +74,6 @@ window.chartColors = {
 
             return data;
         },
-        /**
-         * Generates an array of evenly spaced labels
-         * @param {Object} [config] - Configuration options
-         * @param {number} [config.min=0] - Minimum value
-         * @param {number} [config.max=100] - Maximum value
-         * @param {number} [config.count=8] - Number of labels to generate
-         * @param {number} [config.decimals=8] - Number of decimal places
-         * @param {string} [config.prefix=''] - Prefix for each label
-         * @returns {Array} Array of formatted label strings
-         */
         labels: function(config) {
             var cfg = config || {};
             var min = cfg.min || 0;
@@ -142,14 +92,6 @@ window.chartColors = {
 
             return values;
         },
-        /**
-         * Generates an array of month labels
-         * @param {Object} [config] - Configuration options
-         * @param {number} [config.count=12] - Number of months to generate
-         * @param {number} [config.year=2020] - Starting year
-         * @param {number} [config.section] - Number of characters to include from month name
-         * @returns {Array} Array of month labels with year
-         */
         months: function(config) {
             var cfg = config || {};
             var count = cfg.count || 12;
@@ -166,11 +108,6 @@ window.chartColors = {
 
             return values;
         },
-        /**
-         * Returns a color from the predefined color palette
-         * @param {number} index - Index in the color palette
-         * @returns {string} Hex color code
-         */
         color: function(index) {
             return COLORS[index % COLORS.length];
         },
@@ -179,14 +116,6 @@ window.chartColors = {
         //  var alpha = opacity === undefined ? 0.5 : 1 - opacity;
         //  return ColorO(color).alpha(alpha).rgbString();
         //}
-        /**
-         * Creates a transparent color from RGB values
-         * @param {number} r - Red component (0-255)
-         * @param {number} g - Green component (0-255)
-         * @param {number} b - Blue component (0-255)
-         * @param {number} alpha - Alpha transparency (0-1)
-         * @returns {string} RGBA color string
-         */
         transparentize: function (r, g, b, alpha) {
               const a = (1 - alpha) * 255;
               const calc = x => Math.round((x - a)/alpha);
@@ -196,11 +125,7 @@ window.chartColors = {
 
 
     };
-    /**
-     * Generates a random scaling factor between -100 and 100
-     * @returns {number} A random integer between -100 and 100
-     * @deprecated Use Samples.utils.rand() instead
-     */
+    // DEPRECATED
     window.randomScalingFactor = function() {
         return Math.round(Samples.utils.rand(-100, 100));
     };
