@@ -6,8 +6,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="interactionModalBody">
-          <!-- <div id="interactionModalBodyContent" class="col clarama-element clarama-post-embedded clarama-edit-element slate-panel-target tight" url="" autorun="true">
-          </div> -->
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -17,15 +15,12 @@
 </div>
   
 <div id="interactionPopup">
-    <!-- <div id="interactionPopupContent" class="col clarama-element clarama-post-embedded clarama-edit-element slate-panel-target tight" url="" autorun="true">
-    </div> -->
 </div>
 
 <script type="text/javascript">
     let lastMouseEvent = null;
     var currentModalAddContentPath = "";
   
-    // Track mouse for popup positioning
     document.addEventListener('mousemove', function (e) {
       lastMouseEvent = e;
     });
@@ -41,14 +36,29 @@
   
     function showPopupNearMouse(url) {
       const ipopup = document.getElementById('interactionPopup');
-      console.log("ipopup", ipopup)
+      // console.log("ipopup", ipopup)
       
       if (lastMouseEvent) {
-        ipopup.style.left = (lastMouseEvent.pageX) + 'px';
-        ipopup.style.top = (lastMouseEvent.pageY -150) + 'px';
+        const popupMaxWidthPercent = 43;
+        const viewportWidth = window.innerWidth;
+        const popupMaxWidth = viewportWidth * (popupMaxWidthPercent / 100);
+        const mouseX = lastMouseEvent.pageX;
+        const mouseY = lastMouseEvent.pageY;
+    
+        // If the popup would overflow past the right edge
+        if (mouseX + popupMaxWidth > viewportWidth) {
+          // Align popup from the right instead
+          ipopup.style.left = 'unset';
+          ipopup.style.right = (viewportWidth - mouseX) + 'px';
+        } else {
+          ipopup.style.right = 'unset';
+          ipopup.style.left = mouseX + 'px';
+        }
+    
+        ipopup.style.top = (mouseY - 150) + 'px';
       }
+
       ipopup.style.display = 'block';
-  
       ipopup.innerHTML = '';
       ipopup.append(showInteractionContent(url));
       // showInteractionContent(url, 'interactionPopupContent');
@@ -63,7 +73,7 @@
     }
   
     function showInteractionContent(relativeP) {
-      console.log("inside showinteractioncontent fn");
+      // console.log("inside showinteractioncontent fn");
       let currentP;
       if ('{{ file_url | path }}'[0] === '/') {
         currentP = ($CLARAMA_ROOT + '/render/popup{{ file_url | path }}');
@@ -82,7 +92,7 @@
       }
   
       let ICurl = $CLARAMA_ROOT + currentSegments.join('/'); 
-      console.log("ICurl", ICurl)
+      // console.log("ICurl", ICurl)
       // document.getElementById(displayContentID).setAttribute("url", ICurl);
   
       const newIC = document.createElement("div");

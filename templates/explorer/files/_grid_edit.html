@@ -127,13 +127,16 @@
         <div class="mb-3">
           <label class="form-label d-block">Interaction Type</label>
           <div class="btn-group" role="group" aria-label="Interaction Type">
-            <input type="checkbox" class="btn-check" name="interactionType" id="popupType" autocomplete="off" value="popup">
+            <input type="radio" class="btn-check" name="interactionType" id="elementType" autocomplete="off" value="element">
+            <label class="btn btn-outline-primary" for="elementType">Element</label>
+
+            <input type="radio" class="btn-check" name="interactionType" id="popupType" autocomplete="off" value="popup">
             <label class="btn btn-outline-primary" for="popupType">Popup</label>
              
-            <input type="checkbox" class="btn-check" name="interactionType" id="modalType" autocomplete="off" value="modal">
+            <input type="radio" class="btn-check" name="interactionType" id="modalType" autocomplete="off" value="modal">
             <label class="btn btn-outline-primary" for="modalType">Modal</label>
              
-            <input type="checkbox" class="btn-check" name="interactionType" id="pauseType" autocomplete="off" value="pause">
+            <input type="radio" class="btn-check" name="interactionType" id="pauseType" autocomplete="off" value="pause">
             <label class="btn btn-outline-primary" for="pauseType">Pause</label>
           </div>
         </div>
@@ -175,7 +178,11 @@
 
   function openInteractionSettings(button) {
     document.getElementById('interactionSettingsModal').classList.add('modal-open');
-    const type = button.getAttribute('data-element');
+    var type = button.getAttribute('data-element');
+    const allowedTypes = ['popup', 'modal', 'pause'];
+    if (!allowedTypes.includes(type)) {
+      type = 'element';
+    }
     const target = button.getAttribute('data-target');
     const url = button.getAttribute('data-url');
     const index = button.getAttribute('data-index');
@@ -197,12 +204,12 @@
     browseBtn.setAttribute('gridElem', target);
   }
 
-  $('input[name="interactionType"]').on('change', function () {
-    // if this is being checked, uncheck others
-    if (this.checked) {
-      $('input[name="interactionType"]').not(this).prop('checked', false);
-    }
-  });
+  // $('input[name="interactionType"]').on('change', function () {
+  //   // if this is being checked, uncheck others
+  //   if (this.checked) {
+  //     $('input[name="interactionType"]').not(this).prop('checked', false);
+  //   }
+  // });
 
   $( document ).ready(() => {
     $(".toggle_show").click(function () {
@@ -343,9 +350,9 @@
   }
 
   function addContent(element, data, html) {
-    console.log("element", element)
-    console.log("data", data)
-    console.log("html", html)
+    // console.log("element", element)
+    // console.log("data", data)
+    // console.log("html", html)
     if (isDict({{ grid_id }}elements)) {
       {{ grid_id }}elements[element] = data;
     } else {
@@ -396,7 +403,7 @@
     delete {{ grid_id }}elements[element];
 
     gs_element = $('.grid-stack-item');
-    console.log(gs_element);
+    // console.log(gs_element);
     let remove = undefined;
 
     gs_element.each(function() {
@@ -404,7 +411,7 @@
         remove = $(this);
     })
 
-    console.log(remove);
+    // console.log(remove);
     remove.remove();
   }
 
@@ -536,22 +543,24 @@
     const fileTarget = document.getElementById("interaction-element").value;
     const gridElem = document.getElementById("interaction-target").value;
     const elemIndex = document.getElementById('interaction-index').value;
-    const checkedType = $('input[name="interactionType"]:checked').val(); // undefined if none selected
-    console.log("file_url", file_url);
-    console.log("fileTarget", fileTarget);
-    console.log("gridElem", gridElem);
-    console.log("elemIndex", elemIndex)
-    console.log("checkedType", checkedType);
+    const checkedType = $('input[name="interactionType"]:checked').val();
+    // console.log("file_url", file_url);
+    // console.log("fileTarget", fileTarget);
+    // console.log("gridElem", gridElem);
+    // console.log("elemIndex", elemIndex)
+    // console.log("checkedType", checkedType);
     
-    console.log({{ grid_id }}elements)
+    // console.log({{ grid_id }}elements)
     var element = {{ grid_id }}elements[gridElem];
   
     if (Array.isArray(element.links)) {
       const links = element.links;
       const current = getElementKeyByUrl({{ grid_id }}elements, file_url);
-      console.log("current", current)
+      const elemToStore = checkedType === 'element' ? current : checkedType;
+      // console.log("elemToStore", elemToStore);
+      // console.log("current", current)
       if (typeof current === 'string') {
-        links[elemIndex] = { element: checkedType ? checkedType : current, url: file_url };
+        links[elemIndex] = { element: elemToStore, url: file_url };
       } else if (typeof current === 'object') {
         current.url = file_url;
         current.element = checkedType ? checkedType : current.element;
