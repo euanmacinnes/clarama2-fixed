@@ -64,8 +64,12 @@
   
     function showInteractionContent(relativeP) {
       console.log("inside showinteractioncontent fn");
-      
-      let currentP = ($CLARAMA_ROOT + '/render/popup/{{ file_url | path }}');
+      let currentP;
+      if ('{{ file_url | path }}'[0] === '/') {
+        currentP = ($CLARAMA_ROOT + '/render/popup{{ file_url | path }}');
+      } else {
+        currentP = ($CLARAMA_ROOT + '/render/popup/{{ file_url | path }}');
+      }
   
       let currentSegments = currentP.split('/');
       let relativeSegments = relativeP.split('/');
