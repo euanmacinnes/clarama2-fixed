@@ -44,6 +44,8 @@ Clarama:
       - 'slate.yaml'
       - 'field.yaml'
       - 'config.yaml'
+      - 'locker.yaml'
+      - 'profiles.yaml'
       - 'deploy.yaml'
       - 'locker.yaml'
       - 'yaml'
@@ -63,6 +65,7 @@ Clarama:
       .query.yaml: [ 'raw','versioning', 'issues' ]
       .field.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
       .config.yaml: [ 'raw','versioning', 'issues' ]
+      .profiles.yaml: [ 'raw','versioning', 'issues' ]
       .environment.yaml: [ 'raw','versioning', 'issues' ]
       .deploy.yaml: [ 'raw','versioning', 'issues' ]
       .access.yaml: [ 'raw','versioning', 'issues' ]
@@ -115,6 +118,7 @@ Clarama:
       .group.yaml: bi-people
       .config.yaml: bi-sliders
       .access.yaml: bi-fingerprint
+      .profiles.yaml: bi-highlighter
       .ipynb: bi-journal-richtext
       .jpg: bi-card-image
       .png: bi-card-image
@@ -156,6 +160,7 @@ Clarama:
       .config.yaml: yaml
       .locker.yaml: yaml
       .access.yaml: yaml
+      .profiles.yaml: yaml
     FiletypeNames:
       .csv: Comma-Separated Values
       .tsv: Tab-Separated Values
@@ -175,6 +180,7 @@ Clarama:
       .environment.yaml: Task Environment
       .config.yaml: Configuration
       .access.yaml: Access Control
+      .profiles.yaml: Access Role Profiles
       .jpeg: Jpeg Image
       .jpg: Jpeg Image
       .png: PNG Image
