@@ -26,17 +26,22 @@ function debounce(func, timeout = 500) {
 }
 
 function perform_interact(field, args = {}) {
-    // console.log("Interacting from " + field.attr("id"));
+    console.log("field", field);
+    console.log("Interacting from " + field.attr("id"));
+    console.log("args", args);
     var element = field.parents(".clarama-element").attr('id');
     var grid = field.parents(".grid-stack");
     var grid_id = field.parents(".clarama-element").attr('grid-id');
+    console.log("grid_id", grid_id)
 
     if (grid_id !== undefined) {
         var element_array = eval(grid_id + "elements");
         var eobj = element_array[element];
+        console.log("eobj", eobj)
 
         field_values = merge_dicts(get_field_values(), args);
         console.log(field_values);
+        console.log("grid", grid);
 
         if ('links' in eobj) {
             links = eobj["links"]; // array of file names to refresh
@@ -55,6 +60,7 @@ function perform_interact(field, args = {}) {
                         linked_element = grid.find('#' + link);
                         linked_type = linked_element.attr("element-type");
                     }
+                    console.log("linked_element", linked_element)
 
                     // console.log("Linking " + link + '->' + linked_type);
                     switch (linked_type) {
@@ -90,7 +96,10 @@ function perform_interact(field, args = {}) {
                     if (element === 'popup') {
                         showPopupNearMouse(url);
                     } else if (element === 'modal') {
-                        showModalWithContent(url);
+                        showModalWithContent(url, field_values);
+                        // linked_element = grid.find('#interactionModalContent');
+                        // console.log("linked_element modal", linked_element)
+                        // reload(linked_element, field_values)
                     } 
                     // else {
                     //     const toOverride = document.getElementById(element);
@@ -101,7 +110,13 @@ function perform_interact(field, args = {}) {
                     // }
                 }
             }
-        }
+        } 
+    }
+
+    if (field.length && field.is('table')) {
+        showModalWithContent("/Fields/issues/View%20Add%20Comments.slate.yaml");
+        linked_element = grid.find('#interactionModalContent');
+        reload(linked_element, field_values)
     }
 }
 

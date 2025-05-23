@@ -166,7 +166,7 @@ $.fn.load_post = function (onfinished, args, json) {
 
     return this.each(function () {
         var embedded = $(this);
-        //console.log("POST loading " + embedded.attr("class") + " = " + embedded.attr("url") + JSON.stringify(args));
+        console.log("POST loading " + embedded.attr("class") + " = " + embedded.attr("url") + JSON.stringify(args));
 
         if (embedded.attr("clarama_loaded") !== "true") {
             embedded.html('<div class="d-flex justify-content-center align-items-center"><div class="loading-spinner"></div></div>')
@@ -190,6 +190,7 @@ $.fn.load_post = function (onfinished, args, json) {
 
                     console.log("JSON Payload");
                     console.log(json_payload);
+                    console.log("url", url);
                     const final_url = merge_url_params(url, args);
 
                     fetch($CLARAMA_ROOT + final_url,
@@ -295,6 +296,7 @@ function merge_dicts(a, b) {
  * using either GET or POST depending on the element's class
  */
 function reload(embedded, args) {
+    console.log("embedded", embedded)
     console.log("Reloading " + embedded.attr('url') + " with args " + JSON.stringify(args))
     embedded.attr("clarama_loaded", 'false');
     embedded.attr("autorun", 'true');
@@ -341,10 +343,10 @@ $.fn.load = function (onfinished, args) {
                     fetch($CLARAMA_ROOT + final_url)
                         .then((response) => response.text())
                         .then((html) => {
-                            //console.log('GET Embedded JQuery Loaded ' + $CLARAMA_ROOT + url)
-                            // console.log({ 'html': html })
+                            console.log('GET Embedded JQuery Loaded ' + $CLARAMA_ROOT + url)
+                            console.log({ 'html': html })
                             try {
-                                //console.log(final_url)
+                                console.log(final_url)
                                 embedded.html(html).promise()
                                     .done(function () {
                                         enable_interactions(embedded);
