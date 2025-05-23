@@ -3,7 +3,7 @@
         <b>Exception</b><br/><br/>
         <div class="input-group mb-3">
             <div class="form-floating">
-                <span class="clarama-capitalize" data-bs-toggle="collapse"
+                <span class="clarama-capitalize clarama-error" data-bs-toggle="collapse"
                       data-bs-target="#collapse{instance_content}">{exception_content}</span>
             </div>
             <button class="btn btn-primary mt-0" type="button" data-bs-toggle="collapse"
@@ -23,12 +23,21 @@
 
 <template id="{{ element_prefix }}task_step_error" target_class="cell-results">
     <div class="row alert alert-danger">
-        <div><b>{message_content}</b>
-            <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapse{instance_content}"
-                    aria-expanded="false" aria-controls="collapse{instance_content}">
-                ...
-            </button>
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        <b class="clarama-error">{message_content}</b>
+                    </td>
+                    <td>&nbsp;&nbsp;&nbsp;</td>
+                    <td>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse{instance_content}"
+                                aria-expanded="false" aria-controls="collapse{instance_content}">
+                            ...
+                        </button>
+                    </td>
+            </table>
         </div>
         <div class="collapse" id="collapse{instance_content}">
             <div class="card card-body">
