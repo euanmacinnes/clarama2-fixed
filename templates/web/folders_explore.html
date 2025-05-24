@@ -211,8 +211,7 @@
 
             <div class="col-md-6 col-lg-7">
                 {% if content %}
-                    <div class="card bg-light">
-                        <!--
+                    <!--
                         <nav class="card-header navbar navbar-expand-xl navbar-dark bg-dark">
                             <div class="container-fluid">
                                 <h1 class="navbar-brand">{{ active_content }}</h1>
@@ -225,10 +224,8 @@
                             </div>
                         </nav>
                         -->
-                        <div class="card-body bg-dark text-white help-folder d-flex justify-content-center">
-                            <div class="card-text clarama-embedded" url="/render/embed-plain/{{ content }}"></div>
-                        </div>
-                    </div>
+
+                    <div class="clarama-embedded" url="/render/embed-plain/{{ content }}"></div>
                 {% endif %}
             </div>
         </div>
