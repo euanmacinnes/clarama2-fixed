@@ -5,6 +5,9 @@
 .help h1 {
     font-size: 48px !important;
     font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+    padding-bottom: .2em;
+    border-bottom: 1px solid #d1d9e0b3;
+    border-spacing: 15px;
 }
 
 .help p {
@@ -21,7 +24,7 @@
 
 .help li {
     font-size: 18px !important;
-    color: #888;
+    color: #555;
     font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
     padding: 10px;
 }
@@ -34,21 +37,17 @@
 
 .help code {
     font-size: 20px !important;
-    color: #ee5;
 }
 
 .help pre {
     font-size: 20px !important;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    background-color: #555;
-    border-top-color: #ccc;
-    border-top-style: solid;
-    border-top-width: thin;
-    border-bottom-color: #ccc;
-    border-bottom-style: solid;
-    border-bottom-width: thin;
-    text-indent: 25px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #eee;
+    font-color: #ccf;
+    border-radius: 8px;
 }
 
 .help a {
@@ -60,6 +59,8 @@
 .help-folder h1 {
     font-size: 44px !important;
     font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+    padding-bottom: .2em;
+    border-bottom: 1px solid #d1d9e0b3;
 }
 
 .help-folder p {
@@ -69,7 +70,7 @@
 
 .help-folder li {
     font-size: 16px !important;
-    color: #888;
+    color: #ccc;
     font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
 }
 
@@ -81,21 +82,16 @@
 
 .help-folder code {
     font-size: 20px !important;
-    color: #888;
 }
 
 .help-folder pre {
-    font-size: 22px !important;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    background-color: #eee;
-    border-top-color: #ccc;
-    border-top-style: solid;
-    border-top-width: thin;
-    border-bottom-color: #ccc;
-    border-bottom-style: solid;
-    border-bottom-width: thin;
-    text-indent: 25px;
+    font-size: 20px !important;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #333;
+    border-radius: 8px;
 }
 
 .help-folder a {
