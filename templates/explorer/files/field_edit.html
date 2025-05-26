@@ -1,7 +1,10 @@
 <table>
     <tr class="bg-secondary text-white">
-        <td colspan="2">
+        <td colspan="1">
             <h3 style="padding: 15px;">Field</h3>
+        </td>
+        <td class="text-end" style="padding:10px;">
+            <i id="save" class="fs-3 bi bi-floppy" onclick="save_field();" url="{{ file_url }}"></i>
         </td>
     </tr>
     <tr>
@@ -269,6 +272,52 @@
         $("#preview").attr("url", url);
         $("#preview").attr("clarama_loaded", false)
         $('#preview').load();
+    }
+
+    function save_field() {
+        var editor = ace.edit("data");
+        var code = editor.getValue();
+
+        var field_data = {
+            "type": key,
+            "name": $("#name").val(),
+            "description": $("#description").val(),
+            "placeholder": $("#placeholder").val(),
+            "default": $("#default").val(),
+            "maximum": $("#maximum").val(),
+            "minimum": $("#minimum").val(),
+            "step": $("#step").val(),
+            "spacing": $("#spacing").val(),
+            "data_text": code
+        }
+
+        var url = "/content/save/" + $("#save").attr("url")
+
+        console.log(url);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            datatype: "html",
+            contentType: 'application/json',
+            data: JSON.stringify(field_data),
+            success: function (data) {
+                if (data['data'] == 'ok') {
+                    console.log('Submission was successful.');
+                    console.log(data);
+                    flash("Saved!");
+                } else {
+                    console.log('Submission was successful.');
+                    console.log(data);
+                    flash("Couldn't save content: " + data['error']);
+                }
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                flash("Couldn't save content, access denied", "danger");
+            }
+        });
     }
 </script>
 
