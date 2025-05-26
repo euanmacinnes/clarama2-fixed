@@ -210,23 +210,23 @@
             </div>
 
             <div class="col-md-6 col-lg-7">
-                <div class="card bg-light">
-                    <nav class="card-header navbar navbar-expand-xl navbar-dark bg-dark">
-                        <div class="container-fluid">
-                            <h1 class="navbar-brand">{{ active_content }}</h1>
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#navbarFolder" aria-controls="navbarFolder" aria-expanded="false"
-                                    aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                        </div>
-                    </nav>
-                    {% if content %}
-                        <div class="card-body bg-dark text-white help-folder d-flex justify-content-center">
-                            <div class="card-text">{{ content | safe }}</div>
-                        </div>
-                    {% endif %}
-                </div>
+                {% if content %}
+                    <!--
+                        <nav class="card-header navbar navbar-expand-xl navbar-dark bg-dark">
+                            <div class="container-fluid">
+                                <h1 class="navbar-brand">{{ active_content }}</h1>
+                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#navbarFolder" aria-controls="navbarFolder"
+                                        aria-expanded="false"
+                                        aria-label="Toggle navigation">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                            </div>
+                        </nav>
+                        -->
+
+                    <div class="clarama-embedded" url="/render/embed-plain/{{ content }}"></div>
+                {% endif %}
             </div>
         </div>
     </div>

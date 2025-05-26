@@ -48,6 +48,12 @@ function get_field_values() {
         }
     );
 
+    var original_url = $("#embedded").attr('original_url');
+
+    if (original_url !== undefined) {
+        result['original_url'] = original_url;
+    }
+
     return result;
 }
 
