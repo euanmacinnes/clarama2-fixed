@@ -76,7 +76,7 @@
       // console.log("inside showinteractioncontent fn");
       let currentP;
       if ('{{ file_url | path }}'[0] === '/') {
-        currentP = ($CLARAMA_ROOT + '/render/popup{{ file_url | path }}?original_url={{ file_url }}');
+        currentP = ($CLARAMA_ROOT + '/render/popup{{ file_url | path }}');
       } else {
         currentP = ($CLARAMA_ROOT + '/render/popup/{{ file_url | path }}');
       }
