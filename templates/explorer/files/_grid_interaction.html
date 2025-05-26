@@ -1,105 +1,108 @@
 <div class="modal fade" id="interactionModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="interactionModalTitle">Interaction</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="interactionModalBody">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="interactionModalTitle">Interaction</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="interactionModalBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
-  
+
 <div id="interactionPopup">
 </div>
 
 <script type="text/javascript">
     let lastMouseEvent = null;
     var currentModalAddContentPath = "";
-  
-    document.addEventListener('mousemove', function (e) {
-      lastMouseEvent = e;
-    });
-  
-    function showModalWithContent(url) {
-      $('#interactionModal').modal('show');
-      const iModal = document.getElementById("interactionModalBody");
-      iModal.innerHTML = '';
-      iModal.append(showInteractionContent(url));
-      // showInteractionContent(url, 'interactionModalBodyContent');
-      enable_interactions($("#interactionModalBody"));
-    }
-  
-    function showPopupNearMouse(url) {
-      const ipopup = document.getElementById('interactionPopup');
-      // console.log("ipopup", ipopup)
-      
-      if (lastMouseEvent) {
-        const popupMaxWidthPercent = 43;
-        const viewportWidth = window.innerWidth;
-        const popupMaxWidth = viewportWidth * (popupMaxWidthPercent / 100);
-        const mouseX = lastMouseEvent.pageX;
-        const mouseY = lastMouseEvent.pageY;
-    
-        // If the popup would overflow past the right edge
-        if (mouseX + popupMaxWidth > viewportWidth) {
-          // Align popup from the right instead
-          ipopup.style.left = 'unset';
-          ipopup.style.right = (viewportWidth - mouseX) + 'px';
-        } else {
-          ipopup.style.right = 'unset';
-          ipopup.style.left = mouseX + 'px';
-        }
-    
-        ipopup.style.top = (mouseY - 150) + 'px';
-      }
 
-      ipopup.style.display = 'block';
-      ipopup.innerHTML = '';
-      ipopup.append(showInteractionContent(url));
-      // showInteractionContent(url, 'interactionPopupContent');
-      enable_interactions($("#interactionPopup"));
-  
-      document.addEventListener('click', function hideOnClick(e) {
-        if (!ipopup.contains(e.target)) {
-          ipopup.style.display = 'none';
-          document.removeEventListener('click', hideOnClick);
-        }
-      });
+    document.addEventListener('mousemove', function (e) {
+        lastMouseEvent = e;
+    });
+
+    function showModalWithContent(url) {
+        $('#interactionModal').modal('show');
+        const iModal = document.getElementById("interactionModalBody");
+        iModal.innerHTML = '';
+        iModal.append(showInteractionContent(url));
+        // showInteractionContent(url, 'interactionModalBodyContent');
+        enable_interactions($("#interactionModalBody"));
     }
-  
-    function showInteractionContent(relativeP) {
-      // console.log("inside showinteractioncontent fn");
-      let currentP;
-      if ('{{ file_url | path }}'[0] === '/') {
-        currentP = ($CLARAMA_ROOT + '/render/popup{{ file_url | path }}?original_url={{ file_url }}');
-      } else {
-        currentP = ($CLARAMA_ROOT + '/render/popup/{{ file_url | path }}');
-      }
-  
-      let currentSegments = currentP.split('/');
-      let relativeSegments = relativeP.split('/');
-      for (let segment of relativeSegments) {
-        if (segment === '..') {
-          currentSegments.pop(); // Move up one directory
-        } else if (segment !== '.' && segment !== '') {
-          currentSegments.push(segment); // Move into subdirectory
+
+    function showPopupNearMouse(url) {
+        const ipopup = document.getElementById('interactionPopup');
+        // console.log("ipopup", ipopup)
+
+        if (lastMouseEvent) {
+            const popupMaxWidthPercent = 43;
+            const viewportWidth = window.innerWidth;
+            const popupMaxWidth = viewportWidth * (popupMaxWidthPercent / 100);
+            const mouseX = lastMouseEvent.pageX;
+            const mouseY = lastMouseEvent.pageY;
+
+            // If the popup would overflow past the right edge
+            if (mouseX + popupMaxWidth > viewportWidth) {
+                // Align popup from the right instead
+                ipopup.style.left = 'unset';
+                ipopup.style.right = (viewportWidth - mouseX) + 'px';
+            } else {
+                ipopup.style.right = 'unset';
+                ipopup.style.left = mouseX + 'px';
+            }
+
+            ipopup.style.top = (mouseY - 150) + 'px';
         }
-      }
-  
-      let ICurl = $CLARAMA_ROOT + currentSegments.join('/'); 
-      // console.log("ICurl", ICurl)
-      // document.getElementById(displayContentID).setAttribute("url", ICurl);
-  
-      const newIC = document.createElement("div");
-      newIC.id = "interactionModalContent";
-      newIC.className = "clarama-element clarama-post-embedded";
-      // newIC.id = "content";
-      newIC.setAttribute("url", `${ICurl}`);
-      return newIC;
+
+        ipopup.style.display = 'block';
+        ipopup.innerHTML = '';
+        ipopup.append(showInteractionContent(url));
+        // showInteractionContent(url, 'interactionPopupContent');
+        enable_interactions($("#interactionPopup"));
+
+        document.addEventListener('click', function hideOnClick(e) {
+            if (!ipopup.contains(e.target)) {
+                ipopup.style.display = 'none';
+                document.removeEventListener('click', hideOnClick);
+            }
+        });
+    }
+
+    function showInteractionContent(relativeP) {
+        // console.log("inside showinteractioncontent fn");
+        let currentP;
+
+        var embedded = $("#embedded").attr("original_url");
+
+        if ('{{ file_url | path }}'[0] === '/') {
+            currentP = ($CLARAMA_ROOT + '/render/popup{{ file_url | path }}?original_url={{ file_url }}');
+        } else {
+            currentP = ($CLARAMA_ROOT + '/render/popup/{{ file_url | path }}');
+        }
+
+        let currentSegments = currentP.split('/');
+        let relativeSegments = relativeP.split('/');
+        for (let segment of relativeSegments) {
+            if (segment === '..') {
+                currentSegments.pop(); // Move up one directory
+            } else if (segment !== '.' && segment !== '') {
+                currentSegments.push(segment); // Move into subdirectory
+            }
+        }
+
+        let ICurl = $CLARAMA_ROOT + currentSegments.join('/');
+        // console.log("ICurl", ICurl)
+        // document.getElementById(displayContentID).setAttribute("url", ICurl);
+
+        const newIC = document.createElement("div");
+        newIC.id = "interactionModalContent";
+        newIC.className = "clarama-element clarama-post-embedded";
+        // newIC.id = "content";
+        newIC.setAttribute("url", `${ICurl}`);
+        return newIC;
     }
 </script>
