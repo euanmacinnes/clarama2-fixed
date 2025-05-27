@@ -113,11 +113,11 @@ function perform_interact(field, args = {}) {
         } 
     }
 
-    if (field.length && field.is('table')) {
-        showModalWithContent("/Fields/issues/View%20Add%20Comments.slate.yaml");
-        linked_element = grid.find('#interactionModalContent');
-        reload(linked_element, field_values)
-    }
+    // if (field.length && field.is('table')) {
+    //     showModalWithContent("/Fields/issues/Issue%20Details.slate.yaml");
+    //     linked_element = grid.find('#interactionModalContent');
+    //     reload(linked_element, field_values)
+    // }
 }
 
 $.fn.interact_change = function () {
