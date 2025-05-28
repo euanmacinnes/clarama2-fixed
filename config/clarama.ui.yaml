@@ -34,6 +34,7 @@ Clarama:
       - 'pdf'
       - 'zip'
       - 'jfif'
+      - 'json'
       - 'svg'
       - 'svgz'
       - 'html'
