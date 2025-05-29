@@ -18,6 +18,8 @@ function reset_environment(environment) {
 
 let socket = undefined;
 
+let socket_starting = false;
+
 let socket_taskQueue = [];
 
 let socket_topics = [];
@@ -124,9 +126,13 @@ function run_socket(embedded, reset_environment) {
     enqueueTaskMessage(topic, embedded, task_url, socket_id, autorun);
 
 
-    if (socket === undefined) {
+    if (!socket_starting) {
+        socket_starting = true;
         let startingTopic = $("#currentUser").attr("username");
-        socket_topics.push(startingTopic);
+
+        if (socket_topics.indexOf(startingTopic) === -1) {
+            socket_topics.push(startingTopic);
+        }
 
         let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + startingTopic;
         console.log("CLARAMA_WEBSOCKET.js:  SUBSCRIBING " + topic + " WebSocket " + socket_url + " for " + task_url);
