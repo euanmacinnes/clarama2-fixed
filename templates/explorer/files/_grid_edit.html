@@ -232,7 +232,7 @@
 
   function showElementOptions(url = "", elemType = "") {
     const inputId_field = document.getElementById('grid-elem');
-    inputId_field.value = url; 
+    inputId_field.value = url;
   
     const dropdownContainer = document.getElementById('elementDropdownContainer');
     dropdownContainer.classList.remove('d-none');
@@ -250,10 +250,20 @@
     const optionsContainer = document.createElement('div');
     optionsContainer.className = 'custom-options hidden';
   
-    const elements = {{ grid_id }}elements;  // your server-side data
+    const elements = {{ grid_id }}elements;
+    // const currentElemLinks = (elements[currentTarget]?.links || []).map(link =>
+    //   typeof link === "string" ? link : link.element
+    // );
+
+    // console.log("elements", elements)
+    // console.log("currentTarget", currentTarget)
+    // console.log("currentElemLinks", currentElemLinks)
+  
     let hasOptions = false;
   
     for (const [elem, value] of Object.entries(elements)) {
+      // if (currentElemLinks.includes(elem)) continue;  // Skip already linked elements
+  
       const optionDiv = document.createElement('div');
       optionDiv.className = 'custom-option';
       optionDiv.setAttribute('elem-id', currentTarget);
@@ -287,12 +297,16 @@
   
     dropdownWrapper.appendChild(optionsContainer);
   
+    // console.log("hasOptions", hasOptions)
+    // const elementRadio = document.querySelector(`input[name="interactionType"][value="element"]`);
+    // if (elementRadio) elementRadio.disabled = !hasOptions;
+  
     if (hasOptions) {
       dropdownContainer.appendChild(dropdownWrapper);
       dropdownContainer.style.display = 'block';
     } else {
       dropdownContainer.style.display = 'none';
-      }
+    }
   }
 
   document.querySelectorAll('input[name="interactionType"]').forEach(radio => {
