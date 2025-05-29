@@ -315,6 +315,10 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
                 console.log("CLARAMA_WEBSOCKET.js: Generated layout table with " + cols + " columns and " + rows + " rows");
             }
 
+            if (dict['class'] === "alert") {
+                flash(dict['message'], dict['category']);
+            }
+
             if (dict['class'] === "template") {
                 let resulter = "#" + dict['step_id'];
                 //console.log("WEBSOCKET MESSAGE:" + dict['step_id']);
