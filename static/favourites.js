@@ -3,7 +3,7 @@ var favoriteFiles = [];
 var favoriteFileExists = false;
 
 function load_favorites(username) {
-    const favoritesUrl = `/render/raw/Users/${username}/favorites.md`;
+    const favoritesUrl = `/render/raw/Users/${username}/favorites.fav`;
     fetch($CLARAMA_ROOT + favoritesUrl)
         .then(response => response.text())
         .then(html => {
@@ -21,7 +21,7 @@ function load_favorites(username) {
                 favoriteFileExists = true;
                 const lines = paths.trim().split('\n');
                 favoriteFilesHeader = lines[0];
-                
+
                 // .slice(1) to remove header
                 // .map(...) to remove any quotes or extra space
                 const rows = lines.slice(1).map(line => line.split(',').map(value => value.trim().replace(/["""]/g, '')));
@@ -33,7 +33,7 @@ function load_favorites(username) {
                     }
 
                     // if both same type, sort alphabetically
-                    return a[0].localeCompare(b[0], undefined, { numeric: true, sensitivity: 'base' });
+                    return a[0].localeCompare(b[0], undefined, {numeric: true, sensitivity: 'base'});
                 });
 
                 console.log(favoriteFiles);
@@ -73,17 +73,17 @@ function save_favorites(username) {
     const content = uniqueFavorites.join('\n'); // Convert array to string with newlines
 
     if (!favoriteFileExists) {
-        var new_content="favorites";
-        var new_content_type="markdown";
+        var new_content = "favorites";
+        var new_content_type = "markdown";
         var file = `/render/new/Users/${username}/?new_content=` + encodeURIComponent(new_content) + "&new_content_type=" + encodeURIComponent(new_content_type);
         execute_json_url(file, false);
     }
 
-    const postUrl = `/content/raw/Users/${username}/favorites.md`;
+    const postUrl = `/content/raw/Users/${username}/favorites.fav`;
     const formData = new FormData();
 
     // Append content as a Blob to ensure file creation or update
-    formData.append("file", new Blob([content], { type: "text/markdown" }), "favorites.md");
+    formData.append("file", new Blob([content], {type: "text/markdown"}), "favorites.fav");
 
     var data = {
         task_action: "save",
@@ -126,16 +126,16 @@ function save_favorites(username) {
 function updateFavoritesUI() {
     const myFavoritesContainer = document.getElementById("my-favorites-listing");
     if (myFavoritesContainer) {
-        myFavoritesContainer.innerHTML = ""; 
+        myFavoritesContainer.innerHTML = "";
         render_my_favorites();
     }
-    
+
     const favoritesContainer = document.getElementById("favorites-listing");
     if (favoritesContainer) {
-        favoritesContainer.innerHTML = ""; 
-        render_favorites(); 
+        favoritesContainer.innerHTML = "";
+        render_favorites();
     }
-    
+
     var starIcon = document.getElementById("page-fav");
     if (starIcon !== null) {
         if (favoriteFiles.some(row => row[1] === window.location.pathname)) {
@@ -146,4 +146,4 @@ function updateFavoritesUI() {
             starIcon.classList.add('bi-star');
         }
     }
- }
+}
