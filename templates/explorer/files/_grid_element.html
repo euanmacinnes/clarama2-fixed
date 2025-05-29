@@ -33,13 +33,8 @@
                 <hr class="dropdown-divider">
             </li>
             <li>
-                <h6 class="dropdown-header">Interactions: </h6>
-                <div class="dropdown-item align-items-center gap-2 d-flex" id="grid-menu-select-{{ target }}"
-                    target="{{ target }}">
-                    <!-- <select id="add_content_interactions-{{ target }}" class="form-select" name="add_interactions"
-                        style="width: 100%;"></select> -->
-                    <i class="bi bi-plus-circle grid-interaction-add" style="cursor: pointer;"></i>
-                </div>
+                <h6 class="dropdown-header">Interactions: <i class="bi bi-plus-circle grid-interaction-add" data-bs-toggle="modal"
+                    data-bs-target="#interactionSettingsModal" onclick="openInteractionSettings('{{ target }}')" style="cursor: pointer;"></i></h6>
             </li>
             {% endif %}
             <div id="grid_element_target-{{ target }}">

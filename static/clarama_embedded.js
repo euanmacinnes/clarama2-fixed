@@ -460,8 +460,29 @@ function execute_json_url(clarama_url, reload = false) {
         } else {
             flash(json['results'], 'danger');
         }
+
     })
 }
+
+function execute_json_url_async(clarama_url, reload = false) {
+    return new Promise((resolve, reject) => {
+        get_json(clarama_url, function (json) {
+            console.log("Executed " + clarama_url)
+    
+            if (reload)
+                window.location.reload()
+    
+            if (json['data'] == 'ok') {
+                flash(json['results']);
+            } else {
+                flash(json['results'], 'danger');
+            }
+
+            resolve(json);
+        })
+    })
+}
+
 
 /**
  * Event handler for executing a function from an element
