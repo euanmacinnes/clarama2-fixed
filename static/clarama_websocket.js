@@ -23,17 +23,24 @@ let socket_taskQueue = [];
 let socket_topics = [];
 
 function processTaskMessages() {
+    socket.send(JSON.stringify({topics: socket_topics}));
+
     socket_taskQueue.forEach(message => {
-        socket.send({topic: socket_topics});
         get_task(message.embedded, message.task_url, message.socket_id, message.autorun);
     });
     socket_taskQueue = [];
 }
 
 function enqueueTaskMessage(topic, embedded, task_url, socket_id, autorun) {
+    if (socket_topics.indexOf(topic) === -1) {
+        socket_topics.push(topic);
+        console.log("CLARAMA_WEBSOCKET.js: TOPICS");
+        console.log(socket_topics);
+    }
+
     if (socket !== undefined)
         if (socket.readyState === WebSocket.OPEN) {
-            socket.send({topic: socket_topics});
+            socket.send({topics: socket_topics});
             get_task(embedded, task_url, socket_id, autorun);
             return;
         }
@@ -113,17 +120,17 @@ function run_socket(embedded, reset_environment) {
 
     let task_url = $CLARAMA_ROOT + $CLARAMA_ENVIRONMENTS_TASK_OPEN + task + '?topic=' + topic + '&mode=' + mode + '&refresh=' + refresh + '&reset-environment=' + reset_environment + env_url;
 
-    let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
 
-    if (socket !== undefined) {
-        console.log("CLARAMA_WEBSOCKET.js: RE-USING EXISTING SOCKET " + socket_url);
-        if (socket_topics.indexOf(socket_url) === -1) {
-            socket_topics.push(topic);
+    enqueueTaskMessage(topic, embedded, task_url, socket_id, autorun);
 
-            enqueueTaskMessage(topic, embedded, task_url, socket_id, autorun);
-        }
-    } else {
+
+    if (socket === undefined) {
+        let startingTopic = $("#currentUser").attr("username");
+        socket_topics.push(startingTopic);
+
+        let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + startingTopic;
         console.log("CLARAMA_WEBSOCKET.js:  SUBSCRIBING " + topic + " WebSocket " + socket_url + " for " + task_url);
+
 
         fetch(socket_url)
             .then((response) => response.json())
@@ -140,12 +147,10 @@ function run_socket(embedded, reset_environment) {
                 } else
                     console.log("Using Preconfigured Websocket address " + server);
 
-                socket_topics.push(topic);
                 let websocket_address = (server + uuid + '/');
-                let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + topic;
-                console.log("CLARAMA_WEBSOCKET.js: Creating " + socket_url + " Websocket on " + websocket_address);
 
-                enqueueTaskMessage(topic, embedded, task_url, socket_id, autorun);
+
+                console.log("CLARAMA_WEBSOCKET.js: Creating " + socket_url + " Websocket on " + websocket_address + " for " + startingTopic);
 
                 let webSocket = new WebSocket(websocket_address);
 
@@ -396,7 +401,6 @@ function onOpen(event, socket_url, webSocket, task_results, socket_id) {
     kernel_status.add("bi-check-circle")
     kernel_status.add("text-success")
     kernel_status.remove("bi-hourglass-split")
-    webSocket.send("{client: { replay: True } } ");
 
     let playbutton = $('.kernel-play-button');
 
