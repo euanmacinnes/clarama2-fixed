@@ -164,6 +164,8 @@
 </footer>
 </div>
 
+<div id="root_socket" class="clarama-websocket" topic="{{ username }}"></div>
+
 {{ bootstrap.load_js() }}
 
 <script type="text/javascript">
@@ -202,6 +204,7 @@
 
 
     $(document).ready(() => {
+        $('.clarama-websocket').enablesocket();
         enable_interactions($('body'));
     });
 
