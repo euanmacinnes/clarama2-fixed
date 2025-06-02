@@ -92,18 +92,18 @@ input[type="search"]::-webkit-search-cancel-button {
 .custom-dropdown-wrapper {
     position: relative;
     width: 100%;
-  }
-   
-  .custom-selected {
+}
+
+.custom-selected {
     padding: 8px 12px;
     border: 1px solid #ccc;
     background: white;
     cursor: pointer;
     border-radius: 4px;
     user-select: none;
-  }
-   
-  .custom-options {
+}
+
+.custom-options {
     position: absolute;
     top: 100%;
     left: 0;
@@ -116,17 +116,13 @@ input[type="search"]::-webkit-search-cancel-button {
     overflow-y: auto;
     border-radius: 0 0 4px 4px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-   
-  .custom-option {
+}
+
+.custom-option {
     padding: 8px 12px;
     cursor: pointer;
-  }
-   
-  .custom-option:hover {
+}
+
+.custom-option:hover {
     background-color: #f1f1f1;
-  }
-   
-  .hidden {
-    display: none;
-  }
+}
