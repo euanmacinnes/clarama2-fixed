@@ -25,8 +25,7 @@ function _arrayBufferToBase64(buffer) {
  */
 function get_field_values(registry, raw, field_submit) {
     // Raw is used to run the fields. raw is false, when saving the fields (so we don't want to save the field values of e.g. a selected file in this case
-    
-    this_grid = saveGrid();
+
     var files_done = true;
     var result = {}
 
@@ -114,12 +113,14 @@ function get_field_values(registry, raw, field_submit) {
     if (files_done) {
         if (raw)
             registry = result;
-        else
+        else {
+            this_grid = saveGrid();
             registry['fieldgrid'] = {
                 'elements': this_grid['elements'],
                 'children': this_grid['grid']['children'],
                 'values': result
             };
+        }
 
         console.log(registry);
         field_submit(registry);
