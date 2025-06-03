@@ -52,7 +52,7 @@ function _task_run(socket) {
 
         // Pass in the task's user-defined parameters from the field_registry, and paste into the header the internal configuration
 
-        const task = get_url(url, field_merged);
+        const task = get_url(url, {});
 
         console.log("CLARAMA_TASK.js: Running Task " + task + ' with ' + json_data);
 
@@ -64,7 +64,7 @@ function _task_run(socket) {
                     'Content-Type': 'application/json'
                 },
                 method: "post",
-                body: JSON.stringify(field_registry)
+                body: JSON.stringify(field_merged)
             })
             .then((response) => {
                 console.log("CLARAMA_TASK.js: TASK RUN RESPONSE " + task);
