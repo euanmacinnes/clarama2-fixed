@@ -25,56 +25,57 @@ function get_url(url, field_registry) {
 function _task_run(socket) {
     json_div = socket + '_args';
 
-    var field_registry = get_field_values();
-    var field_merged = field_registry;
+    get_field_values({}, true, function (field_registry) {
+        var field_merged = field_registry;
 
-    console.log("CLARAMA_TASK.js : TASK RUN Socket " + socket + " looking for " + json_div)
-    var json_data = document.getElementById(json_div)
+        console.log("CLARAMA_TASK.js : TASK RUN Socket " + socket + " looking for " + json_div)
+        var json_data = document.getElementById(json_div)
 
 
-    if (json_data != null) {
-        var json_element = JSON.parse(json_data.innerHTML);
-        field_merged = Object.assign({}, field_registry, json_element);
+        if (json_data != null) {
+            var json_element = JSON.parse(json_data.innerHTML);
+            field_merged = Object.assign({}, field_registry, json_element);
 
-        //if (json_element != null && json_element.value == '') {
-        //console.log("found json element for task in " + json_div);
-        //console.log(field_merged);
-    } else {
-        console.warn("CLARAMA_TASK.js : " + json_div + " div containing JSON is missing")
-    }
+            //if (json_element != null && json_element.value == '') {
+            //console.log("found json element for task in " + json_div);
+            //console.log(field_merged);
+        } else {
+            console.warn("CLARAMA_TASK.js : " + json_div + " div containing JSON is missing")
+        }
 
-    var task_socket = $("#" + socket);
+        var task_socket = $("#" + socket);
 
-    field_merged['clarama_task_kill'] = task_socket.attr("task_kill");
+        field_merged['clarama_task_kill'] = task_socket.attr("task_kill");
 
-    task_kernel_id = task_socket.attr("task_kernel_id");
-    url = $CLARAMA_ENVIRONMENTS_TASK_RUN + task_kernel_id;
+        task_kernel_id = task_socket.attr("task_kernel_id");
+        url = $CLARAMA_ENVIRONMENTS_TASK_RUN + task_kernel_id;
 
-    // Pass in the task's user-defined parameters from the field_registry, and paste into the header the internal configuration
+        // Pass in the task's user-defined parameters from the field_registry, and paste into the header the internal configuration
 
-    const task = get_url(url, field_merged);
+        const task = get_url(url, field_merged);
 
-    console.log("CLARAMA_TASK.js: Running Task " + task + ' with ' + json_data);
+        console.log("CLARAMA_TASK.js: Running Task " + task + ' with ' + json_data);
 
-    // No point sending custom headers here, CORS will nerf any custom headers, so send as params ....
-    fetch(task,
-        {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: "post",
-            body: JSON.stringify(field_registry)
-        })
-        .then((response) => {
-            console.log("CLARAMA_TASK.js: TASK RUN RESPONSE " + task);
-            console.log(response);
-        });
-    /*fetch(task)
-        .then((response) => {
-            console.log("TASK RUN RESPONSE " + task);
-            console.log(response);
-        });*/
+        // No point sending custom headers here, CORS will nerf any custom headers, so send as params ....
+        fetch(task,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: "post",
+                body: JSON.stringify(field_registry)
+            })
+            .then((response) => {
+                console.log("CLARAMA_TASK.js: TASK RUN RESPONSE " + task);
+                console.log(response);
+            });
+        /*fetch(task)
+            .then((response) => {
+                console.log("TASK RUN RESPONSE " + task);
+                console.log(response);
+            });*/
+    });
 }
 
 
