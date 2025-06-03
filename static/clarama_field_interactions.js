@@ -39,11 +39,10 @@ function perform_interact(field, args = {}) {
         var eobj = element_array[element];
         console.log("eobj", eobj)
 
-        field_values = merge_dicts(get_field_values(), args);
-        console.log(field_values);
-        console.log("grid", grid);
-
         if ('links' in eobj) {
+            field_values = merge_dicts(get_field_values(), args);
+            console.log(field_values);
+            console.log("grid", grid);
             links = eobj["links"]; // array of file names to refresh
             //console.log(links);
             //flash(element + ' links to ' + links);
@@ -91,8 +90,9 @@ function perform_interact(field, args = {}) {
                             flash("Don't know how to interact " + linked_type + " - " + link);
                     }
                 } else if (typeof link === 'object') {
-                    const { element, url } = link;
-                    $('.select2-container').blur();;
+                    const {element, url} = link;
+                    $('.select2-container').blur();
+                    ;
                     if (element === 'popup') {
                         showPopupNearMouse(url);
                     } else if (element === 'modal') {
@@ -100,7 +100,7 @@ function perform_interact(field, args = {}) {
                         // linked_element = grid.find('#interactionModalContent');
                         // console.log("linked_element modal", linked_element)
                         // reload(linked_element, field_values)
-                    } 
+                    }
                     // else {
                     //     const toOverride = document.getElementById(element);
                     //     console.log("toOverride", toOverride)
@@ -110,7 +110,7 @@ function perform_interact(field, args = {}) {
                     // }
                 }
             }
-        } 
+        }
     }
 
     // if (field.length && field.is('table')) {
