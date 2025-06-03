@@ -81,47 +81,48 @@ function _task_run(socket) {
 
 function cell_item_run(cell_button) {
     console.log("CLARAMA_TASK.js: RUNNING");
-    var field_registry = get_field_values(); // Get only the field values, not the full field definitions, text or code
-    var task_registry = get_cell_fields(cell_button);
-    task_registry['parameters'] = field_registry
+    get_field_values({}, true, function (field_registry) { // Get only the field values, not the full field definitions, text or code
+        var task_registry = get_cell_fields(cell_button);
+        task_registry['parameters'] = field_registry
 
-    console.log("CLARAMA_TASK.js: cell_edit_run Getting Socket");
-    socket = $("#edit_socket");
+        console.log("CLARAMA_TASK.js: cell_edit_run Getting Socket");
+        socket = $("#edit_socket");
 
-    field_registry['clarama_task_kill'] = false;
+        field_registry['clarama_task_kill'] = false;
 
-    console.log("CLARAMA_TASK.js: cell_edit_run Getting Kernel");
-    task_kernel_id = socket.attr("task_kernel_id");
-    url = $CLARAMA_ENVIRONMENTS_KERNEL_RUN + task_kernel_id;
+        console.log("CLARAMA_TASK.js: cell_edit_run Getting Kernel");
+        task_kernel_id = socket.attr("task_kernel_id");
+        url = $CLARAMA_ENVIRONMENTS_KERNEL_RUN + task_kernel_id;
 
-    // Pass in the task's user-defined parameters from the field_registry, and paste into the header the internal configuration
-    const task = get_url(url, field_registry);
+        // Pass in the task's user-defined parameters from the field_registry, and paste into the header the internal configuration
+        const task = get_url(url, field_registry);
 
-    console.log("CLARAMA_TASK.js: Running Task " + task);
+        console.log("CLARAMA_TASK.js: Running Task " + task);
 
-    $.ajax({
-        type: 'POST',
-        url: url,
-        datatype: "html",
-        contentType: 'application/json',
-        data: JSON.stringify(task_registry),
-        success: function (data) {
-            if (data['data'] == 'ok') {
-                console.log('CLARAMA_TASK.js: Submission was successful.');
+        $.ajax({
+            type: 'POST',
+            url: url,
+            datatype: "html",
+            contentType: 'application/json',
+            data: JSON.stringify(task_registry),
+            success: function (data) {
+                if (data['data'] == 'ok') {
+                    console.log('CLARAMA_TASK.js: Submission was successful.');
+                    console.log(data);
+                    flash("CLARAMA_TASK.js: Executing!");
+
+                    moveToNextCell(cell_button);
+                } else {
+                    console.log('CLARAMA_TASK.js: Submission was successful.');
+                    console.log(data);
+                    flash("Couldn't run content: " + data['error']);
+                }
+            },
+            error: function (data) {
+                console.log('An error occurred.');
                 console.log(data);
-                flash("CLARAMA_TASK.js: Executing!");
-
-                moveToNextCell(cell_button);
-            } else {
-                console.log('CLARAMA_TASK.js: Submission was successful.');
-                console.log(data);
-                flash("Couldn't run content: " + data['error']);
+                flash("Couldn't run editable content, access denied", "danger");
             }
-        },
-        error: function (data) {
-            console.log('An error occurred.');
-            console.log(data);
-            flash("Couldn't run editable content, access denied", "danger");
-        }
+        });
     });
 }

@@ -68,7 +68,7 @@ function get_field_values(registry, raw, field_submit) {
         }
     );
 
-    if (raw)
+    if (raw && field_submit !== undefined)
         $('.clarama-field').each(
             function (index) {
                 var input = $(this);
@@ -93,14 +93,7 @@ function get_field_values(registry, raw, field_submit) {
 
                             console.log(result[input.attr('name')]);
 
-                            if (raw)
-                                registry = result;
-                            else
-                                registry['fieldgrid'] = {
-                                    'elements': this_grid['elements'],
-                                    'children': this_grid['grid']['children'],
-                                    'values': result
-                                };
+                            registry = result;
 
                             field_submit(registry);
                         };
@@ -123,7 +116,11 @@ function get_field_values(registry, raw, field_submit) {
         }
 
         console.log(registry);
-        field_submit(registry);
+
+        if (field_submit !== undefined)
+            field_submit(registry);
+        else
+            return registry;
     }
 }
 
@@ -297,7 +294,7 @@ $.fn.initselect = function () {
                         contentType: "application/json; charset=utf-8",
                         type: "POST",
                         data: function (params) {
-                            var values = get_field_values()
+                            var values = get_field_values({}, true, undefined);
                             var query = {
                                 search: params.term,
                                 values: values
