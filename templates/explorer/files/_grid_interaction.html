@@ -25,17 +25,17 @@
         lastMouseEvent = e;
     });
 
-    function showModalWithContent(url) {
+    function showModalWithContent(url, parameters) {
         $('#interactionModal').modal('show');
         const iModal = document.getElementById("interactionModalBody");
         iModal.innerHTML = '';
-        iModal.append(showInteractionContent('modal', url));
+        iModal.append(showInteractionContent('modal', url, parameters));
         // iModal.innerHTML = '';
         // iModal.append(showInteractionContent(url, 'interactionModalContent'));
         enable_interactions($("#interactionModalBody"));
     }
 
-    function showPopupNearMouse(url) {
+    function showPopupNearMouse(url, parameters) {
         const ipopup = document.getElementById('interactionPopup');
         console.log("ipopup", ipopup)
 
@@ -61,7 +61,7 @@
 
         ipopup.style.display = 'block';
         ipopup.innerHTML = '';
-        ipopup.append(showInteractionContent('popup', url));
+        ipopup.append(showInteractionContent('popup', url, parameters));
         // ipopup.innerHTML = '';
         // ipopup.append(showInteractionContent(url, 'interactionPopupContent'));
         enable_interactions($("#interactionPopup"));
@@ -74,7 +74,7 @@
         });
     }
 
-    function showInteractionContent(interaction, relativeP) {
+    function showInteractionContent(interaction, relativeP, parameters) {
         // console.log("inside showinteractioncontent fn");
         let currentP;
         let ICurl;
@@ -109,6 +109,7 @@
         // newIC.id = newDivID;
         newIC.className = "clarama-post-embedded clarama-replaceable";
         newIC.setAttribute("url", `${ICurl}`);
+        newIC.setAttribute("json", JSON.stringify(parameters));
         // newIC.setAttribute("autorun", "True");
         return newIC;
     }

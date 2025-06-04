@@ -92,9 +92,9 @@ function perform_interact(field, args = {}) {
                         $('.select2-container').blur();
                         ;
                         if (element === 'popup') {
-                            showPopupNearMouse(url);
+                            showPopupNearMouse(url, field_values);
                         } else if (element === 'modal') {
-                            showModalWithContent(url);
+                            showModalWithContent(url, field_values);
                             // linked_element = grid.find('#interactionModalContent');
                             // console.log("linked_element modal", linked_element)
                             // reload(linked_element, field_values)

@@ -174,6 +174,7 @@ $.fn.load_post = function (onfinished, args, json) {
                 .done(function () {
                     var url = embedded.attr("url");
                     var json_div = embedded.attr("post_json");
+                    var json_attr = embedded.attr("json");
                     //console.log("Looking for " + json_div + " for " + url)
                     var json_element = document.getElementById(json_div);
 
@@ -185,6 +186,15 @@ $.fn.load_post = function (onfinished, args, json) {
                             json_payload = JSON.parse(je);
                         } catch {
                             // Ignore, leave it as blank JSON to default the content (e.g. for new steps)
+                        }
+                    }
+
+                    if (json_attr !== undefined) {
+                        try {
+                            console.log("JSON Payload attr " + json_attr);
+                            json_payload = JSON.parse(json_attr);
+                        } catch {
+
                         }
                     }
 

@@ -122,6 +122,13 @@
          task="{{ file_url }}" kill="True" refresh="True"></div>
 </div>
 
+<script type="application/json" id="{{ grid_id }}_json">
+    {{ task_arguments
+|
+json_pprint
+|
+safe }}</script>
+
 <script>
     function show_schedule() {
         console.log("Ok");
