@@ -38,7 +38,6 @@ function perform_interact(field, args = {}) {
         var element_array = eval(grid_id + "elements");
         var eobj = element_array[element];
         console.log("eobj", eobj)
-
         if ('links' in eobj) {
             get_field_values({}, true, function (field_registry) {
                 field_values = merge_dicts(field_registry, args);
@@ -81,7 +80,7 @@ function perform_interact(field, args = {}) {
 
                             case "changed":
                                 linked_element[0].innerHTML = "";
-                                linked_element[0].append(showInteractionContent(link.url));
+                                linked_element[0].append(showInteractionContent('run', link.url));
                                 enable_interactions($(`#${link.element}`));
                                 break;
 
@@ -95,7 +94,7 @@ function perform_interact(field, args = {}) {
                         if (element === 'popup') {
                             showPopupNearMouse(url);
                         } else if (element === 'modal') {
-                            showModalWithContent(url, field_values);
+                            showModalWithContent(url);
                             // linked_element = grid.find('#interactionModalContent');
                             // console.log("linked_element modal", linked_element)
                             // reload(linked_element, field_values)
@@ -111,13 +110,15 @@ function perform_interact(field, args = {}) {
                 }
             });
         }
-    }
 
-    // if (field.length && field.is('table')) {
-    //     showModalWithContent("/Fields/issues/Issue%20Details.slate.yaml");
-    //     linked_element = grid.find('#interactionModalContent');
-    //     reload(linked_element, field_values)
-    // }
+        // if (field.length && field.is('table') && field_values['row']['issue_id']) {
+        //     showModalWithContent("/System/Slates/Tasks/Issue_Details.task.yaml");
+        //     // linked_element = $('#interactionModalBody');
+        //     // console.log("linked_element modal", linked_element)
+        //     // console.log("field_values issue_id", field_values);
+        //     // reload(linked_element, field_values)
+        // }
+    }
 }
 
 $.fn.interact_change = function () {

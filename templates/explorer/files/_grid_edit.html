@@ -142,7 +142,7 @@
             </div>
           </div>
 
-          <input type="hidden" id="selected-elem" name="selectedElementUrl" value=""> <!-- shld only be validated if element for interactionType is selected -->
+          <input type="hidden" id="selected-elem" name="selectedElementUrl" value=""> 
           <div class="mb-3 dropdown-container d-none" id="elementDropdownContainer">
           </div>
 
@@ -255,7 +255,7 @@
     //   typeof link === "string" ? link : link.element
     // );
 
-    // console.log("elements", elements)
+    console.log("elements", elements)
     // console.log("currentTarget", currentTarget)
     // console.log("currentElemLinks", currentElemLinks)
   
@@ -290,6 +290,7 @@
       optionsContainer.appendChild(optionDiv);
       hasOptions = true;
     }
+    document.getElementById('selected-elem').value = Object.keys(elements)[0];
   
     selectedDiv.addEventListener('click', () => {
       optionsContainer.classList.toggle('hidden');

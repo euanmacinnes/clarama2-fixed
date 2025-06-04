@@ -31,15 +31,51 @@ function showNotification(title, body, icon) {
 
 }
 
+function getRelativeTime(date) {
+    const diffMs = new Date() - date;
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHr = Math.floor(diffMin / 60);
+ 
+    if (diffSec < 60) return "Just now";
+    if (diffMin < 60) return `${diffMin} min${diffMin > 1 ? "s" : ""} ago`;
+    return `${diffHr} hour${diffHr > 1 ? "s" : ""} ago`;
+}
+
 function flash(message, category = "info") {
+    const now = new Date();
+    const relativeTime = getRelativeTime(now);
+
+
     html = '<div class="row alert flash-alert alert-' + category + '">' + message + '</div>'
     $("#notification_popup").append(html);
 
-    alert_html = '<li class="list-group-item d-flex flex-row align-items-center justify-content-left border-0 p-2"><div class="d-flex flex-column alert alert-' + category + '">' + category + '</div><div class="d-flex flex-column ps-2 text-nowrap">' + message + '</div></li>'
+    const alert_html = `
+        <li class="list-group-item d-flex flex-row align-items-start justify-content-left border-0 pb-1" data-timestamp="${now.toISOString()}">
+            <div class="d-flex flex-column m-0 px-2 py-1 alert alert-${category}">
+                ${category}
+            </div>
+            <div class="d-flex flex-column ps-2 text-wrap w-100">
+                ${message}
+                <small class="text-white-50 fst-italic" style="font-size: 11px;">${relativeTime}</small>
+            </div>
+        </li>
+    `;
 
     $("#alerts").prepend(alert_html);
     $("#alertsmenu").removeClass("hidden");
 
     $(".flash-alert").delay(3200).fadeOut(300);
-    console.log(category + ":" + message);
+    console.log(`${category}: ${message}`);
 }
+
+setInterval(() => {
+    $("#alerts li").each(function () {
+        const timestamp = $(this).data("timestamp");
+        if (!timestamp) return;
+ 
+        const date = new Date(timestamp);
+        const relativeTime = getRelativeTime(date);
+        $(this).find("small").text(relativeTime);
+    });
+}, 60000);
