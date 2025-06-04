@@ -1,6 +1,6 @@
 <div class="card bg-light" style="padding:25px;">
 
-    {% set internal_topic = url_for(request.endpoint, **request.view_args) | topic %}
+    {% set internal_topic = element_prefix + url_for(request.endpoint, **request.view_args) | topic %}
     <form>
         {% for streamslist in streams %}
             {% for stream, steps in streamslist.items() %}

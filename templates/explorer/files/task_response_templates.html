@@ -1,4 +1,4 @@
-<template id="{{ element_prefix }}task_step_exception" target_class="cell-results">
+<template id="task_step_exception" target_class="cell-results">
     <div class="row alert alert-danger">
         <b>Exception</b><br/><br/>
         <div class="input-group mb-3">
@@ -21,7 +21,7 @@
     </div>
 </template>
 
-<template id="{{ element_prefix }}task_step_error" target_class="cell-results">
+<template id="task_step_error" target_class="cell-results">
     <div class="row alert alert-danger">
         <div>
             <table>
@@ -47,7 +47,7 @@
     </div>
 </template>
 
-<template id="{{ element_prefix }}task_step_warn" target_class="cell-results">
+<template id="task_step_warn" target_class="cell-results">
     <div class="row alert alert-warning">
         <div><b>{message_content}</b>
             <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
@@ -64,7 +64,7 @@
     </div>
 </template>
 
-<template id="{{ element_prefix }}task_step_info" target_class="cell-results">
+<template id="task_step_info" target_class="cell-results">
     <div class="row alert alert-primary">
         <div><b>{message_content}</b>
             <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
@@ -81,7 +81,7 @@
     </div>
 </template>
 
-<template id="{{ element_prefix }}task_step_completed" target_class="cell-timing">
+<template id="task_step_completed" target_class="cell-timing">
     <div class="container" style="opacity: 0.3">
         <div class="row">
             <div class="col">{duration_content}</div>
@@ -90,23 +90,23 @@
     </div>
 </template>
 
-<template id="{{ element_prefix }}task_step_result" target_class="cell-results">
+<template id="task_step_result" target_class="cell-results">
     <pre class="print_response"><code class="code_response">{output_content}</code></pre>
 </template>
 
-<template id="{{ element_prefix }}task_step_html" target_class="cell-results">
+<template id="task_step_html" target_class="cell-results">
     <div>{output_content}</div>
 </template>
 
-<template id="{{ element_prefix }}task_step_result_web_server" target_class="cell-results">
+<template id="task_step_result_web_server" target_class="cell-results">
     <div>{webpage_content}</div>
 </template>
 
-<template id="{{ element_prefix }}task_step_result_web_client" target_class="cell-results">
+<template id="task_step_result_web_client" target_class="cell-results">
     <div url="{url_content}" class="clarama-embedded">Loading {url_content}...</div>
 </template>
 
-<template id="{{ element_prefix }}task_step_result_bootstraptable" target_class="cell-results">
+<template id="task_step_result_bootstraptable" target_class="cell-results">
     <div class="tight" style="overflow: auto; height: 100%">
         <nav class="navbar navbar-expand-lg table-{style_content}-header">
             <ul class="navbar-nav">
@@ -141,7 +141,7 @@
     </div>
 </template>
 
-<template id="{{ element_prefix }}task_step_result_table" target_class="cell-results">
+<template id="task_step_result_table" target_class="cell-results">
     <table id="{table_id_content}"
            data-toggle="table"
            data-show-columns="true"
@@ -169,7 +169,7 @@
     </table>
 </template>
 
-<template id="{{ element_prefix }}task_step_result_table_row" target_class="{table_id_content}_tbody">
+<template id="task_step_result_table_row" target_class="{table_id_content}_tbody">
     <tr>
         <!--{array:start}-->
         <td>
@@ -268,7 +268,7 @@
     </li>
 </template>
 
-<template id="{{ element_prefix }}task_step_result_chart" target_class="cell-results">
+<template id="task_step_result_chart" target_class="cell-results">
     <div class="container-fluid position-relative tight" style="height: 100%">
         <div id="{chart_id_content}-holder" style="min-width: 100px; width:100%; height:100%; position: relative; "
              class="chart-canvas-holder">
@@ -294,7 +294,7 @@
 
 </template>
 
-<template id="{{ element_prefix }}grid_new_content" target_suffix="">
+<template id="grid_new_content" target_suffix="">
     <div class="container-fluid row" style="height: 100%">
         <div id="{target}" class="col clarama-embedded slate-panel-target" style="height: 100%"
              url="/content/embedded/{ url }">

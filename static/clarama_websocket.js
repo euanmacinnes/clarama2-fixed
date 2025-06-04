@@ -18,6 +18,8 @@ function reset_environment(environment) {
 
 let socket = undefined;
 
+let socket_address = '';
+
 let socket_starting = false;
 
 let socket_taskQueue = [];
@@ -42,7 +44,7 @@ function enqueueTaskMessage(topic, embedded, task_url, socket_id, autorun) {
 
     if (socket !== undefined)
         if (socket.readyState === WebSocket.OPEN) {
-            socket.send({topics: socket_topics});
+            socket.send(JSON.stringify({topics: socket_topics}));
             get_task(embedded, task_url, socket_id, autorun);
             return;
         }
@@ -94,26 +96,18 @@ function get_task(embedded, task_url, socket_id, autorun) {
         });
 }
 
-function run_socket(embedded, reset_environment) {
-    let task = embedded.attr("task")
-    let topic = embedded.attr("topic");
+function socket_task(embedded, task, topic, reset_environment) {
     let mode = embedded.attr("mode"); // For passing internally to the kernel, so that the kernel knows it's original mode
-    let task_results = embedded.attr("results_id");
     let autorun = embedded.attr("autorun");
     let socket_id = embedded.attr("id");
     let refresh = embedded.attr("refresh");
-    let element_prefix = embedded.attr("element_prefix");
-    let env_url = '';
     let environment = embedded.attr("environment");
-
-    embedded.attr("socket_time", Date.now());
-
-    if (environment !== undefined) {
+        let env_url = '';
+            if (environment !== undefined) {
         env_url = '&environment=' + environment;
         refresh = true;
         console.log("CLARAMA_WEBSOCKET.js: overriding environment with " + env_url);
     }
-
 
     let playbutton = $('.kernel-play-button');
 
@@ -122,9 +116,40 @@ function run_socket(embedded, reset_environment) {
 
     let task_url = $CLARAMA_ROOT + $CLARAMA_ENVIRONMENTS_TASK_OPEN + task + '?topic=' + topic + '&mode=' + mode + '&refresh=' + refresh + '&reset-environment=' + reset_environment + env_url;
 
-
     enqueueTaskMessage(topic, embedded, task_url, socket_id, autorun);
+}
 
+function start_socket(reconnect = false) {
+    let webSocket = new WebSocket(socket_address);
+
+    socket = webSocket;
+
+    webSocket.onerror = function (event) {
+        onError(event, socket_address, webSocket)
+    };
+
+    webSocket.onopen = function (event) {
+        onOpen(event, socket_address, reconnect)
+        processTaskMessages();
+    };
+
+    webSocket.onclose = function (event) {
+        onClose(event, socket_address, webSocket)
+    };
+
+    webSocket.onmessage = function (event) {
+        onMessage(event, socket_address, webSocket)
+    };
+}
+
+function run_socket(embedded, reset_environment) {
+    let task = embedded.attr("task")
+    let topic = embedded.attr("topic");
+
+    embedded.attr("socket_time", Date.now());
+
+    if (task!==undefined && topic!==undefined)
+        socket_task(embedded, task, topic, reset_environment);
 
     if (!socket_starting) {
         socket_starting = true;
@@ -135,7 +160,7 @@ function run_socket(embedded, reset_environment) {
         }
 
         let socket_url = $CLARAMA_ROOT + $CLARAMA_WEBSOCKET_REGISTER + startingTopic;
-        console.log("CLARAMA_WEBSOCKET.js:  SUBSCRIBING " + topic + " WebSocket " + socket_url + " for " + task_url);
+        console.log("CLARAMA_WEBSOCKET.js:  SUBSCRIBING " + topic + " WebSocket " + socket_url);
 
 
         fetch(socket_url)
@@ -158,27 +183,9 @@ function run_socket(embedded, reset_environment) {
 
                 console.log("CLARAMA_WEBSOCKET.js: Creating " + socket_url + " Websocket on " + websocket_address + " for " + startingTopic);
 
-                let webSocket = new WebSocket(websocket_address);
+                socket_address = websocket_address;
+                start_socket(false)
 
-                socket = webSocket;
-
-                webSocket.onerror = function (event) {
-                    onError(event, task_url, websocket_address, webSocket, task_results)
-                };
-
-                webSocket.onopen = function (event) {
-                    onOpen(event, websocket_address, webSocket, task_results, socket_id)
-                    console.log(socket_id + " " + element_prefix + ":=>Task connecting to " + task_url)
-                    processTaskMessages();
-                };
-
-                webSocket.onclose = function (event) {
-                    onClose(event, websocket_address, webSocket, task_results)
-                };
-
-                webSocket.onmessage = function (event) {
-                    onMessage(event, websocket_address, webSocket, element_prefix)
-                };
 
 
             });
@@ -215,21 +222,16 @@ function replace_keys(text, key_dict) {
 
 // https://stackoverflow.com/questions/18673860/defining-a-html-template-to-append-using-jquery
 
-function process_template(template_id, substitutions, target_div, element_prefix) {
+function process_template(template_id, substitutions, target_div) {
     if (target_div === undefined) {
         console.warn("Skipping template " + template_id + ", target_div is undefined");
         return;
     }
 
-    let full_template_id = element_prefix + template_id;
-
-    if (element_prefix === undefined)
-        full_template_id = template_id;
-
-    let template_object = $("template#" + full_template_id);
+    let template_object = $("template#" + template_id);
 
     if (template_object == null) {
-        console.log("Template " + full_template_id + " not found");
+        console.log("Template " + template_id + " not found");
     } else {
         //console.log("template#" + full_template_id);
         let template = template_object.html();
@@ -238,7 +240,7 @@ function process_template(template_id, substitutions, target_div, element_prefix
         //console.log("target_class: " + target_class || "")
 
         if (template == null)
-            console.log("Template " + full_template_id + " not found");
+            console.log("Template " + template_id + " not found");
         else {
             //console.log("Template " + template_id + " FOUND with " + substitutions);
             Object.entries(substitutions).forEach(([key, value]) => {
@@ -268,7 +270,7 @@ function process_template(template_id, substitutions, target_div, element_prefix
             let target = target_div.find('.' + target_class).first();
 
             if (target === undefined)
-                console.log("Error, could not find class " + target_class + " on object #" + target_div.attr("id") + " for template " + full_template_id);
+                console.log("Error, could not find class " + target_class + " on object #" + target_div.attr("id") + " for template " + template_id);
             else {
                 let final_template = template.replace("<!--", "").replace("-->", "");
                 console.log("FINAL TEMPLATE " + final_template + " sending to " + target);
@@ -283,11 +285,11 @@ function process_template(template_id, substitutions, target_div, element_prefix
 // On receipt of a websocket message from the server. The kernels will send messages of dicts
 // in which one of the keys, "type" indicates the type of message, which then correlates with the HTML template to use
 // to render that message
-function onMessage(event, socket_url, webSocket, element_prefix) {
+function onMessage(event, socket_url, webSocket) {
     let dict = JSON.parse(event.data);
 
     if ('class' in dict) {
-        //console.log("Processing Socket Message " + dict['class']);
+        console.log("WEBSOCKET.js: Processing Socket Message " + dict['class']);
         try {
             if (dict['class'] === "ping") {
                 console.log("ping");
@@ -330,7 +332,7 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
                 //console.log("WEBSOCKET MESSAGE:" + dict['step_id']);
                 //console.log(dict);
                 //console.log("TEMPLATE RESULTER --[" + resulter + ']--');
-                process_template(dict['type'], dict['values'], $(resulter), element_prefix);
+                process_template(dict['type'], dict['values'], $(resulter));
             }
 
             if (dict['class'] === "template_array") {
@@ -341,14 +343,14 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
                     let resulter = "#" + dict['step_id'];
                     console.log("WEBSOCKET MESSAGE:" + dict['step_id']);
                     console.log("TEMPLATE ARRAY RESULTER --[" + resulter + ']--');
-                    process_template(dict['type'], new_dict, $(resulter), element_prefix);
+                    process_template(dict['type'], new_dict, $(resulter));
                 })
             }
 
             if (dict['class'] === "template_table") {
                 let resulter = "#" + dict['step_id'];
                 console.log("CLARAMA_WEBSOCKET.js: WEBSOCKET TABLE MESSAGE:" + webSocket.url);
-                process_template(dict['type'], dict['values'], $(resulter), element_prefix);
+                process_template(dict['type'], dict['values'], $(resulter));
                 // Draw the table ID first, then let's put in the data
                 bTable(dict['values']['table_id'], dict['results']);
             }
@@ -357,7 +359,7 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
                 let resulter = "#" + dict['step_id'];
                 console.log("CLARAMA_WEBSOCKET.js: WEBSOCKET CHART MESSAGE:" + webSocket.url + " " + dict['step_id']);
                 console.log($(resulter));
-                process_template(dict['type'], dict['values'], $(resulter), element_prefix);
+                process_template(dict['type'], dict['values'], $(resulter));
                 // Draw the table ID first, then let's put in the data
                 bChart(dict['values']['chart_id'], dict['results']);
             }
@@ -405,7 +407,7 @@ function onMessage(event, socket_url, webSocket, element_prefix) {
     }
 }
 
-function onOpen(event, socket_url, webSocket, task_results, socket_id) {
+function onOpen(event, socket_url, reconnect) {
     console.log('CLARAMA_WEBSOCKET.js: WebSocket Connection established ' + Date.now() + ' on ' + socket_url);
     let kernel_status = $('#kernel_status');
     kernel_status.add("bi-check-circle")
@@ -416,14 +418,22 @@ function onOpen(event, socket_url, webSocket, task_results, socket_id) {
 
     playbutton.removeClass("btn-secondary")
     playbutton.addClass("btn-primary")
+
+    if (reconnect) {
+        console.log("Reconnecting " + reconnect);
+        flash("SOCKET connected", "info");
+    }
 }
 
-function onClose(event, socket_url, webSocket, task_results) {
-    console.log('CLARAMA_WEBSOCKET.js: WebSocket Connection CLOSED ' + Date.now() + ' on ' + socket_url + " on socket " + webSocket + " with result " + task_results);
-    flash("SOCKET lost", "danger");
+function onClose(event, socket_url, webSocket) {
+    console.log('CLARAMA_WEBSOCKET.js: WebSocket Connection CLOSED ' + Date.now() + ' on ' + socket_url + " on socket " + webSocket);
+    // flash("SOCKET lost", "danger");
+    setTimeout(function () {
+        start_socket(true);
+    },100)
 }
 
-function onError(event, task_url, socket_url, webSocket, task_results) {
-    flash("Task " + task_url + " WebSocket Error [" + event.data + "] from " + socket_url + " on socket " + webSocket + " with result " + task_results);
+function onError(event, socket_url, webSocket) {
+    console.log("CLARAMA_WEBSOCKET.js: WebSocket Error [" + event.data + "] from " + socket_url + " on socket " + webSocket);
     //alert("SOCKET error " + event.data, "danger");
 }

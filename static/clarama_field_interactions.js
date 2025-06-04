@@ -42,83 +42,85 @@ function perform_interact(field, args = {}) {
         var element_array = eval(grid_id + "elements");
         var eobj = element_array[element];
         console.log("eobj", eobj)
-        console.log("field_values", field_values);
-        console.log("grid", grid);
 
         if ('links' in eobj) {
-            links = eobj["links"]; // array of file names to refresh
-            console.log("perform interact link", links);
-            //flash(element + ' links to ' + links);
-            for (const link of links) {
-                if (typeof link === 'string' || (typeof link === 'object' && link.element !== "popup" && link.element !== "modal")) {
-                    if (typeof link === 'object') {
-                        linked_element = grid.find('#' + link.element);
-                        if (element_array[link.element]['url'] !== link.url) {
-                            linked_type = "changed";
+            get_field_values({}, true, function (field_registry) {
+                field_values = merge_dicts(field_registry, args);
+                console.log(field_values);
+                console.log("grid", grid);
+                links = eobj["links"]; // array of file names to refresh
+                //console.log(links);
+                //flash(element + ' links to ' + links);
+                for (const link of links) {
+                    if (typeof link === 'string' || (typeof link === 'object' && link.element !== "popup" && link.element !== "modal")) {
+                        if (typeof link === 'object') {
+                            linked_element = grid.find('#' + link.element);
+                            if (element_array[link.element]['url'] !== link.url) {
+                                linked_type = "changed";
+                            } else {
+                                linked_type = linked_element.attr("element-type");
+                            }
                         } else {
+                            linked_element = grid.find('#' + link);
                             linked_type = linked_element.attr("element-type");
                         }
-                    } else {
-                        linked_element = grid.find('#' + link);
-                        linked_type = linked_element.attr("element-type");
+                        console.log("linked_element", linked_element)
+
+                        // console.log("Linking " + link + '->' + linked_type);
+                        switch (linked_type) {
+                            case ".task":
+                                field_values['clarama_var_run'] = 'True'
+                                reload(linked_element, field_values);
+                                break;
+
+                            case ".field":
+                                var form_field = linked_element.find(".clarama-field");
+
+                                if (form_field.hasClass('clarama-delay-field')) {
+                                    console.log("Reloading " + linked_element)
+                                    reload(linked_element, field_values)
+                                } else {
+                                    console.log("Refreshing " + linked_element)
+                                    form_field.empty().trigger('change')
+                                }
+                                break;
+
+                            case "changed":
+                                linked_element[0].innerHTML = "";
+                                linked_element[0].append(showInteractionContent("run", link.url));
+                                enable_interactions($(`#${link.element}`));
+                                break;
+
+                            default:
+                                flash("Don't know how to interact " + linked_type + " - " + link);
+                        }
+                    } else if (typeof link === 'object') {
+                        const {element, url} = link;
+                        $('.select2-container').blur();
+                        if (element === 'popup') {
+                            showPopupNearMouse(url);
+                            // linked_element = $('#interactionPopup');
+                            // console.log("linked_element modal", linked_element)
+                            // console.log("field_values issue_id", field_values);
+                            // reload(linked_element, field_values)
+                        } else if (element === 'modal') {
+                            showModalWithContent(url);
+                            // linked_element = $('#interactionModalBody');
+                            // console.log("linked_element modal", linked_element)
+                            // console.log("field_values issue_id", field_values);
+                            // reload(linked_element, field_values)    
+                        }
+                        // else {
+                        //     const toOverride = document.getElementById(element);
+                        //     console.log("toOverride", toOverride)
+                        //     toOverride.innerHTML = "";
+                        //     toOverride.append(showInteractionContent(url));
+                        //     enable_interactions($(`#${element}`));
+                        // }
                     }
-                    console.log("linked_element", linked_element)
-
-                    // console.log("Linking " + link + '->' + linked_type);
-                    switch (linked_type) {
-                        case ".task":
-                            field_values['clarama_var_run'] = 'True'
-                            reload(linked_element, field_values);
-                            break;
-
-                        case ".field":
-                            var form_field = linked_element.find(".clarama-field");
-
-                            if (form_field.hasClass('clarama-delay-field')) {
-                                console.log("Reloading " + linked_element)
-                                reload(linked_element, field_values)
-                            } else {
-                                console.log("Refreshing " + linked_element)
-                                form_field.empty().trigger('change')
-                            }
-                            break;
-
-                        case "changed":
-                            linked_element[0].innerHTML = "";
-                            linked_element[0].append(showInteractionContent("run", link.url));
-                            enable_interactions($(`#${link.element}`));
-                            break;
-
-                        default:
-                            flash("Don't know how to interact " + linked_type + " - " + link);
-                    }
-                } else if (typeof link === 'object') {
-                    const { element, url } = link;
-                    $('.select2-container').blur();;
-                    if (element === 'popup') {
-                        showPopupNearMouse(url);
-                        // linked_element = $('#interactionPopup');
-                        // console.log("linked_element modal", linked_element)
-                        // console.log("field_values issue_id", field_values);
-                        // reload(linked_element, field_values)
-                    } else if (element === 'modal') {
-                        // console.log("field_values", field_values)
-                        showModalWithContent(url);
-                        // linked_element = $('#interactionModalBody');
-                        // console.log("linked_element modal", linked_element)
-                        // console.log("field_values issue_id", field_values);
-                        // reload(linked_element, field_values)
-                    } 
-                    // else {
-                    //     const toOverride = document.getElementById(element);
-                    //     console.log("toOverride", toOverride)
-                    //     toOverride.innerHTML = "";
-                    //     toOverride.append(showInteractionContent(url));
-                    //     enable_interactions($(`#${element}`));
-                    // }
                 }
-            }
-        } 
+            });
+        }
 
         if (field.length && field.is('table') && field_values['row']['issue_id']) {
             showModalWithContent("/System/Slates/Tasks/Issue_Details.task.yaml");

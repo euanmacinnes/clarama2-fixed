@@ -1,5 +1,15 @@
 //  Copyright (c) 2024. Euan Duncan Macinnes, euan.d.macinnes@gmail.com, S7479622B - All Rights Reserved
 
+function _arrayBufferToBase64(buffer) {
+    var binary = '';
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+}
+
 // This file is responsible for reading all field values (calling the relevant routines for specific cells in clarama_cells.js)
 // gathering that data, and separately then saving this JSON on the server
 
@@ -13,8 +23,18 @@
  * This is used by the task & slate to just get a dict of current field values needed before submitting a task
  *
  */
-function get_field_values() {
+function get_field_values(registry, raw, field_submit) {
+    // Raw is used to run the fields. raw is false, when saving the fields (so we don't want to save the field values of e.g. a selected file in this case
+
+    var files_done = true;
     var result = {}
+
+    var original_url = $("#embedded").attr('original_url');
+
+    if (original_url !== undefined) {
+        result['original_url'] = original_url;
+    }
+
     $('.clarama-field').each(
         function (index) {
             var input = $(this);
@@ -48,13 +68,60 @@ function get_field_values() {
         }
     );
 
-    var original_url = $("#embedded").attr('original_url');
+    if (raw && field_submit !== undefined)
+        $('.clarama-field').each(
+            function (index) {
+                var input = $(this);
+                // var panel = $("#panel_" + input.attr('name'));
+                // console.log("Input Field " + input.attr("id") + ':' + input.attr('fieldtype'));
 
-    if (original_url !== undefined) {
-        result['original_url'] = original_url;
+                switch (input.attr('fieldtype')) {
+                    case 'file':
+                        console.log('CLARAMA_FIELDS.js: file field');
+                        console.log(input);
+                        files_done = false;
+                        var fileval = input[0].files[0];
+                        var fr = new FileReader();
+                        fr.onload = function () {
+                            console.log('CLARAMA_FIELDS.js: file field LOADED');
+                            var data = fr.result;
+
+                            result[input.attr('name')] = {
+                                'filename': input.val(),
+                                'filedatab64': _arrayBufferToBase64(data)
+                            };
+
+                            console.log(result[input.attr('name')]);
+
+                            registry = result;
+
+                            field_submit(registry);
+                        };
+                        fr.readAsArrayBuffer(fileval);
+                }
+            }
+        );
+
+
+    if (files_done) {
+        if (raw)
+            registry = result;
+        else {
+            this_grid = saveGrid();
+            registry['fieldgrid'] = {
+                'elements': this_grid['elements'],
+                'children': this_grid['grid']['children'],
+                'values': result
+            };
+        }
+
+        console.log(registry);
+
+        if (field_submit !== undefined)
+            field_submit(registry);
+        else
+            return registry;
     }
-
-    return result;
 }
 
 function check_fields_valid() {
@@ -103,23 +170,12 @@ function check_fields_valid() {
 /**
  * saveGrid is in the _grid_edit.html and is dynamically generated with the saved grid definition inside the HTML
  */
-function get_fields(fields, cell) {
+function get_fields(fields, cell, field_submit) {
     let socket = $("#edit_socket");
 
     var registry = {
         'streams': [],
         'environment': socket.attr("environment")
-    }
-
-    if (fields) {
-        this_grid = saveGrid();
-        values = get_field_values();
-        // Get the field grid
-        registry['fieldgrid'] = {
-            'elements': this_grid['elements'],
-            'children': this_grid['grid']['children'],
-            'values': values
-        };
     }
 
     $('.stream').each(
@@ -136,7 +192,12 @@ function get_fields(fields, cell) {
             registry['streams'].push(stream_dict);
         });
 
-    return registry;
+    if (fields) {
+        get_field_values(registry, false, field_submit);
+        // Get the field grid
+
+    } else
+        field_submit(registry);
 }
 
 
@@ -233,7 +294,7 @@ $.fn.initselect = function () {
                         contentType: "application/json; charset=utf-8",
                         type: "POST",
                         data: function (params) {
-                            var values = get_field_values()
+                            var values = get_field_values({}, true, undefined);
                             var query = {
                                 search: params.term,
                                 values: values
