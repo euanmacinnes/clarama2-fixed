@@ -222,10 +222,18 @@ $.fn.load_post = function (onfinished, args, json) {
                                     embedded.replaceWith(html);
                                     enable_interactions(parent);
                                 } else {
-                                    embedded.html(html).promise()
-                                        .done(function () {
-                                            enable_interactions(embedded);
-                                        });
+                                    console.log("INTERACTIONS " + embedded.attr("id") + ': ' + final_url);
+                                    console.log({html: html});
+                                    try {
+                                        embedded.html(html).promise()
+                                            .done(function () {
+                                                enable_interactions(embedded);
+                                            });
+                                    } catch (err) {
+                                        console.error("Error loading html in " + embedded.attr("id"));
+                                        console.log(err);
+                                    }
+
                                 }
                                 //console.log('POST onfinished:' + typeof(onfinished) + '-' + onfinished);
 
@@ -344,7 +352,7 @@ $.fn.load = function (onfinished, args) {
                         .then((response) => response.text())
                         .then((html) => {
                             console.log('GET Embedded JQuery Loaded ' + $CLARAMA_ROOT + url)
-                            console.log({ 'html': html })
+                            console.log({'html': html})
                             try {
                                 console.log(final_url)
                                 embedded.html(html).promise()
@@ -468,10 +476,10 @@ function execute_json_url_async(clarama_url, reload = false) {
     return new Promise((resolve, reject) => {
         get_json(clarama_url, function (json) {
             console.log("Executed " + clarama_url)
-    
+
             if (reload)
                 window.location.reload()
-    
+
             if (json['data'] == 'ok') {
                 flash(json['results']);
             } else {

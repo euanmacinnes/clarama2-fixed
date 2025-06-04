@@ -42,8 +42,6 @@ function perform_interact(field, args = {}) {
         if ('links' in eobj) {
             get_field_values({}, true, function (field_registry) {
                 field_values = merge_dicts(field_registry, args);
-                console.log(field_values);
-                console.log("grid", grid);
                 links = eobj["links"]; // array of file names to refresh
                 //console.log(links);
                 //flash(element + ' links to ' + links);
