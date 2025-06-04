@@ -66,7 +66,7 @@ function flash(message, category = "info") {
     $("#alertsmenu").removeClass("hidden");
 
     $(".flash-alert").delay(3200).fadeOut(300);
-    console.log(`${category} (${timeStr}): ${message}`);
+    console.log(`${category}: ${message}`);
 }
 
 setInterval(() => {
