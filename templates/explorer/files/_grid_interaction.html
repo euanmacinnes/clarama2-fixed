@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<div id="interactionPopup">
+<div id="interactionPopup" class="w-100">
 </div>
 
 <script type="text/javascript">
@@ -29,14 +29,15 @@
         $('#interactionModal').modal('show');
         const iModal = document.getElementById("interactionModalBody");
         iModal.innerHTML = '';
-        iModal.append(showInteractionContent(url));
-        // showInteractionContent(url, 'interactionModalBodyContent');
+        iModal.append(showInteractionContent('modal', url));
+        // iModal.innerHTML = '';
+        // iModal.append(showInteractionContent(url, 'interactionModalContent'));
         enable_interactions($("#interactionModalBody"));
     }
 
     function showPopupNearMouse(url) {
         const ipopup = document.getElementById('interactionPopup');
-        // console.log("ipopup", ipopup)
+        console.log("ipopup", ipopup)
 
         if (lastMouseEvent) {
             const popupMaxWidthPercent = 43;
@@ -60,8 +61,9 @@
 
         ipopup.style.display = 'block';
         ipopup.innerHTML = '';
-        ipopup.append(showInteractionContent(url));
-        // showInteractionContent(url, 'interactionPopupContent');
+        ipopup.append(showInteractionContent('popup', url));
+        // ipopup.innerHTML = '';
+        // ipopup.append(showInteractionContent(url, 'interactionPopupContent'));
         enable_interactions($("#interactionPopup"));
 
         document.addEventListener('click', function hideOnClick(e) {
@@ -72,35 +74,42 @@
         });
     }
 
-    function showInteractionContent(relativeP) {
+    function showInteractionContent(interaction, relativeP) {
         // console.log("inside showinteractioncontent fn");
         let currentP;
+        let ICurl;
 
-        if ('{{ file_url | path }}'[0] === '/') {
-            currentP = ($CLARAMA_ROOT + '/render/popup{{ file_url | path }}');
+        if (relativeP === "/System/Slates/Tasks/Issue_Details.task.yaml") {
+            ICurl = '/render/popup' + relativeP;
         } else {
-            currentP = ($CLARAMA_ROOT + '/render/popup/{{ file_url | path }}');
-        }
-
-        let currentSegments = currentP.split('/');
-        let relativeSegments = relativeP.split('/');
-        for (let segment of relativeSegments) {
-            if (segment === '..') {
-                currentSegments.pop(); // Move up one directory
-            } else if (segment !== '.' && segment !== '') {
-                currentSegments.push(segment); // Move into subdirectory
+            if ('{{ file_url | path }}'[0] === '/') {
+                currentP = ($CLARAMA_ROOT + '/render/popup' + '{{ file_url | path }}');
+            } else {
+                currentP = ($CLARAMA_ROOT + '/render/popup' + '/{{ file_url | path }}');
             }
-        }
+            console.log("fileurl/path", '{{ file_url | path }}');
 
-        let ICurl = $CLARAMA_ROOT + currentSegments.join('/');
-        // console.log("ICurl", ICurl)
-        // document.getElementById(displayContentID).setAttribute("url", ICurl);
+            let currentSegments = currentP.split('/');
+            let relativeSegments = relativeP.split('/');
+            for (let segment of relativeSegments) {
+                if (segment === '..') {
+                    currentSegments.pop(); // Move up one directory
+                } else if (segment !== '.' && segment !== '') {
+                    currentSegments.push(segment); // Move into subdirectory
+                }
+            }
+
+            ICurl = $CLARAMA_ROOT + currentSegments.join('/');
+            // document.getElementById(displayContentID).setAttribute("url", ICurl);
+        }
+        console.log("$CLARAMA_ROOT", $CLARAMA_ROOT)
+        console.log("ICurl", ICurl)
 
         const newIC = document.createElement("div");
-        newIC.id = "interactionModalContent";
-        newIC.className = "clarama-element clarama-post-embedded";
-        // newIC.id = "content";
+        // newIC.id = newDivID;
+        newIC.className = "clarama-post-embedded clarama-replaceable";
         newIC.setAttribute("url", `${ICurl}`);
+        // newIC.setAttribute("autorun", "True");
         return newIC;
     }
 </script>
