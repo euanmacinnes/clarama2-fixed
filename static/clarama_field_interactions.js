@@ -82,7 +82,7 @@ function perform_interact(field, args = {}) {
 
                             case "changed":
                                 linked_element[0].innerHTML = "";
-                                linked_element[0].append(showInteractionContent(link.url));
+                                linked_element[0].append(showInteractionContent('run', link.url));
                                 enable_interactions($(`#${link.element}`));
                                 break;
 
@@ -96,7 +96,7 @@ function perform_interact(field, args = {}) {
                         if (element === 'popup') {
                             showPopupNearMouse(url);
                         } else if (element === 'modal') {
-                            showModalWithContent(url, field_values);
+                            showModalWithContent(url);
                             // linked_element = grid.find('#interactionModalContent');
                             // console.log("linked_element modal", linked_element)
                             // reload(linked_element, field_values)
