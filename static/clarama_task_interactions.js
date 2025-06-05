@@ -43,7 +43,7 @@ function task_edit_run(parent) {
                             if (data['data'] == 'ok') {
                                 console.log('Submission was successful.');
                                 console.log(data);
-                                flash("Executing!");
+                                // flash("Executing!");
                             } else {
                                 console.log('Submission was successful.');
                                 console.log(data);
