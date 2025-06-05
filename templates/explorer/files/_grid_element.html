@@ -8,10 +8,25 @@
         <i class="bi bi-three-dots-vertical element_editor grid-elem-menu" data-bs-toggle="dropdown"
             aria-expanded="false" target="{{ target }}" elems="{{ grid_id }}"></i>
         <ul class="dropdown-menu embedded-dropdown-menu grid-element-dropdown-menu">
-            <li><a class="dropdown-item" href="/content/edit/{{ element_content_url }}" target="new"><i
-                        class="bi bi-pencil-square"></i> Edit {{ target_element['url'] }}</a></li>
-            <li><a class="dropdown-item" href="#" onclick="delete_element('{{ target }}');"><i class="bi bi-trash"></i>
-                    Remove Element</a></li>
+            <li class="dropdown-item">
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon3"><a href="/content/edit/{{ element_content_url }}" target="new">{{ target_element['url'] }}</a></span>
+
+                    <span class="input-group-text">?</span>
+
+                    <input type="text" class="form-control" id="paramsInput" placeholder="my_param=something"
+                            value="{{ target_element['params'] }}">
+
+
+                    <button class="btn btn-outline-primary" type="button" id="saveParamsBtn" onclick="saveElementParams('{{ target }}')"><i class="bi bi-floppy"></i></button>
+
+
+                    <button class="btn btn-outline-primary" type="button" id="saveParamsBtn" onclick="delete_element('{{ target }}')"><i class="bi bi-trash"></i></button>
+                </div>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
             {% if field %}
             <li class="dropdown-item">
                 <select class="form-control">
@@ -31,12 +46,7 @@
             </li>
             {% endif %}
             <li class="dropdown-item">
-                <label for="paramsInput" class="form-label mb-1">URL Parameters</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="paramsInput" placeholder="task=1&chart=8"
-                            value="{{ target_element['params'] }}">
-                    <button class="btn btn-outline-primary" type="button" id="saveParamsBtn" onclick="saveElementParams('{{ target }}')">Save</button>
-                </div>
+
             </li>
             {% if grid_id %}
             <li>
