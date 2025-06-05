@@ -259,14 +259,22 @@
         });
 
     function update_preview() {
-        var url = "{{ embedded_url(filename=file_url) }}?type=" + key + "&name=" + $("#name").val()
+        var editor = ace.edit("data");
+        var code = editor.getValue();
+        
+        var url = "{{ embedded_url(filename=file_url) }}"
+            + "?type=" + key
+            + "&name=" + $("#name").val()
             + "&description=" + $("#description").val()
             + "&placeholder=" + $("#placeholder").val()
             + "&default=" + $("#default").val()
             + "&maximum=" + $("#maximum").val()
             + "&minimum=" + $("#minimum").val()
+            + "&readonly=" + $("#readonly").prop('checked')
+            + "&required=" + $("#required").prop('checked')
             + "&step=" + $("#step").val()
             + "&spacing=" + $("#spacing").val()
+            + "&data_text=" + code
         ;
         console.log(url);
         $("#preview").attr("url", url);
@@ -288,6 +296,8 @@
             "minimum": $("#minimum").val(),
             "step": $("#step").val(),
             "spacing": $("#spacing").val(),
+            "readonly": $("#readonly").prop('checked'),
+            "required": $("#required").prop('checked'),
             "data_text": code
         }
 
