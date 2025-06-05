@@ -145,8 +145,6 @@
           <input type="hidden" id="selected-elem" name="selectedElementUrl" value=""> 
           <div class="mb-3 dropdown-container d-none" id="elementDropdownContainer">
           </div>
-
-          <!-- TO DO: add tags string field -->
   
           <button type="button" class="btn btn-outline-secondary w-100" data-bs-toggle="modal" id="browseFileBtn"
             data-bs-target="#browseFileModal"
@@ -159,6 +157,11 @@
             class="form-control rounded-0 border border-end-0 border-light-subtle gridbrowsefile_input"
             placeholder="Data Source Filename" aria-label="Data source relative filename"
             value="{{ source }}" required>
+
+          <div class="my-3">
+            <label for="interaction-params" class="form-label">URL Parameters</label>
+            <input type="text" class="form-control" id="interaction-params" name="interactionParams" placeholder="e.g. task=123&chart=8">
+          </div>
         </div>
 
         <div class="modal-footer">
@@ -209,12 +212,14 @@
       const target = button.getAttribute('data-target');
       const url = button.getAttribute('data-url');
       const index = button.getAttribute('data-index');
+      const params = button.getAttribute('data-params');
       
       if (type == "element") showElementOptions(url, initialType);
 
       currentTarget = target;
       document.getElementById('interaction-target').value = target;
       document.getElementById('interaction-index').value = index;
+      document.getElementById('interaction-params').value = params;
 
       inputId_field.value = url;
       
@@ -657,6 +662,7 @@
     const file_url = document.getElementById("grid-elem").value.trim();
     const gridElem = document.getElementById("interaction-target").value;
     const elemIndex = document.getElementById('interaction-index').value;
+    const urlParams = document.getElementById('interaction-params').value;
     
     var checkedType = $('input[name="interactionType"]:checked').val();
     console.log("checkedType 1", checkedType)
@@ -678,11 +684,11 @@
     let grid_element_target = document.getElementById('grid_element_target-'+gridElem);
 
     if (elemIndex == "") {
-      elementToAddInteraction.links.push({ element: checkedType, url: file_url });
-      grid_element_target.appendChild(addGridInteraction(gridElem, checkedType, file_url, elementToAddInteraction.links.length -1));
+      elementToAddInteraction.links.push({ element: checkedType, url: file_url, params: urlParams });
+      grid_element_target.appendChild(addGridInteraction(gridElem, checkedType, file_url, elementToAddInteraction.links.length -1, urlParams));
       enable_interactions($("#grid_element_target-" + gridElem));
     } else {
-      elementToAddInteraction.links[elemIndex] = { element: checkedType, url: file_url };
+      elementToAddInteraction.links[elemIndex] = { element: checkedType, url: file_url, params: urlParams };
       if (!grid_element_target) return;
       const li = grid_element_target.querySelector(`li[loop-index="${elemIndex}"]`);
       if (!li) return;

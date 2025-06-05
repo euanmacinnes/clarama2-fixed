@@ -36,20 +36,22 @@
                 <h6 class="dropdown-header">Interactions: <i class="bi bi-plus-circle grid-interaction-add" data-bs-toggle="modal"
                     data-bs-target="#interactionSettingsModal" onclick="openInteractionSettings('{{ target }}')" style="cursor: pointer;"></i></h6>
             </li>
-            {% endif %}
             <div id="grid_element_target-{{ target }}">
                 {% for link in elements[target]['links'] %}
                     {% set loop_index = loop.index-1 %}
                     {% if link.element is defined %}
                         {% set current_element = link.element %}
                         {% set current_element_url = link.url %}
+                        {% set current_element_params = link.params %}
                     {% else %}
                         {% set current_element = link %}
                         {% set current_element_url = elements[link]['url'] %}
+                        {% set current_element_params = elements[link]['params'] %}
                     {% endif %}
                     {% include "explorer/steps/grid_edit_interaction.html" %}
                 {% endfor %}
             </div>
+            {% endif %}
         </ul>
     </div>
 </div>
