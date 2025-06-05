@@ -153,10 +153,15 @@
             Browse File…
           </button>
 
-          <input id="grid-elem" type="text"
-            class="form-control rounded-0 border border-end-0 border-light-subtle gridbrowsefile_input"
-            placeholder="Data Source Filename" aria-label="Data source relative filename"
-            value="{{ source }}" required>
+          <div class="input-group">
+            <input id="grid-elem" type="text"
+              class="form-control rounded-0 border border-end-0 border-light-subtle gridbrowsefile_input"
+              placeholder="Data Source Filename" aria-label="Data source relative filename"
+              value="{{ source }}">
+              <button type="button" class="btn btn-outline-secondary" id="clearFileInput">
+                <i class="bi bi-x-lg"></i>
+              </button>
+          </div>
 
           <div class="my-3">
             <label for="interaction-params" class="form-label">URL Parameters</label>
@@ -213,13 +218,13 @@
       const url = button.getAttribute('data-url');
       const index = button.getAttribute('data-index');
       const params = button.getAttribute('data-params');
-      
-      if (type == "element") showElementOptions(url, initialType);
 
       currentTarget = target;
       document.getElementById('interaction-target').value = target;
       document.getElementById('interaction-index').value = index;
       document.getElementById('interaction-params').value = params;
+
+      if (type == "element") showElementOptions(url, initialType);
 
       inputId_field.value = url;
       
@@ -251,6 +256,8 @@
     selectedDiv.id = `add_content_interactions-${currentTarget}`;
     selectedDiv.textContent = elemType || "Select an element";
     dropdownWrapper.appendChild(selectedDiv);
+
+    document.getElementById('selected-elem').value = elemType;
   
     const optionsContainer = document.createElement('div');
     optionsContainer.className = 'custom-options hidden';
@@ -288,14 +295,13 @@
       optionDiv.addEventListener('click', () => {
         selectedDiv.textContent = elem;
         document.getElementById('selected-elem').value = elem;
-        inputId_field.value = value['url'];
+        storeSelectElemOriUrl.value = value['url'];
         optionsContainer.classList.add('hidden');
       });
   
       optionsContainer.appendChild(optionDiv);
       hasOptions = true;
     }
-    document.getElementById('selected-elem').value = Object.keys(elements)[0];
   
     selectedDiv.addEventListener('click', () => {
       optionsContainer.classList.toggle('hidden');
@@ -325,6 +331,11 @@
         dropdownContainer.innerHTML = '';
       }
     });
+  });
+
+  document.getElementById('clearFileInput').addEventListener('click', function () {
+    const input = document.getElementById('grid-elem');
+    input.value = '';
   });
 
   $( document ).ready(() => {
@@ -680,6 +691,11 @@
         alert("Please select an element")
         return;
       }
+    } else {
+      if (file_url == "") {
+        alert("Please select a Data Source Filename")
+        return;
+      }
     }
 
     var elementToAddInteraction = {{ grid_id }}elements[gridElem];
@@ -709,6 +725,7 @@
       if (gearIcon) {
         gearIcon.setAttribute('data-element', checkedType);
         gearIcon.setAttribute('data-url', file_url);
+        gearIcon.setAttribute('data-params', urlParams);
       }
     }
 

@@ -48,7 +48,7 @@ function perform_interact(field, args = {}) {
                     if (typeof link === 'string' || (typeof link === 'object' && link.element !== "popup" && link.element !== "modal")) {
                         if (typeof link === 'object') {
                             linked_element = grid.find('#' + link.element);
-                            if (element_array[link.element]['url'] !== link.url) {
+                            if (element_array[link.element]['url'] !== link.url && link.url !== "") {
                                 linked_type = "changed";
                             } else {
                                 linked_type = linked_element.attr("element-type");
