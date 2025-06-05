@@ -658,6 +658,12 @@
     handle_interaction_settings();
   });
 
+  function saveElementParams(target) {
+    const params = document.getElementById("paramsInput").value;
+    {{ grid_id }}elements[target].params = params;
+    console.log("updated element", {{ grid_id }}elements);
+  }
+
   function handle_interaction_settings() {
     const file_url = document.getElementById("grid-elem").value.trim();
     const gridElem = document.getElementById("interaction-target").value;

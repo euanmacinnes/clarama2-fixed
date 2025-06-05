@@ -13,7 +13,8 @@
             <li><a class="dropdown-item" href="#" onclick="delete_element('{{ target }}');"><i class="bi bi-trash"></i>
                     Remove Element</a></li>
             {% if field %}
-            <li class="dropdown-item"><select class="form-control">
+            <li class="dropdown-item">
+                <select class="form-control">
                     <option id="text_left">Left-Aligned Text</option>
                     <option id="text_right">Right-Aligned Text</option>
                     <option id="text_top">Text appears on top</option>
@@ -21,13 +22,22 @@
                     <option id="tight">Grouped. Text appears on left, boxed, with a</option>
                     <option id="tight">Tight (small, title only)</option>
                     <option id="basic">Basic (No text shown)</option>
-                </select></li>
+                </select>
+            </li>
             {% else %}
             <li class="dropdown-item d-flex">
                 <input type="checkbox" {{ get_checked }} id="{{ target }}_refresh" class="me-1">
                 <label class="form-check-label">Auto-Refresh Task</label>
             </li>
             {% endif %}
+            <li class="dropdown-item">
+                <label for="paramsInput" class="form-label mb-1">URL Parameters</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="paramsInput" placeholder="task=1&chart=8"
+                            value="{{ target_element['params'] }}">
+                    <button class="btn btn-outline-primary" type="button" id="saveParamsBtn" onclick="saveElementParams('{{ target }}')">Save</button>
+                </div>
+            </li>
             {% if grid_id %}
             <li>
                 <hr class="dropdown-divider">
