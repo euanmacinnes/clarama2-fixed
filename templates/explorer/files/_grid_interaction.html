@@ -46,9 +46,8 @@
             const mouseX = lastMouseEvent.pageX;
             const mouseY = lastMouseEvent.pageY;
 
-            // If the popup would overflow past the right edge
+            // check if popup overflowed past right
             if (mouseX + popupMaxWidth > viewportWidth) {
-                // Align popup from the right instead
                 ipopup.style.left = 'unset';
                 ipopup.style.right = (viewportWidth - mouseX) + 'px';
             } else {

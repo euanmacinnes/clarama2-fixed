@@ -286,7 +286,7 @@
 }
 
 .embedded-dropdown-menu {
-    position: fixed !important;
+    /* position: fixed !important; */
     top: 0 !important;
     position: absolute !important;
     transform: none !important;
@@ -294,9 +294,15 @@
     /* overflow-y: scroll;
     height: 305px; */
     right: 0 !important;
+    left: unset !important
     z-index: 1000;
     min-width: 700px;
     box-shadow: 10px 10px 5px lightblue;
+}
+
+.embedded-dropdown-menu.left-align {
+    left: 0 !important;
+    right: unset !important;
 }
 
 .loading-spinner {

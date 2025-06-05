@@ -1,5 +1,8 @@
 document.addEventListener('shown.bs.dropdown', function (event) {
-    const dropdown = event.target.closest('.dropdown');
+    const trigger = event.target.closest('.grid-elem-menu');
+    if (!trigger) return;
+
+    const dropdown = event.target.closest('[id^="grid-elem-dropdown-"]');
     if (!dropdown) return;
 
     const dropdownMenu = dropdown.querySelector('.dropdown-menu');
@@ -17,6 +20,16 @@ document.addEventListener('shown.bs.dropdown', function (event) {
             if (targetDiv) targetDiv.classList.remove('highlight');
         });
     });
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const menuWidth = dropdownMenu.offsetWidth;
+ 
+    // check if menu overflowed left
+    if (triggerRect.left - menuWidth < 0) {
+        dropdownMenu.classList.add('left-align');
+    } else {
+        dropdownMenu.classList.remove('left-align');
+    }
 });
 
 $(document).on('click', '.delete-grid-interaction', function () {
