@@ -145,27 +145,30 @@
           <input type="hidden" id="selected-elem" name="selectedElementUrl" value=""> 
           <div class="mb-3 dropdown-container d-none" id="elementDropdownContainer">
           </div>
-  
-          <button type="button" class="btn btn-outline-secondary w-100" data-bs-toggle="modal" id="browseFileBtn"
-            data-bs-target="#browseFileModal"
-            inputId="grid-elem"
-            filters="*.task.yaml">
-            Browse File…
-          </button>
 
-          <div class="input-group">
+          <div class="input-group mb-3">
+            <button type="button" class="btn btn-outline-primary input-group-text" data-bs-toggle="modal" id="browseFileBtn"
+              data-bs-target="#browseFileModal"
+              inputId="grid-elem"
+              filters="*.task.yaml">
+              <i class="bi bi-folder2-open"></i>
+            </button>
+             
             <input id="grid-elem" type="text"
-              class="form-control rounded-0 border border-end-0 border-light-subtle gridbrowsefile_input"
-              placeholder="Data Source Filename" aria-label="Data source relative filename"
-              value="{{ source }}">
-              <button type="button" class="btn btn-outline-secondary" id="clearFileInput">
-                <i class="bi bi-x-lg"></i>
-              </button>
-          </div>
+              class="form-control removeInputFocus"
+              placeholder="Data Source Filename"
+              value="{{ source }}"/>
 
-          <div class="my-3">
-            <label for="interaction-params" class="form-label">URL Parameters</label>
-            <input type="text" class="form-control" id="interaction-params" name="interactionParams" placeholder="e.g. task=123&chart=8">
+            <button type="button" class="btn btn-outline-secondary border-end-0 p-1" id="clearFileInput" style="font-size: 1rem;border-color: #dee2e6;">
+              <i class="bi bi-x"></i>
+            </button>
+             
+            <span class="input-group-text">?</span>
+            <input type="text" class="form-control removeInputFocus" id="interaction-params" name="interactionParams" placeholder="my_param=something">
+            
+            <button type="button" class="btn btn-outline-secondary p-1" id="clearFileInputParams" style="font-size: 1rem;border-color: #dee2e6;">
+              <i class="bi bi-x"></i>
+            </button>
           </div>
         </div>
 
@@ -335,6 +338,11 @@
 
   document.getElementById('clearFileInput').addEventListener('click', function () {
     const input = document.getElementById('grid-elem');
+    input.value = '';
+  });
+
+  document.getElementById('clearFileInputParams').addEventListener('click', function () {
+    const input = document.getElementById('interaction-params');
     input.value = '';
   });
 
@@ -933,6 +941,7 @@
 
     // Function to navigate to a specific path
     function navigateToPath(path, breadcrumbId, selectId) {
+      console.log("path", path)
       const match = path.match(/^\/content\/json\/?(.*?)(\?|$)/);
       currentModalAddContentPath = match ? match[1] : "";
       renderBreadcrumb(path, breadcrumbId, selectId);

@@ -11,7 +11,7 @@
                 </button> -->
 
                 <div class="input-group">
-                    <input id="task_step_{{ loop_index }}_source" type="text" class="form-control rounded-0 border border-end-0 border-light-subtle gridbrowsefile_input"
+                    <input id="task_step_{{ loop_index }}_source" type="text" class="form-control rounded-0 border border-end-0 border-light-subtle removeInputFocus"
                     placeholder="Task Filename" aria-label="Task relative filename"
                     value="{{ source }}">
                     <button type="button" class="gridbrowsefile border border-start-0 border-light-subtle bg-white px-2" data-bs-toggle="modal" data-bs-target="#browseFileModal" inputId="task_step_{{ loop_index }}_source" filters="*.task.yaml">
