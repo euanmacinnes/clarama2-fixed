@@ -73,31 +73,41 @@ function get_field_values(registry, raw, field_submit) {
             function (index) {
                 var input = $(this);
                 // var panel = $("#panel_" + input.attr('name'));
-                // console.log("Input Field " + input.attr("id") + ':' + input.attr('fieldtype'));
+                console.log("Input Field " + input.attr("id") + ':' + input.val());
 
                 switch (input.attr('fieldtype')) {
                     case 'file':
-                        console.log('CLARAMA_FIELDS.js: file field');
-                        console.log(input);
-                        files_done = false;
-                        var fileval = input[0].files[0];
-                        var fr = new FileReader();
-                        fr.onload = function () {
-                            console.log('CLARAMA_FIELDS.js: file field LOADED');
-                            var data = fr.result;
+                        if (input.val() !== '') {
+                            console.log('CLARAMA_FIELDS.js: file field');
+                            console.log(input);
+                            files_done = false;
+                            var fileval = input[0].files[0];
+                            var fr = new FileReader();
+                            fr.onload = function () {
+                                console.log('CLARAMA_FIELDS.js: file field LOADED');
+                                var data = fr.result;
 
+                                result[input.attr('name')] = {
+                                    'filename': input.val(),
+                                    'filedatab64': _arrayBufferToBase64(data)
+                                };
+
+                                console.log(result[input.attr('name')]);
+
+                                registry = result;
+
+                                field_submit(registry);
+                            };
+                            fr.readAsArrayBuffer(fileval);
+                        } else {
                             result[input.attr('name')] = {
-                                'filename': input.val(),
-                                'filedatab64': _arrayBufferToBase64(data)
+                                'filename': '',
+                                'filedatab64': '',
                             };
 
-                            console.log(result[input.attr('name')]);
-
                             registry = result;
-
                             field_submit(registry);
-                        };
-                        fr.readAsArrayBuffer(fileval);
+                        }
                 }
             }
         );
