@@ -30,13 +30,13 @@
             {% if field %}
             <li class="dropdown-item">
                 <select class="form-control" id="{{ target }}_layout">
-                    <option id="text_left">Left-Aligned Text</option>
-                    <option id="text_right">Right-Aligned Text</option>
-                    <option id="text_top">Text appears on top</option>
-                    <option id="text_bottom">Text appears underneath</option>
-                    <option id="tight">Grouped. Text appears on left, boxed, with a</option>
-                    <option id="tight">Tight (small, title only)</option>
-                    <option id="basic">Basic (No text shown)</option>
+                    <option id="text_left" {{ selected("text_left", target_element['layout']) }}>Left-Aligned Text</option>
+                    <option id="text_right" {{ selected("text_right", target_element['layout']) }}>Right-Aligned Text</option>
+                    <option id="text_top" {{ selected("text_top", target_element['layout']) }}>Text appears on top</option>
+                    <option id="text_bottom" {{ selected("text_bottom", target_element['layout']) }}>Text appears underneath</option>
+                    <option id="text_grouped" {{ selected("text_grouped", target_element['layout']) }}>Grouped. Text appears on left, boxed, with a</option>
+                    <option id="tight" {{ selected("tight", target_element['layout']) }}>Tight (small, title only)</option>
+                    <option id="basic" {{ selected("basic", target_element['layout']) }}>Basic (No text shown)</option>
                 </select>
             </li>
             {% else %}
