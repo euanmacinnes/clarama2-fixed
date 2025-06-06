@@ -678,8 +678,17 @@
   });
 
   function saveElementParams(target) {
-    const params = document.getElementById("paramsInput").value;
+    const params = $("#" + target + "_paramsInput").val();
+    const refresh = $("#" + target + "_refresh").val();    
+    const layout = $("#" + target + "_layout").val();
     {{ grid_id }}elements[target]['params'] = params;
+
+    if (refresh !== undefined)
+    {{ grid_id }}elements[target]['refresh'] = refresh;
+
+    if (layout !== undefined)
+    {{ grid_id }}elements[target]['layout'] = layout;
+
     console.log("updated element " + target, {{ grid_id }}elements[target]);
   }
 
