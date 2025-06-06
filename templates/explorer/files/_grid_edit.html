@@ -680,7 +680,7 @@
   function saveElementParams(target) {
     const params = $("#" + target + "_paramsInput").val();
     const refresh = $("#" + target + "_refresh").val();    
-    const layout = $("#" + target + "_layout").val();
+    const layout = $("#" + target + "_layout option:selected").attr('id');
     {{ grid_id }}elements[target]['params'] = params;
 
     if (refresh !== undefined)
