@@ -14,7 +14,7 @@
 
                     <span class="input-group-text">?</span>
 
-                    <input type="text" class="form-control" id="paramsInput" placeholder="my_param=something"
+                    <input type="text" class="form-control" id="{{ target }}_paramsInput" placeholder="my_param=something"
                             value="{{ target_element['params'] }}">
 
 
@@ -29,7 +29,7 @@
             </li>
             {% if field %}
             <li class="dropdown-item">
-                <select class="form-control">
+                <select class="form-control" id="{{ target }}_layout">
                     <option id="text_left">Left-Aligned Text</option>
                     <option id="text_right">Right-Aligned Text</option>
                     <option id="text_top">Text appears on top</option>
