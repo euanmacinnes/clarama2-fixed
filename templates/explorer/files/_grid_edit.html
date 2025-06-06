@@ -671,8 +671,8 @@
 
   function saveElementParams(target) {
     const params = document.getElementById("paramsInput").value;
-    {{ grid_id }}elements[target].params = params;
-    console.log("updated element", {{ grid_id }}elements);
+    {{ grid_id }}elements[target]['params'] = params;
+    console.log("updated element " + target, {{ grid_id }}elements[target]);
   }
 
   function handle_interaction_settings() {
