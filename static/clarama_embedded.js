@@ -313,9 +313,9 @@ function merge_dicts(a, b) {
  * @description Resets the loading state of the element and triggers a reload
  * using either GET or POST depending on the element's class
  */
-function reload(embedded, url, args) {
+function reload(embedded, args) {
     console.log("embedded", embedded)
-    console.log("Reloading " + url + " with args " + JSON.stringify(args))
+    console.log("Reloading " + embedded.attr('url') + " with args " + JSON.stringify(args))
     embedded.attr("clarama_loaded", 'false');
     embedded.attr("autorun", 'true');
 
