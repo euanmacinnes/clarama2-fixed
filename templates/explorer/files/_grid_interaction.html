@@ -32,7 +32,7 @@
         iModal.append(showInteractionContent('modal', url, parameters));
         // iModal.innerHTML = '';
         // iModal.append(showInteractionContent(url, 'interactionModalContent'));
-        enable_interactions($("#interactionModalBody"));
+        enable_interactions($("#interactionModalBody"), true);
     }
 
     function showPopupNearMouse(url, parameters) {
@@ -63,7 +63,7 @@
         ipopup.append(showInteractionContent('popup', url, parameters));
         // ipopup.innerHTML = '';
         // ipopup.append(showInteractionContent(url, 'interactionPopupContent'));
-        enable_interactions($("#interactionPopup"));
+        enable_interactions($("#interactionPopup"), true);
 
         document.addEventListener('click', function hideOnClick(e) {
             if (!ipopup.contains(e.target)) {
