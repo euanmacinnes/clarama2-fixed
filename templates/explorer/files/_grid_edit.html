@@ -475,6 +475,10 @@
     children: {{ grid_json | safe }}
   };
 
+  GridStack.renderCB = function(el, w) {
+  el.innerHTML = w.content;
+};
+
   // document.querySelector('#saved').value = JSON.stringify(options);
   let {{ grid_id }}grid = GridStack.addGrid(document.querySelector('#containment-wrapper'), {{ grid_id }}options);
 

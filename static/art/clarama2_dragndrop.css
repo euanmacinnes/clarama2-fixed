@@ -315,12 +315,13 @@
     animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-    100% {
-        transform: rotate(360deg);
+    @keyframes spin {
+        100% {
+            transform: rotate(360deg);
+        }
     }
-}
 
-.select2-container--open .select2-dropdown {
-    z-index: 100000 !important;
+    .select2-container--open .select2-dropdown {
+        z-index: 100000 !important;
+    }
 }
