@@ -159,21 +159,21 @@
               placeholder="Data Source Filename"
               value="{{ source }}"/>
 
-            <button type="button" class="btn btn-outline-secondary border-end-0 p-1" id="clearFileInput" style="font-size: 1rem;border-color: #dee2e6;">
+            <button type="button" class="btn btn-outline-secondary border-end-0 p-1" onclick="clearInput('grid-elem')" style="font-size: 1rem;border-color: #dee2e6;">
               <i class="bi bi-x"></i>
             </button>
              
             <span class="input-group-text">?</span>
             <input type="text" class="form-control removeInputFocus" id="interaction-params" name="interactionParams" placeholder="my_param=something">
             
-            <button type="button" class="btn btn-outline-secondary p-1" id="clearFileInputParams" style="font-size: 1rem;border-color: #dee2e6;">
+            <button type="button" class="btn btn-outline-secondary p-1" onclick="clearInput('interaction-params')" style="font-size: 1rem;border-color: #dee2e6;">
               <i class="bi bi-x"></i>
             </button>
           </div>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeInteractionsModal()">Close</button>
           <button type="submit" class="btn btn-primary">Apply</button>
         </div>
       </div>
@@ -193,6 +193,7 @@
   var {{ grid_id }}elements = {{ element_json | safe }};
   console.log("{{ grid_id }}elements", {{ grid_id }}elements);
   let currentTarget = null;
+  const currentPath = "{{ file_url | path }}";
 
   function openInteractionSettings(button) {
     document.getElementById('interactionSettingsModal').classList.add('modal-open');
@@ -241,6 +242,10 @@
       document.getElementById('interaction-title').innerHTML = "Add Interaction";
       currentTarget = button;
     }
+  }
+
+  function closeInteractionsModal() {
+    document.getElementById('interactionSettingsModal').classList.remove('modal-open');
   }
 
   function showElementOptions(url = "", elemType = "") {
@@ -336,15 +341,19 @@
     });
   });
 
-  document.getElementById('clearFileInput').addEventListener('click', function () {
-    const input = document.getElementById('grid-elem');
-    input.value = '';
-  });
-
-  document.getElementById('clearFileInputParams').addEventListener('click', function () {
-    const input = document.getElementById('interaction-params');
-    input.value = '';
-  });
+  function clearInput(id, event = null) {
+    if (event) event.stopPropagation();
+    
+    if (id) {
+      const el = document.getElementById(id);
+      if (el.tagName === 'A') {
+        el.textContent = '';
+        el.removeAttribute('href');
+      } else {
+        el.value = '';
+      }
+    }
+  }
 
   $( document ).ready(() => {
     $(".toggle_show").click(function () {
@@ -391,6 +400,7 @@
     }
 
     let interactionSettingsWasOpen = false;
+    var elementMenuWasOpen = false;
     // double-click on a file in the modal
     $('#add_content_addfield').on('dblclick', 'option', function () {
       document.getElementById('new_content').value = '';
@@ -642,11 +652,25 @@
 
     const inputId = $("#browseFileModal").data('inputId');
     const targetInput = document.getElementById(inputId);
+    let target = inputId.replace('_elemInput', ''); 
     if (targetInput) {
       const newSource = $CLARAMA_ROOT + selected_val;
-      targetInput.value = newSource;
+      if (inputId.includes('_elemInput')) {
+        targetInput.href = "/content/edit/" + resolveRelativeFilePath(newSource);
+        targetInput.textContent = newSource;
+        {{ grid_id }}elements[target]['url'] = newSource;
 
-      if (inputId !== "grid-elem") {
+        let parentDiv = document.getElementById(target);
+        const currentUrl = parentDiv.getAttribute('url');
+        parentDiv.setAttribute('url', "/render/embed/" + resolveRelativeFilePath(newSource) + "?" + $("#" + target + "_paramsInput").val() + "&clarama_layout=text_left&clarama_autorefresh=true&clarama_element_prefix=element_5_&clarama_element_width=4&clarama_element_height=2&clarama_element_aspect=2.0");
+        
+        // console.log("new url", document.getElementById(target).getAttribute('url'))
+        enable_interactions($(`#${target}`).parent(), true);
+      } else {
+        targetInput.value = newSource;
+      }
+
+      if (inputId !== "grid-elem" && (!inputId.includes('_elemInput'))) {
         const btnId = inputId.replace("_source", "_browse");
         const browseLink = document.getElementById(btnId + "_link");
         if (browseLink) {
@@ -680,16 +704,16 @@
   function saveElementParams(target) {
     const params = $("#" + target + "_paramsInput").val();
     const refresh = $("#" + target + "_refresh").val();    
+    const fit = $("#" + target + "_fit").val();    
     const layout = $("#" + target + "_layout option:selected").attr('id');
-    {{ grid_id }}elements[target]['params'] = params;
-
-    if (refresh !== undefined)
-    {{ grid_id }}elements[target]['refresh'] = refresh;
-
-    if (layout !== undefined)
-    {{ grid_id }}elements[target]['layout'] = layout;
+    
+    if (params !== undefined) {{ grid_id }}elements[target]['params'] = params;
+    if (refresh !== undefined) {{ grid_id }}elements[target]['refresh'] = refresh;
+    if (fit !== undefined) {{ grid_id }}elements[target]['autofit'] = fit;
+    if (layout !== undefined) {{ grid_id }}elements[target]['layout'] = layout;
 
     console.log("updated element " + target, {{ grid_id }}elements[target]);
+    enable_interactions($(`#${target}`).parent(), true);
   }
 
   function handle_interaction_settings() {
@@ -805,7 +829,6 @@
   }
 
   // Extract the current directory depth
-  const currentPath = "{{ file_url | path }}";
   var relativePath;
   function renderBreadcrumb(path, breadcrumbId, selectId) {
     const targetPath = path.split('?')[0].split('/').slice(3).join('/');
@@ -955,6 +978,19 @@
       currentModalAddContentPath = match ? match[1] : "";
       renderBreadcrumb(path, breadcrumbId, selectId);
       renderFilesNFolder(path, breadcrumbId, selectId);
+    }
+
+    function resolveRelativeFilePath(relativePath) {
+      const baseParts = currentPath.split('/').filter(Boolean);
+      const relativeParts = relativePath.split('/').filter(Boolean);
+      for (const part of relativeParts) {
+        if (part === '..') {
+          baseParts.pop();
+        } else if (part !== '.') {
+          baseParts.push(part);
+        }
+      }
+      return baseParts.join('/');
     }
 
 </script>

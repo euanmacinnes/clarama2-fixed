@@ -10,15 +10,29 @@
         <ul class="dropdown-menu embedded-dropdown-menu grid-element-dropdown-menu">
             <li class="dropdown-item">
                 <div class="input-group">
-                    <span class="input-group-text" id="basic-addon3"><a href="/content/edit/{{ element_content_url }}" target="new">{{ target_element['url'] }}</a></span>
+                    <button type="button" class="btn btn-outline-primary input-group-text" data-bs-toggle="modal" id="browseFileBtn"
+                        data-bs-target="#browseFileModal"
+                        inputId="{{ target }}_elemInput"
+                        filters="*.task.yaml">
+                        <i class="bi bi-folder2-open"></i>
+                    </button>
+
+                    <span class="input-group-text"><a id="{{ target }}_elemInput" href="/content/edit/{{ element_content_url }}" target="new">{{ target_element['url'] }}</a></span>
+
+                    <button type="button" class="btn btn-outline-secondary border-end-0 p-1" onclick="clearInput('{{ target }}_elemInput', event)" style="font-size: 1rem;border-color: #dee2e6;">
+                      <i class="bi bi-x"></i>
+                    </button>
 
                     <span class="input-group-text">?</span>
 
-                    <input type="text" class="form-control" id="{{ target }}_paramsInput" placeholder="my_param=something"
+                    <input type="text" class="form-control removeInputFocus" id="{{ target }}_paramsInput" placeholder="my_param=something"
                             value="{{ target_element['params'] }}">
 
+                    <button type="button" class="btn btn-outline-secondary p-1 border-end-0" onclick="clearInput('{{ target }}_paramsInput', event)" style="font-size: 1rem;border-color: #dee2e6;">
+                        <i class="bi bi-x"></i>
+                    </button>
 
-                    <button class="btn btn-outline-primary" type="button" id="saveParamsBtn" onclick="saveElementParams('{{ target }}')"><i class="bi bi-floppy"></i></button>
+                    <!-- <button class="btn btn-outline-primary" type="button" id="saveParamsBtn" onclick="saveElementParams('{{ target }}')"><i class="bi bi-floppy"></i></button> -->
 
 
                     <button class="btn btn-outline-primary" type="button" id="saveParamsBtn" onclick="delete_element('{{ target }}')"><i class="bi bi-trash"></i></button>
@@ -29,7 +43,7 @@
             </li>
             {% if field %}
             <li class="dropdown-item">
-                <select class="form-control" id="{{ target }}_layout">
+                <select class="form-control" id="{{ target }}_layout" onchange="saveElementParams('{{ target }}')">
                     <option id="text_left" {{ selected("text_left", target_element['layout']) }}>Left-Aligned Text</option>
                     <option id="text_right" {{ selected("text_right", target_element['layout']) }}>Right-Aligned Text</option>
                     <option id="text_top" {{ selected("text_top", target_element['layout']) }}>Text appears on top</option>
@@ -41,10 +55,14 @@
             </li>
             {% else %}
             <li class="dropdown-item d-flex">
-                <input type="checkbox" {{ get_checked }} id="{{ target }}_refresh" class="me-1">
-                <label class="form-check-label">Auto-Refresh Task</label>
+                <input type="checkbox" {{ get_checked }} id="{{ target }}_refresh" class="me-1" onchange="saveElementParams('{{ target }}')">
+                <label class="{{ target }}_refresh">Auto-Refresh Task</label>
             </li>
             {% endif %}
+            <li class="dropdown-item d-flex">
+                <input type="checkbox" id="{{ target }}_fit" class="me-1" onchange="saveElementParams('{{ target }}')">
+                <label class="{{ target }}_fit">Auto-Fit</label>
+            </li>
             <li class="dropdown-item">
 
             </li>

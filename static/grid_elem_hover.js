@@ -7,6 +7,15 @@ document.addEventListener('shown.bs.dropdown', function (event) {
 
     const dropdownMenu = dropdown.querySelector('.dropdown-menu');
     if (!dropdownMenu) return;
+
+    const inputs = dropdownMenu.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            let inputId = input.id;
+            let target = inputId.replace(/_paramsInput/g, ''); 
+            saveElementParams(target);
+        });
+    });
     const items = dropdownMenu.querySelectorAll('.slate-elem-dropdown-item');
     items.forEach(item => {
         item.addEventListener('mouseover', () => {

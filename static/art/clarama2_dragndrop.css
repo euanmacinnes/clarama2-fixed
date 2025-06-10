@@ -297,7 +297,8 @@
     left: unset !important
     z-index: 1000;
     min-width: 700px;
-    box-shadow: 10px 10px 5px lightblue;
+    /* box-shadow: 10px 10px 5px lightblue; */
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .embedded-dropdown-menu.left-align {

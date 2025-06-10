@@ -1,4 +1,4 @@
-function enable_interactions(parent) {
+function enable_interactions(parent, reload=false) {
     // console.log('initialising interactions on ' + parent.attr('id') + ':' + parent.attr("class") );
 
     //      parent.find('.clarama-execute').execute();
@@ -63,7 +63,11 @@ function enable_interactions(parent) {
         }
     });
     hoverover_this(parent.find('.hoverover'));
-
+    
+    if (reload) {
+        parent.find('.clarama-post-embedded').attr('clarama_loaded', false);
+        parent.find('.clarama-embedded').attr('clarama_loaded', false);
+    }
     parent.find('.clarama-post-embedded').load_post();
     parent.find('.clarama-embedded').load();
     Prism.highlightAll(); // Manually trigger highlighting
