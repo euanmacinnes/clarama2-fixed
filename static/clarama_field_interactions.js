@@ -80,7 +80,7 @@ function perform_interact(field, args = {}) {
 
                             case "changed":
                                 linked_element[0].innerHTML = "";
-                                linked_element[0].append(showInteractionContent('run', link.url));
+                                linked_element[0].append(showInteractionContent('run', link.url+"?"+link.params));
                                 enable_interactions($(`#${link.element}`));
                                 break;
 
@@ -88,13 +88,14 @@ function perform_interact(field, args = {}) {
                                 flash("Don't know how to interact " + linked_type + " - " + link);
                         }
                     } else if (typeof link === 'object') {
-                        const {element, url} = link;
+                        const {element, url, params} = link;
+                        let fullUrl = url + "?" + params;
                         $('.select2-container').blur();
                         ;
                         if (element === 'popup') {
-                            showPopupNearMouse(url, field_values);
+                            showPopupNearMouse(fullUrl, field_values);
                         } else if (element === 'modal') {
-                            showModalWithContent(url, field_values);
+                            showModalWithContent(fullUrl, field_values);
                             // linked_element = grid.find('#interactionModalContent');
                             // console.log("linked_element modal", linked_element)
                             // reload(linked_element, field_values)
