@@ -15,6 +15,10 @@
         <a class="dropdown-item content_item bi bi-trash3" href="#" onclick="context_delete();">&nbsp;Delete</a>
     </div>
 
+    <!-- Just Paste, for the drop area -->
+    <div id="dropzone-context-menu" class="dropdown-menu" style="position: absolute; display: none; z-index: 9999;">
+        <a class="dropdown-item content_item bi bi-clipboard" href="#" onclick="context_paste();">&nbsp;Paste</a>
+    </div>
 
     <div class="align-items-center p-3">
         <div class="row align-items-start">
@@ -25,6 +29,9 @@
                             <div class="btn-group" role="group" aria-label="folder_functions">
                                 <button type="button" class="btn text-white"></button>
                                 <div id="folder_toolbar">
+                                    <button id="toggle_select_mode" type="button" class="btn text-secondary">
+                                        <i class="bi bi-check-square"></i> Select
+                                    </button>
                                     <button type="button" class="btn text-secondary"><i>New</i></button>
                                     <button id="new_1" type="button" class="btn text-white toggle_show hoverover"
                                             opacity=0.15 style="opacity: 0.15" new_file_class="bi-folder"
@@ -92,7 +99,6 @@
                             </div>
                         </div>
                     </nav>
-
                     <div class="card-body">
                         <div class="list-group" style="width: 100%">
                             <div id="toggle_target" name="toggle_target"
@@ -144,7 +150,9 @@
                                     >
                                         <div class="row">
                                             <div class="col">
-                                                <div class="row row-cols-auto" width="100%">
+                                                <div class="row row-cols-auto align-items-center" style="width: 100%;">
+                                                    <input type="checkbox" class="multi-select-checkbox form-check-input me-2 d-none"
+                                                        style="border: 2px solid black; border-radius: 0;" />                                                
                                                     <i class="bi bi-folder-fill position-relative col pe-0"
                                                        style="font-size: 1.6rem;">
                                                         <!--<div class="clarama-embedded rounded-pill badge-notification position-absolute translate-middle"
@@ -173,7 +181,9 @@
                                        style="text-decoration:none">
                                         <div class="row align-items-center">
                                             <div class="col">
-                                                <div class="row row-cols-auto" width="100%">
+                                                <div class="row row-cols-auto align-items-center" style="width: 100%;">
+                                                    <input type="checkbox" class="multi-select-checkbox form-check-input me-2 d-none"
+                                                        style="border: 2px solid black; border-radius: 0;" />                                              
                                                     <i class="bi {{ get(filetypes, file | fileextension, 'bi-clipboard2-data') }} position-relative col pe-0"
                                                        style="font-size: 1.6rem;">
                                                         <!--<div class="clarama-embedded rounded-pill badge-notification position-absolute translate-middle" style="font-size: 0.6em; left: 80%!important;top: 20%!important;" url="{{ url_for("clarama_webgit.git_versioning",mode='explore',filetype='file',filename=local_url + file) }}">
@@ -191,7 +201,8 @@
                             {% endfor %}
                             <div class="container-fluid">
                                 <form class="row">
-                                    <fieldset class="upload_dropZone text-center mb-3 p-4">
+                                    <fieldset class="upload_dropZone text-center mb-3 p-4" data-filepath="{{ local_url }}"
+                                    data-fullpath="{{ fullpath }}">
                                         <legend class="visually-hidden">Image uploader</legend>
                                         <p class="small my-2">Drag &amp; Drop supported files <i>or</i>
                                             <input id="upload_image_background" data-post-name="image_background"
@@ -301,7 +312,6 @@
         // Can't paste to an empty folder
         // File pasting into current folder should create a duplicate
         function context_paste() {
-
             navigator.clipboard.readText()
                 .then(source => {
                     var file = "/render/paste/" + $("#context-menu").attr("listing_filepath") + '?source=' + source;
@@ -600,6 +610,62 @@
             }
 
         })();
+
+        // Right-click menu for dropzones
+        $(document).ready(function () {
+            $(".upload_dropZone").on("contextmenu", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var top = e.pageY - 10;
+                var left = e.pageX - 10;
+
+                var folderPath = $(this).attr("data-filepath");
+                var fullpath = $(this).attr("data-fullpath");
+
+                $("#context-menu").attr("file_div", null);
+                $("#context-menu").attr("listing_file", null);
+                $("#context-menu").attr("listing_filepath", folderPath);
+                $("#context-menu").attr("listing_path", folderPath);
+                $("#context-menu").attr("listing_fullpath", fullpath);
+                $("#context-menu").attr("listing_icon", "folder");
+
+                $("#dropzone-context-menu").css({
+                    display: "block",
+                    top: top,
+                    left: left
+                }).addClass("show");
+
+                return false;
+            });
+
+            // Hide paste menu when clicking elsewhere
+            $(document).click(function () {
+                $("#dropzone-context-menu").hide();
+            });
+        });
+
+        let selecting = false;
+
+        // multiple selection mode
+        $('#toggle_select_mode').on('click', function () {
+            selecting = !selecting;
+            $('.multi-select-checkbox').toggleClass('d-none', !selecting);
+            
+            if (selecting) {
+                $(this)
+                    .removeClass('text-secondary')
+                    .addClass('text-white')
+                    .html('<i class="bi bi-x-square"></i> Cancel');
+            } else {
+                $(this)
+                    .removeClass('text-white')
+                    .addClass('text-secondary')
+                    .html('<i class="bi bi-check-square"></i> Select');
+                $('.multi-select-checkbox').prop('checked', false); // Clear all checkboxes
+            }
+        });
+
     </script>
 
 {% endblock %}
