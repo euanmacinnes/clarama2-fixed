@@ -29,6 +29,9 @@
                             <div class="btn-group" role="group" aria-label="folder_functions">
                                 <button type="button" class="btn text-white"></button>
                                 <div id="folder_toolbar">
+                                    <button id="toggle_select_mode" type="button" class="btn text-secondary">
+                                        <i class="bi bi-check-square"></i> Select
+                                    </button>
                                     <button type="button" class="btn text-secondary"><i>New</i></button>
                                     <button id="new_1" type="button" class="btn text-white toggle_show hoverover"
                                             opacity=0.15 style="opacity: 0.15" new_file_class="bi-folder"
@@ -96,7 +99,6 @@
                             </div>
                         </div>
                     </nav>
-
                     <div class="card-body">
                         <div class="list-group" style="width: 100%">
                             <div id="toggle_target" name="toggle_target"
@@ -148,7 +150,9 @@
                                     >
                                         <div class="row">
                                             <div class="col">
-                                                <div class="row row-cols-auto" width="100%">
+                                                <div class="row row-cols-auto align-items-center" style="width: 100%;">
+                                                    <input type="checkbox" class="multi-select-checkbox form-check-input me-2 d-none"
+                                                        style="border: 2px solid black; border-radius: 0;" />                                                
                                                     <i class="bi bi-folder-fill position-relative col pe-0"
                                                        style="font-size: 1.6rem;">
                                                         <!--<div class="clarama-embedded rounded-pill badge-notification position-absolute translate-middle"
@@ -177,7 +181,9 @@
                                        style="text-decoration:none">
                                         <div class="row align-items-center">
                                             <div class="col">
-                                                <div class="row row-cols-auto" width="100%">
+                                                <div class="row row-cols-auto align-items-center" style="width: 100%;">
+                                                    <input type="checkbox" class="multi-select-checkbox form-check-input me-2 d-none"
+                                                        style="border: 2px solid black; border-radius: 0;" />                                              
                                                     <i class="bi {{ get(filetypes, file | fileextension, 'bi-clipboard2-data') }} position-relative col pe-0"
                                                        style="font-size: 1.6rem;">
                                                         <!--<div class="clarama-embedded rounded-pill badge-notification position-absolute translate-middle" style="font-size: 0.6em; left: 80%!important;top: 20%!important;" url="{{ url_for("clarama_webgit.git_versioning",mode='explore',filetype='file',filename=local_url + file) }}">
@@ -637,6 +643,27 @@
             $(document).click(function () {
                 $("#dropzone-context-menu").hide();
             });
+        });
+
+        let selecting = false;
+
+        // multiple selection mode
+        $('#toggle_select_mode').on('click', function () {
+            selecting = !selecting;
+            $('.multi-select-checkbox').toggleClass('d-none', !selecting);
+            
+            if (selecting) {
+                $(this)
+                    .removeClass('text-secondary')
+                    .addClass('text-white')
+                    .html('<i class="bi bi-x-square"></i> Cancel');
+            } else {
+                $(this)
+                    .removeClass('text-white')
+                    .addClass('text-secondary')
+                    .html('<i class="bi bi-check-square"></i> Select');
+                $('.multi-select-checkbox').prop('checked', false); // Clear all checkboxes
+            }
         });
 
     </script>
