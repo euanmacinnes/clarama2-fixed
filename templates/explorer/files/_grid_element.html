@@ -6,7 +6,7 @@
     <div id="grid-elem-dropdown-{{ target }}" class="dropdown col-auto align-middle tight"
         style="position: absolute; top: 4px; right: 3px;">
         <i class="bi bi-three-dots-vertical element_editor grid-elem-menu" data-bs-toggle="dropdown"
-            aria-expanded="false" target="{{ target }}" elems="{{ grid_id }}"></i>
+            aria-expanded="false" target="{{ target }}" elems="{{ grid_id }}" title="{{ target }}"></i>
         <ul class="dropdown-menu embedded-dropdown-menu grid-element-dropdown-menu">
             <li class="dropdown-item">
                 <div class="input-group">
@@ -61,7 +61,7 @@
             {% endif %}
             <li class="dropdown-item d-flex">
                 <input type="checkbox" id="{{ target }}_fit" class="me-1" onchange="saveElementParams('{{ target }}')">
-                <label class="{{ target }}_fit">Auto-Fit</label>
+                <label class="{{ target }}_fit">Auto-Fill</label>
             </li>
             <li class="dropdown-item">
 

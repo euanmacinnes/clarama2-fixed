@@ -1,9 +1,12 @@
+var activeDropdownId = null;
 document.addEventListener('shown.bs.dropdown', function (event) {
     const trigger = event.target.closest('.grid-elem-menu');
     if (!trigger) return;
 
     const dropdown = event.target.closest('[id^="grid-elem-dropdown-"]');
     if (!dropdown) return;
+
+    activeDropdownId = dropdown.id;
 
     const dropdownMenu = dropdown.querySelector('.dropdown-menu');
     if (!dropdownMenu) return;
