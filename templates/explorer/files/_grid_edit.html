@@ -400,7 +400,6 @@
     }
 
     let interactionSettingsWasOpen = false;
-    var elementMenuWasOpen = false;
     // double-click on a file in the modal
     $('#add_content_addfield').on('dblclick', 'option', function () {
       document.getElementById('new_content').value = '';
@@ -446,6 +445,23 @@
       console.log("interactionSettingsWasOpen", interactionSettingsWasOpen)
       if (interactionSettingsWasOpen) {
         $('#interactionSettingsModal').modal('show');
+      }
+
+      if (activeDropdownId) {
+        const dropdownMenu = document.querySelector(`#${activeDropdownId} .dropdown-menu`);
+        const gridMenu = document.querySelector(`#${activeDropdownId} .grid-elem-menu`);
+        dropdownMenu.classList.add('show');
+        gridMenu.classList.add('show');
+      }
+    });
+
+    $('#interactionSettingsModal').on('hidden.bs.modal', function () {
+      console.log("activeDropdownId", activeDropdownId)
+      if (activeDropdownId) {
+        const dropdownMenu = document.querySelector(`#${activeDropdownId} .dropdown-menu`);
+        const gridMenu = document.querySelector(`#${activeDropdownId} .grid-elem-menu`);
+        dropdownMenu.classList.add('show');
+        gridMenu.classList.add('show');
       }
     });
 
@@ -707,13 +723,13 @@
 
   function saveElementParams(target) {
     const params = $("#" + target + "_paramsInput").val();
-    const refresh = $("#" + target + "_refresh").val();    
-    const fit = $("#" + target + "_fit").val();    
+    const refresh = $("#" + target + "_refresh").is(":checked");    
+    const fit = $("#" + target + "_fit").is(":checked");   
     const layout = $("#" + target + "_layout option:selected").attr('id');
     
     if (params !== undefined) {{ grid_id }}elements[target]['params'] = params;
     if (refresh !== undefined) {{ grid_id }}elements[target]['refresh'] = refresh;
-    if (fit !== undefined) {{ grid_id }}elements[target]['autofit'] = fit;
+    if (fit !== undefined) {{ grid_id }}elements[target]['autofill'] = fit;
     if (layout !== undefined) {{ grid_id }}elements[target]['layout'] = layout;
 
     console.log("updated element " + target, {{ grid_id }}elements[target]);
