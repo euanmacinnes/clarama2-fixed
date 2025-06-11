@@ -24,7 +24,7 @@ let socket_starting = false;
 
 let socket_taskQueue = [];
 
-let socket_topics = [];
+let socket_topics = ['clarama-systemwide'];
 
 function processTaskMessages() {
     socket.send(JSON.stringify({topics: socket_topics}));
@@ -102,8 +102,8 @@ function socket_task(embedded, task, topic, reset_environment) {
     let socket_id = embedded.attr("id");
     let refresh = embedded.attr("refresh");
     let environment = embedded.attr("environment");
-        let env_url = '';
-            if (environment !== undefined) {
+    let env_url = '';
+    if (environment !== undefined) {
         env_url = '&environment=' + environment;
         refresh = true;
         console.log("CLARAMA_WEBSOCKET.js: overriding environment with " + env_url);
@@ -148,7 +148,7 @@ function run_socket(embedded, reset_environment) {
 
     embedded.attr("socket_time", Date.now());
 
-    if (task!==undefined && topic!==undefined)
+    if (task !== undefined && topic !== undefined)
         socket_task(embedded, task, topic, reset_environment);
 
     if (!socket_starting) {
@@ -185,7 +185,6 @@ function run_socket(embedded, reset_environment) {
 
                 socket_address = websocket_address;
                 start_socket(false)
-
 
 
             });
@@ -430,7 +429,7 @@ function onClose(event, socket_url, webSocket) {
     // flash("SOCKET lost", "danger");
     setTimeout(function () {
         start_socket(true);
-    },100)
+    }, 100)
 }
 
 function onError(event, socket_url, webSocket) {
