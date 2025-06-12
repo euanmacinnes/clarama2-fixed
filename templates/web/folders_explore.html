@@ -738,6 +738,10 @@
         $('.listing').on('click', function (e) {
             if ($(e.target).hasClass('multi-select-checkbox')) return;
 
+            // Hide any open context menu
+            $("#context-menu").removeClass("show").hide();
+            $("#dropzone-context-menu").removeClass("show").hide();
+            
             const index = listings.index(this);
             const checkbox = $(this).closest('.favorites-div').find('.multi-select-checkbox');
 
