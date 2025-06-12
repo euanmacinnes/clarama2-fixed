@@ -231,6 +231,7 @@
       const url = button.getAttribute('data-url');
       const index = button.getAttribute('data-index');
       const params = button.getAttribute('data-params');
+      const menuItem = button.getAttribute('data-menuName');
 
       currentTarget = target;
       document.getElementById('interaction-target').value = target;
@@ -241,6 +242,7 @@
       if (type == "menu") cmItem_field.classList.remove('d-none');
 
       inputId_field.value = url;
+      cmItem_field.value = menuItem;
       
       browseBtn.setAttribute('gridElem', target);
 
@@ -664,7 +666,7 @@
             } else {
               console.log('Submission was not successful.');
               console.log(data);
-              flash("Couldn't save content: " + data['error']);
+              flash("Couldn't save content: " + data['error'], "danger");
             }
           },
           error: function (data) {
@@ -842,7 +844,7 @@
         } else {
           console.log('Submission was not successful.');
           console.log(data);
-          flash("Couldn't save content: " + data['error']);
+          flash("Couldn't save content: " + data['error'], "danger");
         }
       },
       error: function (data) {

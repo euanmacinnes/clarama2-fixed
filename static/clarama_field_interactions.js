@@ -85,7 +85,7 @@ function perform_interact(field, args = {}) {
                                 break;
 
                             default:
-                                flash("Don't know how to interact " + linked_type + " - " + link);
+                                flash("Don't know how to interact " + linked_type + " - " + link, 'danger');
                         }
                     } else if (typeof link === 'object') {
                         const {element, url, params} = link;
