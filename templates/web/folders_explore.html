@@ -289,28 +289,53 @@
             $("#context-menu").removeClass("show").hide();
         }
 
+        function getSelectedFilepaths() {
+            // Find all checked checkboxes
+            const paths = [];
+            $('.multi-select-checkbox:checked').each(function() {
+                const filepath = $(this).closest('.favorites-div').find('a').attr('listing_filepath');
+                if (filepath) {
+                    paths.push(filepath);
+                }
+            });
+            return paths;
+        }
+
         function context_delete() {
-            var file = "/render/delete/" + $("#context-menu").attr("listing_filepath");
-            execute_json_url(file, true);
+            const files = getSelectedFilepaths();
+            if (files.length === 0) {                       // no selection
+                var file = "/render/delete/" + $("#context-menu").attr("listing_filepath");
+                execute_json_url(file, true);
+                $("#context-menu").removeClass("show").hide();
+            } else {                                        // mulitple files/folders selected
+                files.forEach(file => {
+                    var url = "/render/delete/" + file;
+                    execute_json_url(url, true);
+                });
+            }   
             $("#context-menu").removeClass("show").hide();
+            exitSelectMode();
         }
 
         function context_cut() {
             var file = $("#context-menu").attr("listing_filepath")
             navigator.clipboard.writeText(encodeURIComponent(file) + "&mode=cut");
             $("#context-menu").removeClass("show").hide();
+            exitSelectMode()
         }
 
         function context_copy() {
             var file = $("#context-menu").attr("listing_filepath")
             navigator.clipboard.writeText(encodeURIComponent(file) + "&mode=copy");
             $("#context-menu").removeClass("show").hide();
+            exitSelectMode()
         }
 
         // Things to watch out for:
         // Pasting a folder inside it's own child
         // Can't paste to an empty folder
         // File pasting into current folder should create a duplicate
+
         function context_paste() {
             navigator.clipboard.readText()
                 .then(source => {
@@ -645,13 +670,14 @@
             });
         });
 
+        // multiple selection mode
         let selecting = false;
 
-        // multiple selection mode
+        // Toggle select mode button
         $('#toggle_select_mode').on('click', function () {
             selecting = !selecting;
             $('.multi-select-checkbox').toggleClass('d-none', !selecting);
-            
+
             if (selecting) {
                 $(this)
                     .removeClass('text-secondary')
@@ -662,9 +688,32 @@
                     .removeClass('text-white')
                     .addClass('text-secondary')
                     .html('<i class="bi bi-check-square"></i> Select');
-                $('.multi-select-checkbox').prop('checked', false); // Clear all checkboxes
+                $('.multi-select-checkbox').prop('checked', false);
             }
         });
+
+        // Prevent opening files/folders when in select mode; allow opening only if NOT selecting
+        $('.listing').on('click', function (e) {
+            if (selecting) {
+                // Find the checkbox inside this item and toggle its checked state
+                const checkbox = $(this).closest('.favorites-div').find('.multi-select-checkbox');
+                if (checkbox.length) {
+                    checkbox.prop('checked', !checkbox.prop('checked'));
+                }
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+
+        // To exit select mode (hide checkboxes, reset toggle button)
+        function exitSelectMode() {
+            selecting = false;
+            $('.multi-select-checkbox').addClass('d-none').prop('checked', false);
+            $('#toggle_select_mode')
+                .removeClass('text-white')
+                .addClass('text-secondary')
+                .html('<i class="bi bi-check-square"></i> Select');
+        }
 
     </script>
 
