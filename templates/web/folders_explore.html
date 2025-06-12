@@ -557,7 +557,6 @@
             });
         });
 
-
         // Drag and drop - single or multiple image files
         // https://www.smashingmagazine.com/2018/01/drag-drop-file-uploader-vanilla-js/
         // https://codepen.io/joezimjs/pen/yPWQbd?editors=1000
@@ -798,10 +797,19 @@
             }
         });
 
-        
-        $(document).on('keydown', function (e) {
-            if (e.key === "Delete" && selecting) context_delete(); // Delete selected listings on Delete key
-            if (e.key === "Escape" && selecting) exitSelectMode(); // Exit select mode on Escape key
+
+        const KEY_ESCAPE = "Escape";
+        const KEY_DELETE = "Delete";
+
+        $(document).on('keydown', function (e) {    
+            if (e.key === KEY_ESCAPE && selecting) {        // Exit select mode on Escape ke
+                exitSelectMode();
+            }
+               
+            if (e.key === KEY_DELETE && selecting) {        // Delete selected listings on Delete key
+                e.preventDefault();
+                context_delete(); 
+            }
         });
 
     </script>
