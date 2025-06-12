@@ -798,9 +798,10 @@
             }
         });
 
-        // Exit select mode on Escape key
+        
         $(document).on('keydown', function (e) {
-            if (e.key === "Escape" && selecting) exitSelectMode();
+            if (e.key === "Delete" && selecting) context_delete(); // Delete selected listings on Delete key
+            if (e.key === "Escape" && selecting) exitSelectMode(); // Exit select mode on Escape key
         });
 
     </script>
