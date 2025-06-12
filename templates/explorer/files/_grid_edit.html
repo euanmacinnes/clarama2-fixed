@@ -475,8 +475,8 @@
     });
 
     $('#interactionSettingsModal').on('hidden.bs.modal', function () {
-      console.log("activeDropdownId", activeDropdownId)
       if (activeDropdownId) {
+        console.log("activeDropdownId", activeDropdownId)
         const dropdownMenu = document.querySelector(`#${activeDropdownId} .dropdown-menu`);
         const gridMenu = document.querySelector(`#${activeDropdownId} .grid-elem-menu`);
         dropdownMenu.classList.add('show');

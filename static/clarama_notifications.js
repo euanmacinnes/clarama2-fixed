@@ -42,6 +42,7 @@ function getRelativeTime(date) {
     return `${diffHr} hour${diffHr > 1 ? "s" : ""} ago`;
 }
 
+var hasUnseenDanger = false;
 function flash(message, category = "info") {
     const now = new Date();
     const relativeTime = getRelativeTime(now);
@@ -52,7 +53,7 @@ function flash(message, category = "info") {
 
     const alert_html = `
         <li class="list-group-item d-flex flex-row align-items-start justify-content-left border-0 pb-1" data-timestamp="${now.toISOString()}">
-            <div class="d-flex flex-column m-0 px-2 py-1 alert alert-${category}">
+            <div class="d-flex flex-column flex-shrink-0 text-center m-0 px-2 py-1 alert alert-${category}" style="width: 68px;">
                 ${category}
             </div>
             <div class="d-flex flex-column ps-2 text-wrap w-100">
@@ -64,6 +65,16 @@ function flash(message, category = "info") {
 
     $("#alerts").prepend(alert_html);
     $("#alertsmenu").removeClass("hidden");
+    const $bellIcon = $('#alertsmenu i.bi');
+
+    if (category === 'danger') {
+        hasUnseenDanger = true;
+        $bellIcon.addClass('shaking');
+    } else {
+        if (!hasUnseenDanger) {
+            $bellIcon.removeClass('shaking');
+        }
+    }
 
     $(".flash-alert").delay(3200).fadeOut(300);
     console.log(`${category}: ${message}`);

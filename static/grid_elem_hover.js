@@ -1,5 +1,11 @@
 var activeDropdownId = null;
 document.addEventListener('shown.bs.dropdown', function (event) {
+    if (event.target.id == 'navbarAlertDropdown') {
+        const $bellIcon = $('#alertsmenu i.bi');
+        hasUnseenDanger = false;
+        $bellIcon.removeClass('shaking');
+    }
+
     const trigger = event.target.closest('.grid-elem-menu');
     if (!trigger) return;
 
