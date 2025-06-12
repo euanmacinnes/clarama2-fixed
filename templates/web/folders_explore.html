@@ -365,31 +365,41 @@
         $(document).ready(function () {
             console.log('Ready!');
 
+            // Form submission
             $('#new_content_form').on('submit', function (e) {
                 content_new();
                 e.preventDefault();
             });
 
-            jQuery(document).click(function (event) {
-                console.log("LENGTH: " + jQuery(event.target).closest('.listing').length);
-                if (jQuery(event.target).closest('.listing').length === 0) {
-                    $('#context-menu').hide();
+            // Click outside any listing to hide the context menu
+            $(document).on("click contextmenu", function (e) {
+                if (!$(e.target).closest("#dropzone-context-menu, .upload_dropZone").length) {
+                    $("#dropzone-context-menu").removeClass("show").hide();
+                }
+                if (!$(e.target).closest('.listing').length) {
+                    $('#context-menu').removeClass("show").hide();
                 }
             });
 
+            // Inline renaming handlers
             $('.listing_div').on('focusout', function () {
                 rename_finished(this);
             });
 
             $('.listing_div').keypress(function (ev) {
-                var keycode = (ev.keyCode ? ev.keyCode : ev.which);
-                if (keycode == 13) {
+                if ((ev.keyCode ? ev.keyCode : ev.which) === 13) {
                     $(this).attr('contenteditable', false);
-                    // No need to call rename here too, the disabling of content editable will cause a focusoout
                 }
             });
 
+            // Context menu for file/folder listings
             $('.listing').on('contextmenu', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // 👇 Hide dropzone menu if it's open
+                $("#dropzone-context-menu").removeClass("show").hide();
+
                 var top = e.pageY - 10;
                 var left = e.pageX - 10;
 
@@ -399,23 +409,24 @@
                 var filepath = item.attr('listing_filepath');
                 var fullpath = item.attr('listing_fullpath');
                 var icon = item.attr('listing_icon');
-                var url = item.attr('href'); // Needed for Open and Download
+                var url = item.attr('href');
 
-                $("#context-menu").attr("file_div", file_div);
-                $("#context-menu").attr("listing_file", file);
-                $("#context-menu").attr("listing_filepath", filepath); // Needed for delete, cut, copy & paste
-                $("#context-menu").attr("listing_path", "{{ local_url }}");
-                $("#context-menu").attr("listing_fullpath", fullpath);
-                $("#context-menu").attr("listing_icon", icon);
+                $("#context-menu").attr({
+                    "file_div": file_div,
+                    "listing_file": file,
+                    "listing_filepath": filepath,
+                    "listing_path": "{{ local_url }}",
+                    "listing_fullpath": fullpath,
+                    "listing_icon": icon
+                });
 
                 var starIcon = document.getElementById("menu_favorites");
-
                 if (favoriteFiles.some(row => row[1] === fullpath)) {
                     starIcon.classList.remove('bi-star');
-                    starIcon.classList.add('bi-star-fill'); // Mark as favorite
+                    starIcon.classList.add('bi-star-fill');
                     starIcon.textContent = " Favorited";
                 } else {
-                    starIcon.classList.remove('bi-star-fill'); // Unmark as favorite
+                    starIcon.classList.remove('bi-star-fill');
                     starIcon.classList.add('bi-star');
                     starIcon.textContent = " Favorite";
                 }
@@ -423,50 +434,80 @@
                 $('#menu_open').attr("href", url);
                 $('#menu_download').attr("href", "/content/download/" + filepath);
                 $('#menu_delete').attr("href", "/content/delete/" + filepath);
-                console.log(file);
-                console.log(url);
 
                 $("#context-menu").css({
                     display: "block",
                     top: top,
                     left: left
                 }).addClass("show");
-                return false; //blocks default Webbrowser right click menu
-            }).on("click", function () {
-                $("#context-menu").removeClass("show").hide();
+
+                return false;
             });
 
+            // Context menu item click
             $("#context-menu a").on("click", function () {
                 $(this).parent().removeClass("show").hide();
             });
 
+            // Toggle create new item UI
             $(".toggle_show").click(function () {
-                new_class = $(this).attr("new_file_class");
-                new_type = $(this).attr("new_file_type");
+                var new_class = $(this).attr("new_file_class");
+                var new_type = $(this).attr("new_file_type");
                 $(".new_content_type").val(new_type);
                 $(".new_item").removeClass("bi-folder bi-journal-arrow-down bi-file-earmark-spreadsheet bi-blockquote-left bi-table bi-database bi-menu-app bi-eye bi-sliders");
                 $(".new_item").addClass(new_class);
-                $(".toggle_target").show('fast', function () {
-                });
+                $(".toggle_target").show('fast');
             });
 
             $(".toggle_hide").click(function () {
-                $(".toggle_target").hide('fast', function () {
-                });
+                $(".toggle_target").hide('fast');
             });
 
             $(".click_delete").click(function (e) {
                 e.preventDefault();
-                url = $(this).attr("url");
+                var url = $(this).attr("url");
 
                 console.log("Deleting " + url);
                 fetch($CLARAMA_ROOT + url)
-                    .then((response) => {
+                    .then(response => {
                         console.log(response);
                         history.go(0);
                     });
             });
+
+            // Dropzone (folder) context menu
+            $(".upload_dropZone").on("contextmenu", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Hide listing context menu if visible
+                $("#context-menu").removeClass("show").hide();
+
+                var top = e.pageY - 10;
+                var left = e.pageX - 10;
+
+                var folderPath = $(this).attr("data-filepath");
+                var fullpath = $(this).attr("data-fullpath");
+
+                $("#context-menu").attr({
+                    "file_div": null,
+                    "listing_file": null,
+                    "listing_filepath": folderPath,
+                    "listing_path": folderPath,
+                    "listing_fullpath": fullpath,
+                    "listing_icon": "folder"
+                });
+
+                $("#dropzone-context-menu").css({
+                    display: "block",
+                    top: top,
+                    left: left
+                }).addClass("show");
+
+                return false;
+            });
         });
+
 
         // Drag and drop - single or multiple image files
         // https://www.smashingmagazine.com/2018/01/drag-drop-file-uploader-vanilla-js/
@@ -637,40 +678,6 @@
             }
 
         })();
-
-        // Right-click menu for dropzones
-        $(document).ready(function () {
-            $(".upload_dropZone").on("contextmenu", function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                var top = e.pageY - 10;
-                var left = e.pageX - 10;
-
-                var folderPath = $(this).attr("data-filepath");
-                var fullpath = $(this).attr("data-fullpath");
-
-                $("#context-menu").attr("file_div", null);
-                $("#context-menu").attr("listing_file", null);
-                $("#context-menu").attr("listing_filepath", folderPath);
-                $("#context-menu").attr("listing_path", folderPath);
-                $("#context-menu").attr("listing_fullpath", fullpath);
-                $("#context-menu").attr("listing_icon", "folder");
-
-                $("#dropzone-context-menu").css({
-                    display: "block",
-                    top: top,
-                    left: left
-                }).addClass("show");
-
-                return false;
-            });
-
-            // Hide paste menu when clicking elsewhere
-            $(document).click(function () {
-                $("#dropzone-context-menu").hide();
-            });
-        });
 
         // multiple selection mode
         let selecting = false;
