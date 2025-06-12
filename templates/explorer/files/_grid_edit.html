@@ -11,7 +11,7 @@
           </ol>
         </nav>
 
-        <!-- <button type="button" class="btn btn-primary" onclick="add_selected_content('')">Add Empty Grid</button> -->
+        <button type="button" class="btn btn-primary" onclick="add_selected_content('/content/element/{{ file_url }}', '')">Add Empty Grid</button>
 
         <div class="d-flex align-items-center w-100">
           <p class="mb-1 pe-2">New: </p>
@@ -564,7 +564,16 @@
     $('.clarama-post-embedded').load();
   }
 
-  // function add_blank_content(element) {
+  // function add_blank_content(element, data) {
+  //   if (isDict({{ grid_id }}elements)) {
+  //     {{ grid_id }}elements[element] = data;
+  //   } else {
+  //     var elem = {};
+  //     elem[element] = data;
+  //     {{ grid_id }}elements = elem;
+  //   }
+
+
   //   {{ grid_id }}grid.addWidget({
   //     x: 0,
   //     y: 0,
@@ -652,7 +661,7 @@
       console.log(slate_data)
 
       // if (element_render_url === '') {
-      //   add_blank_content(element);
+      //   add_blank_content(element, new_element_data);
       // } else {
         $.ajax({
           type: 'POST',
@@ -788,7 +797,7 @@
 
     if (elemIndex == "") {
       if (checkedType == "menu") {
-        elementToAddInteraction.links.push({ element: checkedType, url: file_url, params: urlParams, menuItemName: menuItem });
+        elementToAddInteraction.links.push({ element: checkedType, url: file_url, params: urlParams, menu_item_name: menuItem });
         grid_element_target.appendChild(addGridInteraction(gridElem, checkedType, file_url, elementToAddInteraction.links.length -1, urlParams, menuItem));
       } else {
         elementToAddInteraction.links.push({ element: checkedType, url: file_url, params: urlParams });
@@ -797,7 +806,7 @@
       enable_interactions($("#grid_element_target-" + gridElem));
     } else {
       if (checkedType == "menu") {
-        elementToAddInteraction.links[elemIndex] = { element: checkedType, url: file_url, params: urlParams, menuItemName: menuItem };
+        elementToAddInteraction.links[elemIndex] = { element: checkedType, url: file_url, params: urlParams, menu_item_name: menuItem };
       } else {
         elementToAddInteraction.links[elemIndex] = { element: checkedType, url: file_url, params: urlParams };
       }
