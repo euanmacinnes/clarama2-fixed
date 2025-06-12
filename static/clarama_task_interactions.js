@@ -85,9 +85,9 @@ function task_save(parent) {
                         console.log(data);
                         flash("Saved!");
                     } else {
-                        console.log('Submission was successful.');
+                        console.log('Submission was not successful.');
                         console.log(data);
-                        flash("Couldn't save content: " + data['error']);
+                        flash("Couldn't save content: " + data['error'], "danger");
                     }
                 },
                 error: function (data) {

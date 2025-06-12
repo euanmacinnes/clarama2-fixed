@@ -1,5 +1,11 @@
 var activeDropdownId = null;
 document.addEventListener('shown.bs.dropdown', function (event) {
+    if (event.target.id == 'navbarAlertDropdown') {
+        const $bellIcon = $('#alertsmenu i.bi');
+        hasUnseenDanger = false;
+        $bellIcon.removeClass('shaking');
+    }
+
     const trigger = event.target.closest('.grid-elem-menu');
     if (!trigger) return;
 
@@ -48,9 +54,9 @@ $(document).on('click', '.delete-grid-interaction', function () {
     $(this).closest('li').remove();
 });
 
-function addGridInteraction(gelem_target, selectedValue, selectedValueUrl, loopIndex, urlParams) {
+function addGridInteraction(gelem_target, selectedValue, selectedValueUrl, loopIndex, urlParams, menuItemName="") {
     const newGI = document.createElement("div");
     newGI.className = "clarama-post-embedded clarama-replaceable";
-    newGI.setAttribute("url", `/template/render/explorer/steps/grid_edit_interaction?current_element=${selectedValue}&target=${gelem_target}&current_element_url=${selectedValueUrl}&loop_index=${loopIndex}&current_element_params=${urlParams}`);
+    newGI.setAttribute("url", `/template/render/explorer/steps/grid_edit_interaction?current_element=${selectedValue}&target=${gelem_target}&current_element_url=${selectedValueUrl}&loop_index=${loopIndex}&current_element_params=${urlParams}&menu_item_name=${menuItemName}`);
     return newGI;
 }

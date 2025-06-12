@@ -11,7 +11,7 @@
           </ol>
         </nav>
 
-        <!-- <button type="button" class="btn btn-primary" onclick="add_selected_content('')">Add Empty Grid</button> -->
+        <button type="button" class="btn btn-primary" onclick="add_selected_content('/content/element/{{ file_url }}', '')">Add Empty Grid</button>
 
         <div class="d-flex align-items-center w-100">
           <p class="mb-1 pe-2">New: </p>
@@ -136,6 +136,9 @@
               
               <input type="radio" class="btn-check" name="interactionType" id="modalType" autocomplete="off" value="modal" required>
               <label class="btn btn-outline-primary" for="modalType">Modal</label>
+
+              <input type="radio" class="btn-check" name="interactionType" id="menuType" autocomplete="off" value="menu" required>
+              <label class="btn btn-outline-primary" for="menuType">Context Menu</label>
               
               <input type="radio" class="btn-check" name="interactionType" id="pauseType" autocomplete="off" value="pause" required>
               <label class="btn btn-outline-primary" for="pauseType">Pause</label>
@@ -145,6 +148,8 @@
           <input type="hidden" id="selected-elem" name="selectedElementUrl" value=""> 
           <div class="mb-3 dropdown-container d-none" id="elementDropdownContainer">
           </div>
+
+          <input type="text" id="menu-item" class="form-control mb-3 d-none" name="contentMenuItemName" placeholder="Menu Item Name" value=""> 
 
           <div class="input-group mb-3">
             <button type="button" class="btn btn-outline-primary input-group-text" data-bs-toggle="modal" id="browseFileBtn"
@@ -199,7 +204,8 @@
     document.getElementById('interactionSettingsModal').classList.add('modal-open');
     const browseBtn = document.getElementById('browseFileBtn');
     const dropdownContainer = document.getElementById('elementDropdownContainer');
-    var inputId_field = document.getElementById('grid-elem');
+    const cmItem_field = document.getElementById('menu-item');
+    const inputId_field = document.getElementById('grid-elem');
 
     document.getElementById('interaction-target').value = button;
     browseBtn.setAttribute('gridElem', button);
@@ -212,16 +218,20 @@
     dropdownContainer.classList.add('d-none');
     dropdownContainer.innerHTML = '';
 
+    cmItem_field.classList.add('d-none');
+    cmItem_field.value = '';
+
     if (typeof(button) === "object") {
       var type = button.getAttribute('data-element');
       var initialType = type;
-      const allowedTypes = ['popup', 'modal', 'pause'];
+      const allowedTypes = ['popup', 'modal', 'pause', 'menu'];
       if (!allowedTypes.includes(type)) type = 'element';
 
       const target = button.getAttribute('data-target');
       const url = button.getAttribute('data-url');
       const index = button.getAttribute('data-index');
       const params = button.getAttribute('data-params');
+      const menuItem = button.getAttribute('data-menuName');
 
       currentTarget = target;
       document.getElementById('interaction-target').value = target;
@@ -229,8 +239,10 @@
       document.getElementById('interaction-params').value = params;
 
       if (type == "element") showElementOptions(url, initialType);
+      if (type == "menu") cmItem_field.classList.remove('d-none');
 
       inputId_field.value = url;
+      cmItem_field.value = menuItem;
       
       browseBtn.setAttribute('gridElem', target);
 
@@ -303,7 +315,7 @@
       optionDiv.addEventListener('click', () => {
         selectedDiv.textContent = elem;
         document.getElementById('selected-elem').value = elem;
-        storeSelectElemOriUrl.value = value['url'];
+        inputId_field.value = value['url'];
         optionsContainer.classList.add('hidden');
       });
   
@@ -332,11 +344,18 @@
   document.querySelectorAll('input[name="interactionType"]').forEach(radio => {
     radio.addEventListener('change', () => {
       const dropdownContainer = document.getElementById('elementDropdownContainer');
+      const cmItem_field = document.getElementById('menu-item');
       if (radio.checked && radio.value === 'element') {
         showElementOptions();
-      } else if (radio.checked) {
+        cmItem_field.classList.add('d-none');
+      } else if (radio.checked && radio.value === 'menu') {
+        cmItem_field.classList.remove('d-none');
         dropdownContainer.classList.add('d-none');
         dropdownContainer.innerHTML = '';
+      } else {
+        dropdownContainer.classList.add('d-none');
+        dropdownContainer.innerHTML = '';
+        cmItem_field.classList.add('d-none');
       }
     });
   });
@@ -456,8 +475,8 @@
     });
 
     $('#interactionSettingsModal').on('hidden.bs.modal', function () {
-      console.log("activeDropdownId", activeDropdownId)
       if (activeDropdownId) {
+        console.log("activeDropdownId", activeDropdownId)
         const dropdownMenu = document.querySelector(`#${activeDropdownId} .dropdown-menu`);
         const gridMenu = document.querySelector(`#${activeDropdownId} .grid-elem-menu`);
         dropdownMenu.classList.add('show');
@@ -545,7 +564,16 @@
     $('.clarama-post-embedded').load();
   }
 
-  // function add_blank_content(element) {
+  // function add_blank_content(element, data) {
+  //   if (isDict({{ grid_id }}elements)) {
+  //     {{ grid_id }}elements[element] = data;
+  //   } else {
+  //     var elem = {};
+  //     elem[element] = data;
+  //     {{ grid_id }}elements = elem;
+  //   }
+
+
   //   {{ grid_id }}grid.addWidget({
   //     x: 0,
   //     y: 0,
@@ -633,7 +661,7 @@
       console.log(slate_data)
 
       // if (element_render_url === '') {
-      //   add_blank_content(element);
+      //   add_blank_content(element, new_element_data);
       // } else {
         $.ajax({
           type: 'POST',
@@ -647,7 +675,7 @@
             } else {
               console.log('Submission was not successful.');
               console.log(data);
-              flash("Couldn't save content: " + data['error']);
+              flash("Couldn't save content: " + data['error'], "danger");
             }
           },
           error: function (data) {
@@ -741,10 +769,11 @@
     const gridElem = document.getElementById("interaction-target").value;
     const elemIndex = document.getElementById('interaction-index').value;
     const urlParams = document.getElementById('interaction-params').value;
+    const menuItem = document.getElementById("menu-item").value.trim();
     
     var checkedType = $('input[name="interactionType"]:checked').val();
-    console.log("checkedType 1", checkedType)
-    const allowedTypes = ['popup', 'modal', 'pause'];
+    console.log("checkedType", checkedType)
+    const allowedTypes = ['popup', 'modal', 'pause', 'menu'];
     if (!allowedTypes.includes(checkedType)) {
       checkedType = document.getElementById('selected-elem').value;
 
@@ -767,11 +796,21 @@
     let grid_element_target = document.getElementById('grid_element_target-'+gridElem);
 
     if (elemIndex == "") {
-      elementToAddInteraction.links.push({ element: checkedType, url: file_url, params: urlParams });
-      grid_element_target.appendChild(addGridInteraction(gridElem, checkedType, file_url, elementToAddInteraction.links.length -1, urlParams));
+      if (checkedType == "menu") {
+        elementToAddInteraction.links.push({ element: checkedType, url: file_url, params: urlParams, menu_item_name: menuItem });
+        grid_element_target.appendChild(addGridInteraction(gridElem, checkedType, file_url, elementToAddInteraction.links.length -1, urlParams, menuItem));
+      } else {
+        elementToAddInteraction.links.push({ element: checkedType, url: file_url, params: urlParams });
+        grid_element_target.appendChild(addGridInteraction(gridElem, checkedType, file_url, elementToAddInteraction.links.length -1, urlParams));
+      }
       enable_interactions($("#grid_element_target-" + gridElem));
     } else {
-      elementToAddInteraction.links[elemIndex] = { element: checkedType, url: file_url, params: urlParams };
+      if (checkedType == "menu") {
+        elementToAddInteraction.links[elemIndex] = { element: checkedType, url: file_url, params: urlParams, menu_item_name: menuItem };
+      } else {
+        elementToAddInteraction.links[elemIndex] = { element: checkedType, url: file_url, params: urlParams };
+      }
+
       if (!grid_element_target) return;
       const li = grid_element_target.querySelector(`li[loop-index="${elemIndex}"]`);
       if (!li) return;
@@ -787,6 +826,9 @@
         gearIcon.setAttribute('data-element', checkedType);
         gearIcon.setAttribute('data-url', file_url);
         gearIcon.setAttribute('data-params', urlParams);
+        if (checkedType == "menu") {
+          gearIcon.setAttribute('data-menuName', menuItem);
+        }
       }
     }
 
@@ -811,7 +853,7 @@
         } else {
           console.log('Submission was not successful.');
           console.log(data);
-          flash("Couldn't save content: " + data['error']);
+          flash("Couldn't save content: " + data['error'], "danger");
         }
       },
       error: function (data) {
@@ -842,9 +884,12 @@
   function unlink_elements(target, link_index) {
     if (target in {{ grid_id }}elements) {
       var element = {{ grid_id }}elements[target];
+      console.log("element", element)
       element['links'].splice(link_index, 1);
+      // enable_interactions($(`#${target}`).parent(), true);
 
       flash("unlinking " + target + " to [" + element['links'] + "]");
+      console.log("updated element", {{ grid_id }}elements);
     }
   }
 
