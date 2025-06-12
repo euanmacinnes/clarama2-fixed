@@ -381,7 +381,6 @@
                 }
             });
 
-            // Inline renaming handlers
             $('.listing_div').on('focusout', function () {
                 rename_finished(this);
             });
@@ -397,7 +396,7 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                // 👇 Hide dropzone menu if it's open
+                // Hide dropzone menu if it's open
                 $("#dropzone-context-menu").removeClass("show").hide();
 
                 var top = e.pageY - 10;
@@ -703,6 +702,10 @@
 
         // Prevent opening files/folders when in select mode; allow opening only if NOT selecting
         $('.listing').on('click', function (e) {
+            if ($(e.target).hasClass('multi-select-checkbox')) {
+                return;
+            }
+
             if (selecting) {
                 // Find the checkbox inside this item and toggle its checked state
                 const checkbox = $(this).closest('.favorites-div').find('.multi-select-checkbox');
