@@ -716,6 +716,9 @@
         let selecting = false;
         let anchorIndex = null;
 
+        const checkboxes = $('.multi-select-checkbox');
+        const listings = $('.listing');
+
         // Toggle select mode button
         $('#toggle_select_mode').on('click', function () {
             selecting = !selecting;
@@ -727,52 +730,56 @@
                     .addClass('text-white')
                     .html('<i class="bi bi-x-square"></i> Cancel');
             } else {
-                $(this)
-                    .removeClass('text-white')
-                    .addClass('text-secondary')
-                    .html('<i class="bi bi-check-square"></i> Select');
-                $('.multi-select-checkbox').prop('checked', false);
-                anchorIndex = null;
+                exitSelectMode();
             }
         });
 
-        // Handle click on listings in select mode
+        // Prevent opening files/folders when in select mode
         $('.listing').on('click', function (e) {
-            if ($(e.target).hasClass('multi-select-checkbox')) {
-                return;
-            }
+            if ($(e.target).hasClass('multi-select-checkbox')) return;
 
-            const allListings = $('.listing');
-            const currentIndex = allListings.index(this);
+            const index = listings.index(this);
             const checkbox = $(this).closest('.favorites-div').find('.multi-select-checkbox');
 
-            // Auto-enable select mode on Shift+Click
-            if (e.shiftKey && !selecting) {
-                selecting = true;
-                $('.multi-select-checkbox').removeClass('d-none');
-                $('#toggle_select_mode')
-                    .removeClass('text-secondary')
-                    .addClass('text-white')
-                    .html('<i class="bi bi-x-square"></i> Cancel');
-            }
+            if (e.shiftKey) {
+                if (!selecting) {
+                    selecting = true;
+                    $('.multi-select-checkbox').removeClass('d-none');
+                    $('#toggle_select_mode')
+                        .removeClass('text-secondary')
+                        .addClass('text-white')
+                        .html('<i class="bi bi-x-square"></i> Cancel');
+                }
 
-            if (selecting && checkbox.length) {
-                if (e.shiftKey && anchorIndex !== null) {
-                    const start = Math.min(anchorIndex, currentIndex);
-                    const end = Math.max(anchorIndex, currentIndex);
+                if (anchorIndex === null) {
+                    anchorIndex = index;
+                    checkbox.prop('checked', true);
+                } else {
+                    const start = Math.min(anchorIndex, index);
+                    const end = Math.max(anchorIndex, index);
 
-                    $('.multi-select-checkbox').prop('checked', false);
+                    // Uncheck all first
+                    checkboxes.prop('checked', false);
 
                     for (let i = start; i <= end; i++) {
-                        allListings.eq(i).closest('.favorites-div').find('.multi-select-checkbox').prop('checked', true);
+                        checkboxes.eq(i).prop('checked', true);
                     }
-                } else {
-                    const isNowChecked = !checkbox.prop('checked');
-                    checkbox.prop('checked', isNowChecked);
+                }
 
-                    if (anchorIndex === null && isNowChecked) {
-                        anchorIndex = currentIndex;
-                    }
+                e.preventDefault();
+                e.stopPropagation();
+
+            } else if (selecting) {
+                const isChecked = checkbox.prop('checked');
+                checkbox.prop('checked', !isChecked);
+
+                if (!isChecked && anchorIndex === null) {
+                    anchorIndex = index;
+                }
+
+                // If all checkboxes are now unchecked, reset anchorIndex
+                if (checkboxes.filter(':checked').length === 0) {
+                    anchorIndex = null;
                 }
 
                 e.preventDefault();
@@ -783,12 +790,12 @@
         // Exit select mode
         function exitSelectMode() {
             selecting = false;
-            $('.multi-select-checkbox').addClass('d-none').prop('checked', false);
+            anchorIndex = null;
+            checkboxes.addClass('d-none').prop('checked', false);
             $('#toggle_select_mode')
                 .removeClass('text-white')
                 .addClass('text-secondary')
                 .html('<i class="bi bi-check-square"></i> Select');
-            anchorIndex = null;
         }
 
     </script>
