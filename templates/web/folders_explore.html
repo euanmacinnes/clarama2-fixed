@@ -319,13 +319,6 @@
             exitSelectMode();
         }
 
-        // function context_cut() {
-        //     var file = $("#context-menu").attr("listing_filepath")
-        //     navigator.clipboard.writeText(encodeURIComponent(file) + "&mode=cut");
-        //     $("#context-menu").removeClass("show").hide();
-        //     exitSelectMode()
-        // }
-
         function context_cut() {
             const files = getSelectedFilepaths();
 
@@ -341,13 +334,6 @@
             exitSelectMode();
         }
 
-
-        // function context_copy() { // old
-        //     var file = $("#context-menu").attr("listing_filepath")
-        //     navigator.clipboard.writeText(encodeURIComponent(file) + "&mode=copy");
-        //     $("#context-menu").removeClass("show").hide();
-        //     exitSelectMode()
-        // }
 
         function context_copy() {
             const files = getSelectedFilepaths();
@@ -376,20 +362,7 @@
         // Pasting a folder inside it's own child
         // Can't paste to an empty folder
         // File pasting into current folder should create a duplicate
-
-        // function context_paste() {
-        //     navigator.clipboard.readText()
-        //         .then(source => {
-        //             var file = "/render/paste/" + $("#context-menu").attr("listing_filepath") + '?source=' + source;
-        //             execute_json_url(file, true);
-        //         })
-        //         .catch(err => {
-        //             console.error('Failed to read clipboard contents: ', err);
-        //         });
-
-        //     $("#context-menu").removeClass("show").hide();
-        // }
-
+        
         function context_paste() {
             navigator.clipboard.readText()
                 .then(source => {
@@ -741,6 +714,7 @@
 
         // multiple selection mode
         let selecting = false;
+        let anchorIndex = null;
 
         // Toggle select mode button
         $('#toggle_select_mode').on('click', function () {
@@ -758,27 +732,55 @@
                     .addClass('text-secondary')
                     .html('<i class="bi bi-check-square"></i> Select');
                 $('.multi-select-checkbox').prop('checked', false);
+                anchorIndex = null;
             }
         });
 
-        // Prevent opening files/folders when in select mode; allow opening only if NOT selecting
+        // Handle click on listings in select mode
         $('.listing').on('click', function (e) {
             if ($(e.target).hasClass('multi-select-checkbox')) {
                 return;
             }
 
-            if (selecting) {
-                // Find the checkbox inside this item and toggle its checked state
-                const checkbox = $(this).closest('.favorites-div').find('.multi-select-checkbox');
-                if (checkbox.length) {
-                    checkbox.prop('checked', !checkbox.prop('checked'));
+            const allListings = $('.listing');
+            const currentIndex = allListings.index(this);
+            const checkbox = $(this).closest('.favorites-div').find('.multi-select-checkbox');
+
+            // Auto-enable select mode on Shift+Click
+            if (e.shiftKey && !selecting) {
+                selecting = true;
+                $('.multi-select-checkbox').removeClass('d-none');
+                $('#toggle_select_mode')
+                    .removeClass('text-secondary')
+                    .addClass('text-white')
+                    .html('<i class="bi bi-x-square"></i> Cancel');
+            }
+
+            if (selecting && checkbox.length) {
+                if (e.shiftKey && anchorIndex !== null) {
+                    const start = Math.min(anchorIndex, currentIndex);
+                    const end = Math.max(anchorIndex, currentIndex);
+
+                    $('.multi-select-checkbox').prop('checked', false);
+
+                    for (let i = start; i <= end; i++) {
+                        allListings.eq(i).closest('.favorites-div').find('.multi-select-checkbox').prop('checked', true);
+                    }
+                } else {
+                    const isNowChecked = !checkbox.prop('checked');
+                    checkbox.prop('checked', isNowChecked);
+
+                    if (anchorIndex === null && isNowChecked) {
+                        anchorIndex = currentIndex;
+                    }
                 }
+
                 e.preventDefault();
                 e.stopPropagation();
             }
         });
 
-        // To exit select mode (hide checkboxes, reset toggle button)
+        // Exit select mode
         function exitSelectMode() {
             selecting = false;
             $('.multi-select-checkbox').addClass('d-none').prop('checked', false);
@@ -786,6 +788,7 @@
                 .removeClass('text-white')
                 .addClass('text-secondary')
                 .html('<i class="bi bi-check-square"></i> Select');
+            anchorIndex = null;
         }
 
     </script>
