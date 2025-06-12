@@ -31,22 +31,16 @@
 } */
 
 .shaking {
-    animation: shake 0.5s 10;
-    animation-iteration-count: infinite;
-    animation-timing-function: ease-in-out;
-  }
-  
-  @keyframes shake {
-    0%, 100% {
-      transform: rotate(0deg);
-    }
-    20%, 80% {
-      transform: rotate(-6deg);
-    }
-    40%, 60% {
-      transform: rotate(6deg);
-    }
-  }
+    display: inline-block;
+    animation: shake 0.5s infinite ease-in-out;
+    color: red;
+}
+
+@keyframes shake {
+    0%, 100% { transform: rotate(0deg); }
+    20%, 80% { transform: rotate(-12deg); }
+    40%, 60% { transform: rotate(12deg); }
+}
 
 /* @keyframes shake {
     0% {
