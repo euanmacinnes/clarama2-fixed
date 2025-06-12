@@ -334,7 +334,6 @@
             exitSelectMode();
         }
 
-
         function context_copy() {
             const files = getSelectedFilepaths();
             let dataToCopy;
@@ -384,7 +383,6 @@
             $("#context-menu").removeClass("show").hide();
         }
 
-
         function rename_finished(object) {
             var conattr = $(object).text();
             $(object).attr('contenteditable', false);
@@ -395,6 +393,24 @@
             console.log("renaming");
         }
 
+        function enterSelectMode() {
+            selecting = true;
+            $('.multi-select-checkbox').removeClass('d-none');
+            $('#toggle_select_mode')
+                .removeClass('text-secondary')
+                .addClass('text-white')
+                .html('<i class="bi bi-x-square"></i> Cancel');
+        }
+
+        function exitSelectMode() {
+            selecting = false;
+            anchorIndex = null;
+            checkboxes.addClass('d-none').prop('checked', false);
+            $('#toggle_select_mode')
+                .removeClass('text-white')
+                .addClass('text-secondary')
+                .html('<i class="bi bi-check-square"></i> Select');
+        }
 
         $(document).ready(function () {
             console.log('Ready!');
@@ -745,15 +761,10 @@
             const index = listings.index(this);
             const checkbox = $(this).closest('.favorites-div').find('.multi-select-checkbox');
 
+            if (e.ctrlKey && !selecting) enterSelectMode()      // actvate select mode with ctrl key
+
             if (e.shiftKey) {
-                if (!selecting) {
-                    selecting = true;
-                    $('.multi-select-checkbox').removeClass('d-none');
-                    $('#toggle_select_mode')
-                        .removeClass('text-secondary')
-                        .addClass('text-white')
-                        .html('<i class="bi bi-x-square"></i> Cancel');
-                }
+                if (!selecting) enterSelectMode()               // activate select mode with shift key
 
                 if (anchorIndex === null) {
                     anchorIndex = index;
@@ -777,30 +788,20 @@
                 const isChecked = checkbox.prop('checked');
                 checkbox.prop('checked', !isChecked);
 
-                if (!isChecked && anchorIndex === null) {
-                    anchorIndex = index;
-                }
+                if (!isChecked && anchorIndex === null) anchorIndex = index;
 
                 // If all checkboxes are now unchecked, reset anchorIndex
-                if (checkboxes.filter(':checked').length === 0) {
-                    anchorIndex = null;
-                }
+                if (checkboxes.filter(':checked').length === 0) anchorIndex = null;
 
                 e.preventDefault();
                 e.stopPropagation();
             }
         });
 
-        // Exit select mode
-        function exitSelectMode() {
-            selecting = false;
-            anchorIndex = null;
-            checkboxes.addClass('d-none').prop('checked', false);
-            $('#toggle_select_mode')
-                .removeClass('text-white')
-                .addClass('text-secondary')
-                .html('<i class="bi bi-check-square"></i> Select');
-        }
+        // Exit select mode on Escape key
+        $(document).on('keydown', function (e) {
+            if (e.key === "Escape" && selecting) exitSelectMode();
+        });
 
     </script>
 
