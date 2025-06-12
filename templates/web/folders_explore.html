@@ -319,18 +319,57 @@
             exitSelectMode();
         }
 
+        // function context_cut() {
+        //     var file = $("#context-menu").attr("listing_filepath")
+        //     navigator.clipboard.writeText(encodeURIComponent(file) + "&mode=cut");
+        //     $("#context-menu").removeClass("show").hide();
+        //     exitSelectMode()
+        // }
+
         function context_cut() {
-            var file = $("#context-menu").attr("listing_filepath")
-            navigator.clipboard.writeText(encodeURIComponent(file) + "&mode=cut");
+            const files = getSelectedFilepaths();
+
+            if (files.length === 0) {
+                var file = $("#context-menu").attr("listing_filepath");
+                navigator.clipboard.writeText(encodeURIComponent(file) + "&mode=cut");
+            } else {
+                const encodedFiles = files.map(f => encodeURIComponent(f)).join(",");
+                navigator.clipboard.writeText(encodedFiles + "&mode=cut");
+            }
+
             $("#context-menu").removeClass("show").hide();
-            exitSelectMode()
+            exitSelectMode();
         }
 
+
+        // function context_copy() { // old
+        //     var file = $("#context-menu").attr("listing_filepath")
+        //     navigator.clipboard.writeText(encodeURIComponent(file) + "&mode=copy");
+        //     $("#context-menu").removeClass("show").hide();
+        //     exitSelectMode()
+        // }
+
         function context_copy() {
-            var file = $("#context-menu").attr("listing_filepath")
-            navigator.clipboard.writeText(encodeURIComponent(file) + "&mode=copy");
+            const files = getSelectedFilepaths();
+            let dataToCopy;
+
+            if (files.length === 0) { // no selection
+                const file = $("#context-menu").attr("listing_filepath");
+                dataToCopy = encodeURIComponent(file) + "&mode=copy";    
+            } else {
+                dataToCopy = encodeURIComponent(files.join(",")) + "&mode=copy";
+            }
+
+            navigator.clipboard.writeText(dataToCopy)
+                .then(() => {
+                    console.log("Copied:", dataToCopy);
+                })
+                .catch(err => {
+                    console.error('Failed to write to clipboard: ', err);
+                });
+
             $("#context-menu").removeClass("show").hide();
-            exitSelectMode()
+            exitSelectMode();
         }
 
         // Things to watch out for:
@@ -338,11 +377,32 @@
         // Can't paste to an empty folder
         // File pasting into current folder should create a duplicate
 
+        // function context_paste() {
+        //     navigator.clipboard.readText()
+        //         .then(source => {
+        //             var file = "/render/paste/" + $("#context-menu").attr("listing_filepath") + '?source=' + source;
+        //             execute_json_url(file, true);
+        //         })
+        //         .catch(err => {
+        //             console.error('Failed to read clipboard contents: ', err);
+        //         });
+
+        //     $("#context-menu").removeClass("show").hide();
+        // }
+
         function context_paste() {
             navigator.clipboard.readText()
                 .then(source => {
-                    var file = "/render/paste/" + $("#context-menu").attr("listing_filepath") + '?source=' + source;
-                    execute_json_url(file, true);
+                    // Split on '&mode=' to get path(s) and mode
+                    const [encodedPaths, mode] = source.split("&mode=");
+                    const paths = decodeURIComponent(encodedPaths).split(",");
+
+                    const targetPath = $("#context-menu").attr("listing_filepath");
+
+                    paths.forEach(path => {
+                        const file = `/render/paste/${targetPath}?source=${encodeURIComponent(path)}&mode=${mode}`;
+                        execute_json_url(file, true);
+                    });
                 })
                 .catch(err => {
                     console.error('Failed to read clipboard contents: ', err);
@@ -350,6 +410,7 @@
 
             $("#context-menu").removeClass("show").hide();
         }
+
 
         function rename_finished(object) {
             var conattr = $(object).text();
