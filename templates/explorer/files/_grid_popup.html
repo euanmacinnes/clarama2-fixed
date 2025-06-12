@@ -9,7 +9,7 @@
 
     }
 
-    {{ grid_id }}elements = {{ element_json | safe }};
+    {{ grid_id }}elements = {{ element_json | to_json | safe }};
 
 
     {{ grid_id }}subOptions = {

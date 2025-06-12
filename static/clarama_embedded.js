@@ -77,6 +77,14 @@ function insertScript($script, callback) {
     }
 }
 
+var current_embedded = '';
+
+window.onerror = function (message, source, lineno, colno, error) {
+    console.error("Global error:", message);
+    console.error("Last embedded", current_embedded);
+    return true; // Prevent default error handling
+}
+
 // https://html.spec.whatwg.org/multipage/scripting.html
 var runScriptTypes = [
     'application/javascript',
@@ -235,6 +243,7 @@ $.fn.load_post = function (onfinished, args, json) {
                                     console.log("INTERACTIONS " + embedded.attr("id") + ': ' + final_url);
                                     console.log({html: html});
                                     try {
+                                        current_embedded = html;
                                         embedded.html(html).promise()
                                             .done(function () {
                                                 enable_interactions(embedded);
@@ -365,6 +374,7 @@ $.fn.load = function (onfinished, args) {
                             console.log({'html': html})
                             try {
                                 console.log(final_url)
+                                current_embedded = html;
                                 embedded.html(html).promise()
                                     .done(function () {
                                         enable_interactions(embedded);
