@@ -195,7 +195,7 @@
     return item.hasClass('bi bi-folder-fill');
   }
   
-  var {{ grid_id }}elements = {{ element_json | safe }};
+  var {{ grid_id }}elements = {{ element_json | to_json | safe }};
   console.log("{{ grid_id }}elements", {{ grid_id }}elements);
   let currentTarget = null;
   const currentPath = "{{ file_url | path }}";
