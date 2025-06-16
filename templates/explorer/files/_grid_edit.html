@@ -11,7 +11,7 @@
           </ol>
         </nav>
 
-        <button type="button" class="btn btn-primary" onclick="add_selected_content('/content/element/{{ file_url }}', '')">Add Empty Grid</button>
+        <button type="button" class="btn btn-primary" onclick="add_selected_content('/content/element/{{ file_url }}', 'empty')">Add Empty Grid</button>
 
         <div class="d-flex align-items-center w-100">
           <p class="mb-1 pe-2">New: </p>
@@ -195,7 +195,7 @@
     return item.hasClass('bi bi-folder-fill');
   }
   
-  var {{ grid_id }}elements = {{ element_json | safe }};
+  var {{ grid_id }}elements = {{ element_json | to_json | safe }};
   console.log("{{ grid_id }}elements", {{ grid_id }}elements);
   let currentTarget = null;
   const currentPath = "{{ file_url | path }}";
@@ -533,9 +533,10 @@
   }
 
   function addContent(element, data, html) {
-    // console.log("element", element)
-    // console.log("data", data)
-    // console.log("html", html)
+    console.log("element", element)
+    console.log("data", data)
+    console.log("html", html)
+    console.log("type of html", typeof html)
     if (isDict({{ grid_id }}elements)) {
       {{ grid_id }}elements[element] = data;
     } else {
@@ -543,7 +544,6 @@
       elem[element] = data;
       {{ grid_id }}elements = elem;
     }
-
 
     //{{ grid_id }}elements[element] = data;
 
@@ -565,14 +565,6 @@
   }
 
   // function add_blank_content(element, data) {
-  //   if (isDict({{ grid_id }}elements)) {
-  //     {{ grid_id }}elements[element] = data;
-  //   } else {
-  //     var elem = {};
-  //     elem[element] = data;
-  //     {{ grid_id }}elements = elem;
-  //   }
-
 
   //   {{ grid_id }}grid.addWidget({
   //     x: 0,
@@ -620,7 +612,11 @@
 
   function add_selected_content(element_render_url, selected_v = "") {
     if (selected_v !== "") {
-      selected_val = selected_v;
+      if (selected_v == "empty") {
+        selected_val = "";
+      } else {
+        selected_val = selected_v;
+      }
     } else {
       selected_val = "./" + $("#add_content_addfield").val();
     }
@@ -661,7 +657,7 @@
       console.log(slate_data)
 
       // if (element_render_url === '') {
-      //   add_blank_content(element, new_element_data);
+      //   addContent(element, new_element_data, "");
       // } else {
         $.ajax({
           type: 'POST',
@@ -671,7 +667,21 @@
           data: JSON.stringify(slate_data),
           success: function (data) {
             if (data['data'] == 'ok') {
-              addContent(element, new_element_data, data['results']);
+              let html = data['results'];
+              // if (selected_val == '') {
+              //   console.log("im inside here")
+              //   let parser = new DOMParser();
+              //   let doc = parser.parseFromString(html, 'text/html');
+              //   let elementDiv = doc.querySelector(element);
+              //   console.log("elementDiv", elementDiv)
+              //   if (elementDiv) {
+              //     elementDiv.setAttribute('url', '');
+              //     elementDiv.innerHTML = '';
+              //     html = elementDiv.outerHTML;
+              //   }
+              // }
+              
+              addContent(element, new_element_data, html);
             } else {
               console.log('Submission was not successful.');
               console.log(data);
@@ -712,7 +722,7 @@
         const currentUrl = parentDiv.getAttribute('url');
         parentDiv.setAttribute('url', "/render/embed/" + resolveRelativeFilePath(newSource) + "?" + $("#" + target + "_paramsInput").val() + "&clarama_layout=text_left&clarama_autorefresh=true&clarama_element_prefix=element_5_&clarama_element_width=4&clarama_element_height=2&clarama_element_aspect=2.0");
         
-        // console.log("new url", document.getElementById(target).getAttribute('url'))
+        console.log("new url", document.getElementById(target).getAttribute('url'))
         enable_interactions($(`#${target}`).parent(), true);
       } else {
         targetInput.value = newSource;

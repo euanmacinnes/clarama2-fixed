@@ -10,11 +10,11 @@
                 <div class="col-1">
                     <select id="content_query_{{ loop_index }}_mode" class="form-control">
                         {% if mode is defined %}
-                        <option {{ selected("GET", mode) }} >GET</option>
-                        <option {{ selected("POST", mode) }} >POST</option>
+                            <option {{ selected("GET", mode) }} >GET</option>
+                            <option {{ selected("POST", mode) }} >POST</option>
                         {% else %}
-                        <option >GET</option>
-                        <option >POST</option>
+                            <option>GET</option>
+                            <option>POST</option>
                         {% endif %}
 
                     </select></div>
@@ -25,8 +25,7 @@
 
             <div><br/>Parameters (headers, data, json), enter in YAML format</div>
             <div id="content_query_{{ loop_index }}_params" name="task_step_field_{{ loop_index }}_params" editor="yaml"
-                 class="source-editor form-control" style="min-height: 100px">{{ content }}
-            </div>
+                 class="source-editor form-control" style="min-height: 100px">{{ content }}</div>
         </div>
     </div>
 </div>

@@ -77,6 +77,14 @@ function insertScript($script, callback) {
     }
 }
 
+var current_embedded = '';
+
+window.onerror = function (message, source, lineno, colno, error) {
+    console.error("Global error:", message);
+    console.error("Last embedded", current_embedded);
+    return true; // Prevent default error handling
+}
+
 // https://html.spec.whatwg.org/multipage/scripting.html
 var runScriptTypes = [
     'application/javascript',
@@ -180,6 +188,10 @@ $.fn.load_post = function (onfinished, args, json) {
 
                     var json_payload = json;
 
+                    if (url.split("?")[0] == "/render/embed/") {
+                        url = "";
+                    }
+
                     if (json_element !== undefined) {
                         try {
                             var je = $("<textarea/>").html(json_element.innerHTML).text(); // Hack to get json from a div element (which will be just text)
@@ -222,8 +234,13 @@ $.fn.load_post = function (onfinished, args, json) {
                             //return Promise.reject(response); // 2. reject instead of throw
                         })
                         .then((html) => {
-                            //console.log('POST Embedded JQuery Loaded ' + $CLARAMA_ROOT + url)
-                            //console.log({ 'html': html })
+                            // console.log('POST Embedded JQuery Loaded ' + $CLARAMA_ROOT + url)
+                            // console.log({ 'html': html })
+
+                            if (html == "[]\n") {
+                                html = "";
+                            }
+
                             try {
                                 console.log(final_url)
 
@@ -235,6 +252,7 @@ $.fn.load_post = function (onfinished, args, json) {
                                     console.log("INTERACTIONS " + embedded.attr("id") + ': ' + final_url);
                                     console.log({html: html});
                                     try {
+                                        current_embedded = html;
                                         embedded.html(html).promise()
                                             .done(function () {
                                                 enable_interactions(embedded);
@@ -263,7 +281,6 @@ $.fn.load_post = function (onfinished, args, json) {
                             console.warn('JQuery Error loading ' + $CLARAMA_ROOT + final_url)
                             console.warn(error);
                         });
-
                     embedded.attr("clarama_loaded", true)
                 });
         }
@@ -343,6 +360,10 @@ $.fn.load = function (onfinished, args) {
                     var url = embedded.attr("url");
                     var url_data_id = embedded.attr("url_data_id");
 
+                    if (url.split("?")[0] == "/render/embed/") {
+                        url = "";
+                    }
+
                     if (url_data_id !== undefined) {
                         //console.log("Retrieving JSON for " + url_data_id);
 
@@ -361,10 +382,15 @@ $.fn.load = function (onfinished, args) {
                     fetch($CLARAMA_ROOT + final_url)
                         .then((response) => response.text())
                         .then((html) => {
+
+                            if (html == "[]\n") {
+                                html = "";
+                            }
                             console.log('GET Embedded JQuery Loaded ' + $CLARAMA_ROOT + url)
                             console.log({'html': html})
                             try {
                                 console.log(final_url)
+                                current_embedded = html;
                                 embedded.html(html).promise()
                                     .done(function () {
                                         enable_interactions(embedded);
@@ -382,7 +408,6 @@ $.fn.load = function (onfinished, args) {
                             console.warn('JQuery Error loading ' + $CLARAMA_ROOT + url)
                             console.warn(error);
                         });
-
                     embedded.attr("clarama_loaded", true)
                 });
         }
