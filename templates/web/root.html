@@ -25,6 +25,28 @@
         <div class="collapse navbar-collapse justify-content-between position-relative" id="navbarClarama"
              style="top: 4px">
             <div class="d-flex align-items-center flex-column flex-xl-row mb-2 mb-xl-0">
+                {% if branches %}
+                    <div id="branch_selector" class="navbar-dropdown">
+                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                style="background-color: #303030; color: #fff">
+                            {{ current_branch or "Main" }}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-start"
+                            style="background-color: #111;">
+
+                            {% for branch in branches %}
+                                <li>
+                                    <a class="text-capitalize nav-link  fw-bold text-white  fst-italic dropdown-item py-2 px-3"
+                                       href="/content/explore/?set_branch={{ branch['branch'] }}&branch_path={{ branch['folder'] }}">
+                                        <i class="bi bi-signpost h5 me-2"></i>{{ branch['branch'] }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+                {% endif %}
                 {% set ns = namespace(burl="") %}
                 <ul class="navbar-nav root-nav mb-2 mb-xl-0 align-items-center">
                     {% for breadcrumb in breadcrumbs %}
@@ -113,7 +135,8 @@
                     </a>
                     <ul id="alertsmenu" class="navbar-nav px-2 hidden">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarAlertDropdown" role="button"
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarAlertDropdown"
+                               role="button"
                                data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-bell"></i>
                             </a>
