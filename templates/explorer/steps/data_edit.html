@@ -189,17 +189,19 @@
                             <option {{ selected("Bottom",legend) }}>Bottom</option>
                         </select>
                     </div>
-                    <button type="button" class="btn btn-primary ms-3" data-bs-toggle="collapse" href="#chartYamlEditor" role="button" aria-expanded="false" aria-controls="chartYamlEditor">Advance</button>
+                    <button type="button" class="btn btn-primary ms-3" data-bs-toggle="collapse" href="#chartYamlEditor"
+                            role="button" aria-expanded="false" aria-controls="chartYamlEditor">Advance
+                    </button>
                 </div>
             </div>
 
             <div class="container-fluid mb-2 collapse" id="chartYamlEditor">
                 <div id="content_query_yaml_{{ loop_index }}"
-                    name="task_step_field_yaml_{{ loop_index }}"
-                    editor="yaml"
-                    class="source-editor form-control clarama-field-editor"
-                    celltype="code"
-                    style="min-height: 100px">
+                     name="task_step_field_yaml_{{ loop_index }}"
+                     editor="yaml"
+                     class="source-editor form-control clarama-field-editor"
+                     celltype="code"
+                     style="min-height: 100px">
                 </div>
             </div>
 
@@ -230,22 +232,23 @@
                 </div>
             </div>
 
+            {% if chart is defined %}
+                {% set seriesanno = chart['series-anno'] or [] %}
+                {% set seriesgroups = chart['series-groups'] or [{}] %}
+                {% set seriesformats = chart['series-formats'] or [{}] %}
+            {% else %}
+                {% set seriesanno = [] %}
+                {% set seriesgroups = [{}] %}
+                {% set seriesformats = [{}] %}
+            {% endif %}
+
             <ul id="seriesGrp{{ loop_index }}" class="list-group">
-                {% if chart is defined %}
-                    {% set seriesgroups = chart['series-groups'] or [{}] %}
-                    {% set seriesformats = chart['series-formats'] or [{}] %}
-                    {% set seriesannotations = chart['series-annotations'] or [{}] %}
-                {% else %}
-                    {% set seriesgroups = [{}] %}
-                    {% set seriesformats = [{}] %}
-                    {% set seriesannotations = [{}] %}
-                {% endif %}
                 <label for="sg{{ loop_index }}" class="form-label mb-2">
                     Series Groups
                     <i id="addSG{{ loop_index }}" class="bi bi-plus-circle ms-1 data-cell-icon-hover add"></i>
                 </label>
                 <div class="list-group-item d-flex row gx-2 align-items-center">
-                    <div style="width: 2%;"></div> 
+                    <div style="width: 2%;"></div>
                     <div class="col-2">Type</div>
                     <div class="col-1">X Axis</div>
                     <div class="col-1">Y Axis</div>
@@ -255,7 +258,7 @@
                     <div class="col-1">Series Axis</div>
                     <div class="col-1">Unit Axis</div>
                     <div class="col-2">Label Axis</div>
-                    <div style="width: 4%;"></div> 
+                    <div style="width: 4%;"></div>
                 </div>
                 {% for sgroup in seriesgroups %}
                     {% with loop_index=loop_index, series_index=loop.index %}
@@ -286,6 +289,31 @@
                     {% endwith %}
                 {% endfor %}
             </ul>
+            <ul id="seriesAnno{{ loop_index }}" class="list-group">
+                <label for="sa{{ loop_index }}" class="form-label mb-2">
+                    Series Annotations
+                    <i id="addAN{{ loop_index }}" class="bi bi-plus-circle ms-1 data-cell-icon-hover add"></i>
+                </label>
+                <div class="list-group-item d-flex row gx-2 align-items-center">
+                    <div class="col-1">Label</div>
+                    <div class="col-1">X Axis</div>
+                    <div class="col-1">Y Axis</div>
+                    <div class="col-1">X Max Axis</div>
+                    <div class="col-1">Y Max Axis</div>
+                    <div class="col-1">Unit Axis</div>
+                    <div class="col-1">Dotted Lines</div>
+                    <div class="col-1">Border Width</div>
+                    <div class="col-1">Type</div>
+                    <div class="col-1">Colour</div>
+                    <div class="col-1">Fill Colour</div>
+                    <div style="width: 4%;"></div>
+                </div>
+                {% for sanno in seriesanno %}
+                    {% with loop_index=loop_index, series_index=loop.index %}
+                        {% include "explorer/steps/data_edit_chart_series_annotation.html" %}
+                    {% endwith %}
+                {% endfor %}
+            </ul>
         </div>
     </div>
     <div id="content_query_{{ loop_index }}" name="task_step_field_{{ loop_index }}" editor="sql"
@@ -302,8 +330,8 @@
 
         function updateSeriesFields($selectElem) {
             const seriesType = $selectElem.val();
-            const fields = ['series-x','series-y','series-z','series-ymin','series-ymax','series-s','series-u','series-l'];
-            
+            const fields = ['series-x', 'series-y', 'series-z', 'series-ymin', 'series-ymax', 'series-s', 'series-u', 'series-l'];
+
             // fields to disable based on series type
             const disableRules = {
                 "Bubble": ['series-ymin', 'series-ymax'],
@@ -315,25 +343,25 @@
                 "Polar Area": ['series-y', 'series-z', 'series-ymin', 'series-ymax', 'series-s'],
                 "Radar": ['series-y', 'series-z', 'series-ymin', 'series-ymax']
             };
-    
+
             const group = $selectElem.closest('.chart-series-groups');
-    
+
             // enable all fields first
-            fields.forEach(function(field) {
+            fields.forEach(function (field) {
                 group.find('input.' + field).prop('disabled', false);
             });
-    
+
             // thn disable fields per rules
             const toDisable = disableRules[seriesType] || [];
-            toDisable.forEach(function(field) {
+            toDisable.forEach(function (field) {
                 group.find('input.' + field).prop('disabled', true);
             });
         }
-    
+
         $('.series-type').each(function () {
             updateSeriesFields($(this));
         });
-    
+
         $(document).on('change', '.series-type', function () {
             updateSeriesFields($(this));
         });
