@@ -233,11 +233,11 @@
             </div>
 
             {% if chart is defined %}
-                {% set seriesanno = chart['series-anno'] or [] %}
+                {% set seriesanno = chart['series-anno'] or [{}] %}
                 {% set seriesgroups = chart['series-groups'] or [{}] %}
                 {% set seriesformats = chart['series-formats'] or [{}] %}
             {% else %}
-                {% set seriesanno = [] %}
+                {% set seriesanno = [{}] %}
                 {% set seriesgroups = [{}] %}
                 {% set seriesformats = [{}] %}
             {% endif %}
