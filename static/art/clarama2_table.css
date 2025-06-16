@@ -10,6 +10,29 @@
     padding: 5px;
 }
 
+.table-header {
+    padding: 0px;
+}
+
+.table-header-nav-item {
+    padding: 0px !important;
+    vertical-align: middle;
+}
+
+.table-header-nav-text {
+    top: 8px !important;
+    bottom: 8px !important;
+    vertical-align: middle;
+}
+
+.table-header-nav-bar {
+    padding: 0px;
+}
+
+.table-header-nav-toolbar {
+    padding: 0px;
+}
+
 .table-default-header {
     --bs-bg-opacity: 1;
     background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;
