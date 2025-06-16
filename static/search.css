@@ -126,3 +126,40 @@ input[type="search"]::-webkit-search-cancel-button {
 .custom-option:hover {
     background-color: #f1f1f1;
 }
+
+.breadcrumb-hidden {
+    display: none;
+}
+
+.breadcrumb-ellipsis {
+    position: relative;
+    cursor: pointer;
+}
+
+.breadcrumb-ellipsis .hidden-items {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%);
+    background: #191919;
+    z-index: 100;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 15px;
+}
+
+.breadcrumb-ellipsis:hover .hidden-items {
+    display: flex;
+}
+
+.breadcrumb-ellipsis .hidden-items::before {
+    content: "";
+    position: absolute;
+    top: -17px;
+    left: 50%;
+    border-width: 9px;
+    border-style: solid;
+    border-color: transparent transparent #191919 transparent;
+}
