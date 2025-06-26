@@ -1,7 +1,11 @@
 Clarama:
   Folders:
-    ModeSlates: "{rootdir}/files/dynamic/content/System/Slates"
-    FileTypeModeSlates: "{rootdir}/files/dynamic/content/System/FileModes"
+    ModeSlates:
+      - "{rootdir}/files/dynamic/content/System/Slates"
+      - "{rootdir}/files/dynamic/content/Local/Slates"
+    FileTypeModeSlates:
+      - "{rootdir}/files/dynamic/content/System/FileModes"
+      - "{rootdir}/files/dynamic/content/Local/FileModes"
     Environments: "{rootdir}/files/dynamic/content/System/Environments"
     Config: "{rootdir}/files/dynamic/config"
     Content: "{rootdir}/files/dynamic/content"
@@ -9,8 +13,8 @@ Clarama:
     Cells: "{rootdir}/files/fixed/templates/explorer/steps"
     Fixed: "{rootdir}/files/fixed"
     Themes: "{rootdir}/files/fixed/themes"
-    Templates: "{rootdir}/files/fixed/templates"
-    StaticFiles: "{rootdir}/files/fixed/static"
+    Templates: "{rootdir}/files/fixed/themes/default/templates"
+    StaticFiles: "{rootdir}/files/fixed/themes/default/static"
     Orchestrators: "{claramadir}/services/environments/orchestrators"
     SourceTypes: "{claramadir}/services/data/sourcetypes"
   DefaultFavourites:
