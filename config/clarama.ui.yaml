@@ -79,7 +79,7 @@ Clarama:
       .tsv: [ 'explore','raw','versioning', 'issues' ]
       .task: [ 'raw','versioning', 'issues' ]
       .plan: [ 'raw','versioning', 'issues' ]
-      .ipynb: [ 'run','explore','raw','versioning', 'issues' ]
+      .ipynb: [ 'run','explore','edit','raw','versioning', 'issues' ]
       .txt: [ 'raw','versioning', 'issues' ]
       .py: [ 'raw','versioning', 'issues' ]
       .sql: [ 'raw','versioning', 'issues' ]
