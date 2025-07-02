@@ -34,6 +34,8 @@ Clarama:
       - 'sh'
       - 'xlsx'
       - 'jpeg'
+      - 'pkl'
+      - 'parquet'
       - 'jpg'
       - 'png'
       - 'css'
