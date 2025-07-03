@@ -92,6 +92,7 @@ Clarama:
       .css: [ 'raw','versioning', 'issues' ]
       .ts: [ 'raw','versioning', 'issues' ]
       .js: [ 'raw','versioning', 'issues' ]
+      .pkl: [ 'explore','issues' ]
       .jpg: [ 'explore','issues' ]
       .png: [ 'explore','issues' ]
       .jpeg: [ 'explore','issues' ]
@@ -193,6 +194,8 @@ Clarama:
       .jpeg: Jpeg Image
       .jpg: Jpeg Image
       .png: PNG Image
+      .pkl: Python Pickle
+      .parquet: Parquet
       .pdf: Adobe PDF
       .ipynb: Jupyter Notebook
       .py: Python
