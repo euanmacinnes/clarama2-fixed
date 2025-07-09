@@ -66,7 +66,7 @@ Clarama:
     VisibleModes: # Internal modes are 'view', 'info' and 'embed', and are not selectable by the user.
       folders: [ 'explore', 'jobs', 'versioning', 'issues' ]
       default: [ 'explore', 'versioning', 'issues' ]
-      .task.yaml: [ 'run','jobs','schedule','explore','edit','raw','versioning', 'issues' ]
+      .task.yaml: [ 'run','jobs','explore','edit','raw','versioning', 'issues' ]
       .slate.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
       .plan.yaml: [ 'explore','edit','raw','jobs','versioning', 'issues' ]
       .source.yaml: [ 'explore','raw','versioning', 'issues' ]
