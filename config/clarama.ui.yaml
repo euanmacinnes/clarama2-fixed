@@ -1,10 +1,10 @@
 Clarama:
   Folders:
     ModeSlates:
-      - "{rootdir}/files/dynamic/content/System/Slates"
+      - "{rootdir}/files/dynamic/content/System/Plugins/Slates"
       - "{rootdir}/files/dynamic/content/Local/Slates"
     FileTypeModeSlates:
-      - "{rootdir}/files/dynamic/content/System/FileModes"
+      - "{rootdir}/files/dynamic/content/System/Plugins/FileModes"
       - "{rootdir}/files/dynamic/content/Local/FileModes"
     Environments: "{rootdir}/files/dynamic/content/System/Environments"
     Config: "{rootdir}/files/dynamic/config"
