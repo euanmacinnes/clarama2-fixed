@@ -4,7 +4,7 @@ Clarama:
       - "{rootdir}/files/dynamic/content/System/Plugins/Slates"
       - "{rootdir}/files/dynamic/content/Local/Slates"
     FileTypeModeSlates:
-      - "{rootdir}/files/dynamic/content/System/Plugins/FileModes"
+      - "{rootdir}/files/dynamic/content/System/Plugins/FIleModes"
       - "{rootdir}/files/dynamic/content/Local/FileModes"
     Environments: "{rootdir}/files/dynamic/content/System/Environments"
     Config: "{rootdir}/files/dynamic/config"
@@ -263,6 +263,10 @@ Clarama:
         description: Multiple-item selection, data-driven
         data: True
         choices: True
+      statetoggle:
+        icon: bi-3-square-fill
+        name: State Toggle
+        description: toggle between a linear series of states, potentially with image representation of each.
       string:
         icon: bi-input-cursor-text
         name: String
