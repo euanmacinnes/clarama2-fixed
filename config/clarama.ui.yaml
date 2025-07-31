@@ -1,10 +1,10 @@
 Clarama:
   Folders:
     ModeSlates:
-      - "{rootdir}/files/dynamic/content/System/Slates"
+      - "{rootdir}/files/dynamic/content/System/Plugins/Slates"
       - "{rootdir}/files/dynamic/content/Local/Slates"
     FileTypeModeSlates:
-      - "{rootdir}/files/dynamic/content/System/FileModes"
+      - "{rootdir}/files/dynamic/content/System/Plugins/FIleModes"
       - "{rootdir}/files/dynamic/content/Local/FileModes"
     Environments: "{rootdir}/files/dynamic/content/System/Environments"
     Config: "{rootdir}/files/dynamic/config"
@@ -66,7 +66,7 @@ Clarama:
     VisibleModes: # Internal modes are 'view', 'info' and 'embed', and are not selectable by the user.
       folders: [ 'explore', 'jobs', 'versioning', 'issues' ]
       default: [ 'explore', 'versioning', 'issues' ]
-      .task.yaml: [ 'run','jobs','schedule','explore','edit','raw','versioning', 'issues' ]
+      .task.yaml: [ 'run','jobs','explore','edit','raw','versioning', 'issues' ]
       .slate.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
       .plan.yaml: [ 'explore','edit','raw','jobs','versioning', 'issues' ]
       .source.yaml: [ 'explore','raw','versioning', 'issues' ]
@@ -92,6 +92,7 @@ Clarama:
       .css: [ 'raw','versioning', 'issues' ]
       .ts: [ 'raw','versioning', 'issues' ]
       .js: [ 'raw','versioning', 'issues' ]
+      .pkl: [ 'explore','issues' ]
       .jpg: [ 'explore','issues' ]
       .png: [ 'explore','issues' ]
       .jpeg: [ 'explore','issues' ]
@@ -193,6 +194,8 @@ Clarama:
       .jpeg: Jpeg Image
       .jpg: Jpeg Image
       .png: PNG Image
+      .pkl: Python Pickle
+      .parquet: Parquet
       .pdf: Adobe PDF
       .ipynb: Jupyter Notebook
       .py: Python
@@ -260,6 +263,10 @@ Clarama:
         description: Multiple-item selection, data-driven
         data: True
         choices: True
+      statetoggle:
+        icon: bi-3-square-fill
+        name: State Toggle
+        description: toggle between a linear series of states, potentially with image representation of each.
       string:
         icon: bi-input-cursor-text
         name: String
