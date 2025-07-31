@@ -263,6 +263,10 @@ Clarama:
         description: Multiple-item selection, data-driven
         data: True
         choices: True
+      statetoggle:
+        icon: bi-3-square-fill
+        name: State Toggle
+        description: toggle between a linear series of states, potentially with image representation of each.
       string:
         icon: bi-input-cursor-text
         name: String
