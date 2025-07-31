@@ -4,7 +4,7 @@ Clarama:
       - "{rootdir}/files/dynamic/content/System/Plugins/Slates"
       - "{rootdir}/files/dynamic/content/Local/Slates"
     FileTypeModeSlates:
-      - "{rootdir}/files/dynamic/content/System/Plugins/FIleModes"
+      - "{rootdir}/files/dynamic/content/System/Plugins/FileModes"
       - "{rootdir}/files/dynamic/content/Local/FileModes"
     Environments: "{rootdir}/files/dynamic/content/System/Environments"
     Config: "{rootdir}/files/dynamic/config"
@@ -56,7 +56,7 @@ Clarama:
       - 'locker.yaml'
       - 'profiles.yaml'
       - 'deploy.yaml'
-      - 'locker.yaml'
+      - 'conversation.yaml'
       - 'yaml'
       - 'pjpeg'
       - 'pjp'
@@ -68,7 +68,7 @@ Clarama:
       default: [ 'explore', 'versioning', 'issues' ]
       .task.yaml: [ 'run','jobs','explore','edit','raw','versioning', 'issues' ]
       .slate.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
-      .plan.yaml: [ 'explore','edit','raw','jobs','versioning', 'issues' ]
+      .conversation.yaml: [ 'explore','raw','jobs','versioning', 'issues' ]
       .source.yaml: [ 'explore','raw','versioning', 'issues' ]
       .table.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
       .query.yaml: [ 'raw','versioning', 'issues' ]
@@ -119,6 +119,7 @@ Clarama:
       .help.yaml: bi-info-square
       .task.yaml: bi-journal-arrow-down
       .slate.yaml: bi-file-earmark-spreadsheet
+      .conversation.yaml: bi-chat-left-text
       .plan.yaml: bi-diagram-3
       .table.yaml: bi-table
       .query.yaml: bi-question-circle
@@ -158,6 +159,7 @@ Clarama:
       .config: yaml
       .plan: yaml
       .task.yaml: yaml
+      .conversation.yaml: yaml
       .query.yaml: yaml
       .slate.yaml: yaml
       .deploy.yaml: yaml
@@ -182,7 +184,7 @@ Clarama:
       .md: Markdown
       .task.yaml: Task
       .slate.yaml: Slate
-      .plan.yaml: Plan
+      .conversation.yaml: Conversation
       .table.yaml: Data Table
       .source.yaml: Source
       .field.yaml: Field
