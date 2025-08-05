@@ -11,7 +11,7 @@ Clarama:
     Web: "http://127.0.0.1:5000/"  # the deployment config will update this with either HTTPS or HTTP and the public domain name
     Messenger_WS: "ws://127.0.0.1:5006/ws/"  # For receiving notifications. the deployment config will update this with either HTTPS or HTTP and the public domain name
     # Internal, called by the Web service. Configure a zone of clarama.local with an A record for primary in the local DNS to reroute
-    Data: "http://127.0.0.1:5001/data/"
+    Data: "http://127.0.0.1:5000/data/"
     Explorer: "http://127.0.0.1:5000/explorer/"
     Mount: "http://127.0.0.1:5000/" # The default (root) mount for all the file content, without the api path, just the domain. /api/mount will be added automatically
     Jobs: "http://127.0.0.1:5000/jobs/"
