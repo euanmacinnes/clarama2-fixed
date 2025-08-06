@@ -11,6 +11,7 @@ Clarama:
     Content: "{rootdir}/files/dynamic/content"
     Users: "{rootdir}/files/dynamic/content/Users"
     Cells: "{rootdir}/files/fixed/templates/explorer/steps"
+    AI: "{rootdir}/files/dynamic/content/System/Plugins/AI/Templates"
     Fixed: "{rootdir}/files/fixed"
     Themes: "{rootdir}/files/fixed/themes"
     Templates: "{rootdir}/files/fixed/themes/default/templates"
