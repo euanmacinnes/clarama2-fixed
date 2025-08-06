@@ -160,6 +160,8 @@ Clarama:
       .csv: CSV
       .css: css
       .sql: sql
+      .yaml: yaml
+      .jinja2: django
       .task: yaml
       .config: yaml
       .plan: yaml
