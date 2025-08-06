@@ -58,6 +58,7 @@ Clarama:
       - 'deploy.yaml'
       - 'conversation.yaml'
       - 'yaml'
+      - 'jinja2'
       - 'pjpeg'
       - 'pjp'
       - 'ipynb'
@@ -85,6 +86,8 @@ Clarama:
       .tsv: [ 'explore','raw','versioning', 'issues' ]
       .task: [ 'raw','versioning', 'issues' ]
       .plan: [ 'raw','versioning', 'issues' ]
+      .yaml: [ 'raw','versioning', 'issues' ]
+      .jinja2: [ 'raw','versioning', 'issues' ]
       .ipynb: [ 'run','explore','edit','raw','versioning', 'issues' ]
       .txt: [ 'raw','versioning', 'issues' ]
       .py: [ 'raw','versioning', 'issues' ]
@@ -116,6 +119,8 @@ Clarama:
       .ts: bi-filetype-ts
       .py: bi-filetype-py
       .sql: bi-filetype-sql
+      .yaml: bi-filetype-yml
+      .jinja2: bi-filetype-ai
       .help.yaml: bi-info-square
       .task.yaml: bi-journal-arrow-down
       .slate.yaml: bi-file-earmark-spreadsheet
