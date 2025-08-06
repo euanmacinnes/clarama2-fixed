@@ -58,6 +58,7 @@ Clarama:
       - 'profiles.yaml'
       - 'deploy.yaml'
       - 'conversation.yaml'
+      - 'test.yaml'
       - 'yaml'
       - 'jinja2'
       - 'pjpeg'
@@ -80,6 +81,7 @@ Clarama:
       .environment.yaml: [ 'raw','versioning', 'issues' ]
       .deploy.yaml: [ 'raw','versioning', 'issues' ]
       .access.yaml: [ 'raw','versioning', 'issues' ]
+      .test.yaml: [ 'run','edit','raw','versioning', 'issues' ]
       .html: [ 'explore','raw','versioning', 'issues' ]
       .json: [ 'raw','versioning', 'issues' ]
       .md: [ 'explore','edit','raw','versioning', 'issues' ]
@@ -123,6 +125,7 @@ Clarama:
       .yaml: bi-filetype-yml
       .jinja2: bi-filetype-ai
       .help.yaml: bi-info-square
+      .test.yaml: bi-browser-chrome
       .task.yaml: bi-journal-arrow-down
       .slate.yaml: bi-file-earmark-spreadsheet
       .conversation.yaml: bi-chat-left-text
@@ -167,6 +170,7 @@ Clarama:
       .config: yaml
       .plan: yaml
       .task.yaml: yaml
+      .test.yaml: yaml
       .conversation.yaml: yaml
       .query.yaml: yaml
       .slate.yaml: yaml
@@ -190,6 +194,7 @@ Clarama:
       .txt: Text
       .json: JSON
       .md: Markdown
+      .test.yaml: Playwright Test
       .task.yaml: Task
       .slate.yaml: Slate
       .conversation.yaml: Conversation
