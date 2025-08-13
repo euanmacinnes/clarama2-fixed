@@ -19,6 +19,7 @@ Clarama:
     Environments: "http://127.0.0.1:5000/environments/"
     Messenger: "http://127.0.0.1:5006/"  # For registration and publishing
     AccessControl: "http://127.0.0.1:5000/accesscontrol/"
+    GenieFlow: "http://127.0.0.1:8000/v1/ai/multi/"
     Scheduler: "http://127.0.0.1:5007/scheduler/"
     Runners: "http://127.0.0.1:5000/runners/"
     Compiler: "http://127.0.0.1:5010/compiler/fetch/files/dynamic/content/"
