@@ -65,6 +65,11 @@ Clarama:
       - 'pjp'
       - 'ipynb'
       - 'py'
+      - 'db'
+      - 'sqlite'
+      - 'sqlite3'
+      - 'accdb'
+      - 'mdb'
     InternalModes: [ 'delete','raw','download','new','rename','paste','info','embed','view' ]
     VisibleModes: # Internal modes are 'view', 'info' and 'embed', and are not selectable by the user.
       folders: [ 'explore', 'jobs', 'versioning', 'issues' ]
@@ -152,6 +157,11 @@ Clarama:
       .zip: bi-file-zip
       .tar: bi-file-zip
       .tar.gz: bi-file-zip
+      .db: bi-database-fill
+      .sqlite: bi-database-fill
+      .sqlite3: bi-database-fill
+      .accdb: bi-database-fill
+      .mdb: bi-database-fill
     FiletypeRawEditor:
       .html: html
       .js: javascript
@@ -214,6 +224,11 @@ Clarama:
       .pdf: Adobe PDF
       .ipynb: Jupyter Notebook
       .py: Python
+      .db: SQLite Database
+      .sqlite: SQLite Database
+      .sqlite3: SQLite Database
+      .accdb: Access Database (>=2007)
+      .mdb: Access Database (<2007)
     ModeIcons:
       explore: bi-view-list
       run: bi-play text-success
