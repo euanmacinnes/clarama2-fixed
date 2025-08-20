@@ -70,6 +70,7 @@ Clarama:
       - 'sqlite3'
       - 'accdb'
       - 'mdb'
+      - 'jar'
     InternalModes: [ 'delete','raw','download','new','rename','paste','info','embed','view' ]
     VisibleModes: # Internal modes are 'view', 'info' and 'embed', and are not selectable by the user.
       folders: [ 'explore', 'jobs', 'versioning', 'issues' ]
@@ -162,6 +163,7 @@ Clarama:
       .sqlite3: bi-database-fill
       .accdb: bi-database-fill
       .mdb: bi-database-fill
+      .jar: bi-filetype-java
     FiletypeRawEditor:
       .html: html
       .js: javascript
@@ -229,6 +231,7 @@ Clarama:
       .sqlite3: SQLite Database
       .accdb: Access Database (>=2007)
       .mdb: Access Database (<2007)
+      .jar: Java Resource
     ModeIcons:
       explore: bi-view-list
       run: bi-play text-success
