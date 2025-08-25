@@ -28,6 +28,8 @@ Clarama:
       - 'js'
       - 'sql'
       - 'xls'
+      - 'XLS'
+      - 'XLSX'
       - 'tar'
       - 'tar.gz'
       - 'zip'
