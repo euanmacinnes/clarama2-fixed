@@ -15,7 +15,7 @@ Clarama:
     Explorer: "http://127.0.0.1:5000/explorer/"
     Mount: "http://127.0.0.1:5000/" # The default (root) mount for all the file content, without the api path, just the domain. /api/mount will be added automatically
     Jobs: "http://127.0.0.1:5000/jobs/"
-    Gitinsights: "http://127.0.0.1:5000/version/git/"
+    Git: "http://127.0.0.1:5000/version/git/"
     Environments: "http://127.0.0.1:5000/environments/"
     Messenger: "http://127.0.0.1:5006/"  # For registration and publishing
     AccessControl: "http://127.0.0.1:5000/accesscontrol/"
