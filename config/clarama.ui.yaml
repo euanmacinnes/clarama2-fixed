@@ -313,3 +313,7 @@ Clarama:
       time:
         icon: bi-clock
         name: Time
+      timer:
+        icon: bi-stopwatch
+        name: Timer
+        description: Countdown/interval timer with preset frequencies and custom seconds (5s to 5m)
