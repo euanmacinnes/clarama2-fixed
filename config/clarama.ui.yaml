@@ -83,7 +83,7 @@ Clarama:
       .source.yaml: [ 'explore','raw','versioning', 'issues' ]
       .table.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
       .query.yaml: [ 'raw','versioning', 'issues' ]
-      .field.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
+      .field.yaml: [ 'edit','explore','raw','versioning', 'issues' ]
       .config.yaml: [ 'raw','versioning', 'issues' ]
       .profiles.yaml: [ 'raw','versioning', 'issues' ]
       .environment.yaml: [ 'raw','versioning', 'issues' ]
