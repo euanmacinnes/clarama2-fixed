@@ -65,6 +65,7 @@ Clarama:
       - 'pjp'
       - 'ipynb'
       - 'py'
+      - 'jar'
     InternalModes: [ 'delete','raw','download','new','rename','paste','info','embed','view' ]
     VisibleModes: # Internal modes are 'view', 'info' and 'embed', and are not selectable by the user.
       folders: [ 'explore', 'jobs', 'versioning', 'issues' ]
