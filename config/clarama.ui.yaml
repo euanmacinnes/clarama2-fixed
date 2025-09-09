@@ -322,3 +322,7 @@ Clarama:
         icon: bi-table
         name: List
         description: A table-like list of rows with configurable columns; stores JSON array of row objects
+      c2file:
+        icon: bi-folder2-open
+        name: Browse File
+        description: Pick a C2 file using the built-in browser; supports configurable filters (e.g., *.field.yaml|*.task.yaml)
