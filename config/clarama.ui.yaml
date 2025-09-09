@@ -318,3 +318,7 @@ Clarama:
         icon: bi-stopwatch
         name: Timer
         description: Countdown/interval timer with preset frequencies and custom seconds (5s to 5m)
+      list:
+        icon: bi-table
+        name: List
+        description: A table-like list of rows with configurable columns; stores JSON array of row objects
