@@ -26,6 +26,7 @@ Clarama:
     Config: "http://127.0.0.1:5010/compiler/config/files/dynamic/content/"
     Redis: "redis://c2.local:6379/1"
     Postgres: "c2.local:5432/"        # Default database for Jobs, Notifications. Can be replaced with other SQL databases.
+    MongoDB: "mongodb://c2.local:27017" # Default MongoDB instance
     InfluxDB: "http://c2.local:8086" # Demo database. Feel free to add your own, replace this. Core Clarama will run without it.
     Ollama: "http://127.0.0.1:11434"
     ClaramaSourceDB: "/System/Data/Sources/clarama instance postgres.source.yaml" # Leave static. Values inside will live populate from the instance. Update username / password / database if needed
