@@ -6,6 +6,7 @@ Clarama:
     FileTypeModeSlates:
       - "{rootdir}/files/dynamic/content/System/Plugins/FileModes"
       - "{rootdir}/files/dynamic/content/Local/FileModes"
+    Root: "{rootdir}"
     Environments: "{rootdir}/files/dynamic/content/System/Environments"
     Config: "{rootdir}/files/dynamic/config"
     Content: "{rootdir}/files/dynamic/content"
