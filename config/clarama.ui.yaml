@@ -237,7 +237,7 @@ Clarama:
       .mdb: Access Database (<2007)
       .jar: Java Resource
     ModeIcons:
-      explore: bi-view-list
+      explore: bi-arrow-right-short
       run: bi-play text-success
       edit: bi-pen
       raw: bi-file-code
