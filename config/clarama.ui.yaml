@@ -249,81 +249,110 @@ Clarama:
       button:
         icon: bi-square
         name: Button
+        group: Action
       checkbox:
         icon: bi-toggle-on
         name: Checkbox Toggle
+        group: Boolean
       codeeditor:
         icon: bi-code-square
         name: Code Editor
+        group: Editors
       color:
         icon: bi-palette
         name: Color Picker
+        group: Input
       date:
         icon: bi-calendar-day
         name: Date Picker
+        group: Date & Time
       daterange:
         icon: bi-calendar2-range
         name: Date Range Picker
         description: Select a start and end date/time
+        group: Date & Time
       datetime:
         icon: bi-calendar
         name: Datetime Picker
+        group: Date & Time
       email:
         icon: bi-envelope-at
         name: Email Address
+        group: Input
       file:
         icon: bi-paperclip
         name: Attached File(s)
+        group: Files
       hidden:
         icon: bi-incognito
         name: Hidden Field
         description: for passing information between tasks without showing the user
+        group: Special
       number:
         icon: bi-1-square
         name: Number
         description: Enter a number, either integer or floating-point
+        group: Numeric
       password:
         icon: bi-braces-asterisk
         name: Password
+        group: Input
       range:
         icon: bi-sliders
         name: Number Slider
+        group: Numeric
       select:
         icon: bi-menu-app
         name: Menu (Single Selection)
         description: Single-item selection, data-driven
         data: True
         choices: True
+        group: Selection
       select_multiple:
         icon: bi-menu-button-wide
         name: Menu (Multiple Selection)
         description: Multiple-item selection, data-driven
         data: True
         choices: True
+        group: Selection
+      tagcloud:
+        icon: bi-cloud
+        name: Tag Cloud
+        description: Draggable tag cloud; supports move/copy and inline editing
+        data: True
+        choices: True
+        group: Selection
       statetoggle:
         icon: bi-3-square-fill
         name: State Toggle
         description: toggle between a linear series of states, potentially with image representation of each.
+        group: Selection
       string:
         icon: bi-input-cursor-text
         name: String
         description: a single line of text
+        group: Input
       textarea:
         icon: bi-body-text
         name: Text
         deacription: A multi-line block of text
+        group: Editors
       time:
         icon: bi-clock
         name: Time
+        group: Date & Time
       timer:
         icon: bi-stopwatch
         name: Timer
         description: Countdown/interval timer with preset frequencies and custom seconds (5s to 5m)
+        group: Date & Time
       list:
         icon: bi-table
         name: List
         description: A table-like list of rows with configurable columns; stores JSON array of row objects
+        group: Selection
       browse:
         icon: bi-folder2-open
         name: Browse
         description: Browse and select a file using the built-in browser; supports optional filters (e.g., *.field.yaml|*.csv)
+        group: Files
