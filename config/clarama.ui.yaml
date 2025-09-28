@@ -82,7 +82,7 @@ Clarama:
       .task.yaml: [ 'run','jobs','explore','edit','raw','versioning', 'issues' ]
       .slate.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
       .conversation.yaml: [ 'explore','raw','jobs','versioning', 'issues' ]
-      .source.yaml: [ 'explore','raw','versioning', 'issues' ]
+      .source.yaml: [ 'explore','edit', 'raw','versioning', 'issues' ]
       .table.yaml: [ 'explore','edit','raw','versioning', 'issues' ]
       .query.yaml: [ 'raw','versioning', 'issues' ]
       .field.yaml: [ 'edit','explore','raw','versioning', 'issues' ]
