@@ -62,6 +62,8 @@ Clarama:
       - 'config.yaml'
       - 'locker.yaml'
       - 'profiles.yaml'
+      - 'agent.yaml'
+      - 'tool.yaml'
       - 'deploy.yaml'
       - 'conversation.yaml'
       - 'test.yaml'
@@ -94,6 +96,8 @@ Clarama:
       .environment.yaml: [ 'raw','versioning', 'issues' ]
       .deploy.yaml: [ 'raw','versioning', 'issues' ]
       .access.yaml: [ 'raw','versioning', 'issues' ]
+      .agent.yaml: [ 'raw','versioning', 'issues' ]
+      .tool.yaml: [ 'raw','versioning', 'issues' ]
       .test.yaml: [ 'run','edit','raw','versioning', 'issues' ]
       .html: [ 'explore','raw','versioning', 'issues' ]
       .json: [ 'raw','versioning', 'issues' ]
@@ -188,6 +192,8 @@ Clarama:
       .task: yaml
       .config: yaml
       .plan: yaml
+      .agent.yaml: yaml
+      .tool.yaml: yaml
       .task.yaml: yaml
       .test.yaml: yaml
       .conversation.yaml: yaml
@@ -220,6 +226,8 @@ Clarama:
       .table.yaml: Data Table
       .source.yaml: Source
       .field.yaml: Field
+      .agent.yaml: AI Agent
+      .tool.yaml: AI Agent Tool
       .group.yaml: Security Group
       .environment.yaml: Task Environment
       .config.yaml: Configuration
