@@ -8,6 +8,9 @@ Clarama:
       - "{rootdir}/files/dynamic/content/Local/FileModes"
     Root: "{rootdir}"
     Environments: "{rootdir}/files/dynamic/content/System/Environments"
+    Agents:
+      - "{rootdir}/files/dynamic/content/System/Plugins/AI"
+      - "{rootdir}/files/dynamic/content/Local/Plugins/AI"
     Config: "{rootdir}/files/dynamic/config"
     Content: "{rootdir}/files/dynamic/content"
     Users: "{rootdir}/files/dynamic/content/Users"
