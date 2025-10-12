@@ -7,6 +7,7 @@ Clarama:
     DefaultOrchestrator: native
     Websocket_Dynamic: False # Auto-generate the websocket address from the inbound address.
     Instance: demo
+    AIProfile: default
     # External
     Web: "http://127.0.0.1:5000/"  # the deployment config will update this with either HTTPS or HTTP and the public domain name
     Messenger_WS: "ws://127.0.0.1:5006/ws/"  # For receiving notifications. the deployment config will update this with either HTTPS or HTTP and the public domain name
