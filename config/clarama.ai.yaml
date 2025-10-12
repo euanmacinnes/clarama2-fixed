@@ -3,7 +3,7 @@ Clarama:
     Profile:
       Default:
         Summary: gemma3:1b
-        Python: codellama:python
+        Python: gemma3:1b
         SQL: sqlcoder:7b
         Influx: gemma3:4a
         Mermaid: gemma3:1b
