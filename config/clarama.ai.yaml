@@ -5,6 +5,6 @@ Clarama:
         Summary: gemma3:1b
         Python: gemma3:1b
         SQL: sqlcoder:7b
-        Influx: gemma3:4a
+        Influx: gemma3:4b
         Mermaid: gemma3:1b
         Math: qwen2-math
